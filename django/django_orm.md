@@ -1042,7 +1042,7 @@ Django je kreirao dve nove tabele `hr_compensation` i jednu tabelu za spajanje `
   python manage.py shell_plus
   ```
 
-Drugo, kreirajte tri programa kompenzacije, uključujući Stock, Bonuses i Profit Sharing:
+- Kreirajte tri programa kompenzacije, uključujući Stock, Bonuses i Profit Sharing:
 
   ```shell
   >>> c1 = Compensation(name='Stock')
@@ -1145,7 +1145,7 @@ Ili sa imenom kompenzacije "Profit Sharing":
 <QuerySet [<Employee: Jane Doe>]>
 ```
 
-### Ukidanje naknada zaposlenima
+### Ukidanje kompenzacija zaposlenima
 
 Da biste uklonili program kompenzacije zaposlenom, koristite `remove()` metod atributa `compensations` objekta Employee. Na primer:
 
@@ -1156,7 +1156,7 @@ Da biste uklonili program kompenzacije zaposlenom, koristite `remove()` metod at
   <Employee: Jane Doe>
   ```
 
-- Uklonite "profit sharing" kompenzaciju ( c3 ) iz Jane Doe baze podataka i sačuvajte izmene u njoj:
+- Uklonite "profit sharing" kompenzaciju ( c3 ) iz za Jane Doe i sačuvajte izmene:
 
   ```shell
   >>> e.compensations.remove(c3)
@@ -1175,7 +1175,178 @@ Sada su Jane Doe preostala dva programa kompenzacije.
 ### Rezime relacije "više na više"
 
 - U relaciji `"više-prema-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
-Relacione baze podataka koriste tabelu za spajanje da bi uspostavile odnos `"više-prema-više"` između dve tabele.
-Koristite `ManyToManyField` za modeliranje relacije `"više-prema-više"` između modela u Django-u.
+- Relacione baze podataka koriste tabelu za spajanje da bi uspostavile odnos `"više-prema-više"` između dve tabele.
+- Koristite `ManyToManyField` za modeliranje relacije `"više-prema-više"` između modela u Django-u.
 
 [Sadržaj](#sadržaj)
+
+## ManyToManyField through
+
+U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli. Da bi se uspostavio odnos `"više-na-više"`, relacione baze podataka koriste treću tabelu koja se naziva tabela za spajanje i kreiraju dva odnosa `"jedan-na-više"` iz izvornih tabela.
+
+Tipično, tabela spajanja sadrži vrednosti identifikatora izvornih tabela tako da redovi u jednoj tabeli mogu biti povezani sa redovima u drugoj tabeli.
+
+Ponekad ćete možda želeti da dodate dodatna polja u tabelu za pridruživanje. Na primer, svaki zaposleni može imati više poslova tokom svoje karijere.
+
+Da biste pratili kada zaposleni preuzima posao, možete dodati polja `begin_date` i `end_date` u tabelu za pridruživanje.
+
+Da biste to uradili u Django-u, koristite argument `ManyToManyField` `through`.
+
+Na primer, sledeće pokazuje kako povezati zaposlenog sa više poslova putem dodela:
+
+```py
+class Employee(models.Model):
+  # ...
+
+class Job(models.Model):
+  title = models.CharField(max_length=255)
+  employees = models.ManyToManyField(Employee, through='Assignment')
+
+  def __str__(self):
+    return self.title
+
+class Assignment(models.Model):
+  employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+  position = models.ForeignKey(Job, on_delete=models.CASCADE)
+  begin_date = models.DateField()
+  end_date = models.DateField(default=date(9999, 12, 31))
+```
+
+Kako to funkcioniše?
+
+- Definišite `Job` model, dodate `employees` atribut koji koristi `ManyToManyField` i prosledite ga `Assignment` kao `through` argument.
+- Definišite `Assignment` klasu koja ima dva strana ključa, jedan je povezan sa `Employee` modelom, a drugi je povezan sa `Job` modelom. Takođe, dodajte atribute `begin_date` i `end_date` modelu `Assignment`.
+- Pokrenite `makemigrations` da biste napravili nove migracije:
+
+  ```py
+  python manage.py makemigrations
+  ```
+
+  Izlaz:
+
+  ```shell
+  Migrations for 'hr':
+    hr\migrations\0005_assignment_job_assignment_job.py
+      - Create model Assignment
+      - Create model Job
+      - Add field job to assignment
+  ```
+
+- Izvršite `migrate` komandu da biste primenili promene na bazu podataka:
+
+  ```shell
+  python manage.py migrate
+  ```
+
+  Izlaz:
+
+  ```shell
+  Operations to perform:
+    Apply all migrations: admin, auth, contenttypes, hr, sessions
+  Running migrations:
+    Applying hr.0005_assignment_job_assignment_job... OK
+  ```
+
+Iza kulisa, Django kreira tabele `hr_job` i `hr_assignment` u bazi podataka:
+`hr_assignment` je tabela spajanja. Pored polja `employee_id` i `position_id`, ona ima `begin_date`i `end_date` polja.
+
+### Stvaranje novih radnih mesta
+
+- Pokrenite `shell_plus` komandu:
+
+  ```shell
+  python manage.py shell_plus
+  ```
+
+- Kreirajte tri nove pozicije:
+
+  ```shell
+  >>> j1 = Job(title='Software Engineer I')
+  >>> j1.save()
+  >>> j2 = Job(title='Software Engineer II') 
+  >>> j2.save() 
+  >>> j3 = Job(title='Software Engineer III')
+  >>> j3.save()
+  >>> Job.objects.all()
+  <QuerySet [<Job: Software Engineer I>, <Job: Software Engineer II>, <Job: Software Engineer III>]>
+  ```
+
+### Kreiranje instanci za spojni model
+
+- Pronađite zaposlenog sa imenom "John Doe" i "Jane Doe":
+
+  ```shell
+  >>> e1 = Employee.objects.filter(first_name='John',last_name='Doe').first()
+  >>> e1
+  <Employee: John Doe>
+  >>> e2 = Employee.objects.filter(first_name='Jane', last_name='Doe').first()
+  >>> e2
+  <Employee: Jane Doe>
+  ```
+
+- Kreirajte instance srednjeg modela ( `Assignment` ):
+
+  ```shell
+  >>> from datetime import date
+  >>> a1 = Assignment(employee=e1,job=j1, begin_date=date(2019,1,1), end_date=date(2021,12,31))
+  >>> a1.save()
+  >>> a2 = Assignment(employee=e1,job=j2, begin_date=date(2022,1,1))
+  >>> a2.save()
+  >>> a3 = Assignment(employee=e2, job=j1, begin_date=date(2019, 3, 1))
+  >>> a3.save()
+  ```
+
+- Pronađite zaposlene koji zauzimaju "Software Engineer I" poziciju ( p1 ):
+
+  ```shell
+  >>> j1.employees.all()
+  <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
+  ```
+
+Iza kulisa, Django izvršava sledeći upit:
+
+```sql
+SELECT
+  "hr_employee"."id",
+  "hr_employee"."first_name",
+  "hr_employee"."last_name",
+  "hr_employee"."contact_id",
+  "hr_employee"."department_id"
+FROM "hr_employee"
+INNER JOIN "hr_assignment"
+  ON ("hr_employee"."id" = "hr_assignment"."employee_id")
+WHERE "hr_assignment"."job_id" = 1
+```
+
+Slično tome, možete pronaći sve zaposlene koji zauzimaju tu "Software Engineer II" poziciju:
+
+```shell
+>>> j2.employees.all()
+<QuerySet [<Employee: John Doe>]>
+Kodni jezik:  Pajton  ( python )
+```
+
+### Uklanjanje instanci spojnog modela
+
+- Uklonite "Jane Doe" ( e2 ) iz "Software Engineer II" posla koristeći `remove()` metodu:
+
+  ```shell
+  >>> j2.employees.remove(e2) 
+  ```
+
+- Uklonite sve zaposlene sa "Software Engineer I" posla koristeći sledeću `clear()` metodu:
+
+  ```shell
+  >>> j1.employees.clear() 
+  ```
+
+Posao "j1" sada ne bi trebalo da ima zaposlene:
+
+```shell
+>>> j1.employees.all() 
+<QuerySet []>
+```
+
+### Rezime through
+
+- Koristite `through` argument u `ManyToManyField` da biste dodali dodatna polja u relaciju `"više-na-više"`.
