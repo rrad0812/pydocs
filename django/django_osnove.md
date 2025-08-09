@@ -58,9 +58,7 @@ U ovom odeljku ćete naučiti osnovne Django koncepte tako što ćete napraviti 
 
 ## Početak rada
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da:
+U ovom tutorijalu ćete naučiti kako da:
 
 - kreirate novi Django projekat,
 - razumete strukturu projekta i
@@ -341,11 +339,11 @@ pip install -r requirements.txt
 - Koristite `python manage.py runserver` komandu za pokretanje projekta koristeći Django razvojni veb server.
 - Pritisnite dva puta `Ctrl-C` ( ili `Cmd-C` ) da biste zaustavili Django razvojni veb server.
 
+[Sadržaj](#sadržaj)
+
 ## Kreiranje aplikacije  
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da:
+U ovom tutorijalu ćete naučiti kako da:
 
 - kreirate novu aplikaciju u Django projektu,
 - kako da definišete prikaze (views) i
@@ -602,11 +600,11 @@ Ako otvorite URL adresu <http://127.0.0.1:8000>, videćete početnu stranicu blo
 - Definišite rutu u `urls.py` datoteci aplikacije da biste mapirali URL obrazac sa funkcijom prikaza.
 - Koristite `include()` funkciju da biste uključili `urls.py` aplikaciju u `urls.py` projekta.
 
+[Sadržaj](#sadržaj)
+
 ## Šabloni
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da:
+U ovom tutorijalu ćete naučiti kako da:
 
 - kreirate Django šablone,
 - prenosite podatke iz funkcija prikaza u šablone i
@@ -1108,11 +1106,11 @@ Statičke datoteke su CSS, JavaScript i datoteke slika koje koristite u šabloni
 
 [01]: <https://docs.djangoproject.com/en/4.2/ref/templates/builtins/>
 
+[Sadržaj](#sadržaj)
+
 ## Modeli
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti o Django modelima i kako da
+U ovom tutorijalu ćete naučiti o Django modelima i kako da
 
 - kreirate modele za vašu Django aplikaciju.
 
@@ -1294,11 +1292,11 @@ Nakon definisanja modela, možete kreirati i primeniti migracije da biste kreira
 - Metoda za nadjačavanje `__str__()` koja vraća string reprezentaciju modela.
 - Koristite `Meta` klasu za konfigurisanje modela.
 
+[Sadržaj](#sadržaj)
+
 ## Migracije
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da
+U ovom tutorijalu ćete naučiti kako da
 
 - kreirate modele i
 - koristite `Django migracije` za kreiranje tabela baze podataka.
@@ -1466,11 +1464,11 @@ sessions
 - Koristite `sqlmigrate` komandu da biste videli generisani SQL na osnovu modela.
 - Koristite `showmigrations` komandu da biste naveli sve migracije i njihov status u projektu.
 
+[Sadržaj](#sadržaj)
+
 ## Administratorska strana
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da
+U ovom tutorijalu ćete naučiti kako da
 
 - kreirate superkorisnika i
 - koristite ga za prijavu na administratorsku stranicu Django-a.
@@ -1614,11 +1612,11 @@ Ako otvorite URL adresu <http://127.0.0.1/>, videćete tri objave iz baze podata
 - Koristite `admin.site.register` metodu za registraciju modela u administratorskom panelu.
 - Koristite `all()` metod `Model.objects` da biste dobili sve modele kao `QuerySet` iz baze podataka.
 
+[Sadržaj](#sadržaj)
+
 ## Forme
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da
+U ovom tutorijalu ćete naučiti kako da
 
 - kreirate Django obrazac za
   - kreiranje,
@@ -1789,11 +1787,11 @@ Ako unesete validne vrednosti za sva polja, Django čuva vrednosti u bazi podata
 - Koristite `form.save()` za čuvanje vrednosti forme u bazi podataka.
 - Koristite `redirect()` za preusmeravanje na putanju.
 
+[Sadržaj](#sadržaj)
+
 ## Fleš poruke
 
-[Na vrh](#django-osnove)
-
-**Rezime** : u ovom tutorijalu ćete naučiti kako da
+U ovom tutorijalu ćete naučiti kako da
 
 - koristite Django fleš poruke,
 - uključujući kreiranje fleš poruka i
@@ -1907,11 +1905,11 @@ videćete poruku o grešci.
 
 - Koristite `messages` from `django.contrib` za kreiranje i prikazivanje poruka.
 
+[Sadržaj](#sadržaj)
+
 ## Edit forme
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da
+U ovom tutorijalu ćete naučiti kako da
 
 - kreirate Django formu za uređivanje kako biste ažurirali objavu i sačuvali izmene u bazi podataka.
 
@@ -2058,11 +2056,11 @@ Kako kod funkcioniše:
 - Koristite `get_object_or_404()` funkciju da biste dobili objekat po `ID`-u ili preusmerili na stranicu `404` ako objekat ne postoji.
 - Prosledite instancu ModelaForm da biste prikazali polja modela.
 
+[Sadržaj](#sadržaj)
+
 ## Forma za brisanje
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da
+U ovom tutorijalu ćete naučiti kako da
 
 - kreirate Django formu za brisanje objave.
 
@@ -2177,11 +2175,11 @@ Kada kliknete na `Yes, Delete` dugme, Django će izvršiti `delete_post()` funkc
 
 - Koristite `delete()` metodu za brisanje modela iz baze podataka
 
+[Sadržaj](#sadržaj)
+
 ## Forma za prijavu
 
-[Na vrh](#django-osnove)
-
-**Rezime**: u ovom tutorijalu ćete naučiti kako da kreirate Django formu za prijavu koji omogućava korisnicima da se
+U ovom tutorijalu ćete naučiti kako da kreirate Django formu za prijavu koji omogućava korisnicima da se
 
 - prijave pomoću korisničkog imena i lozinke.
 
@@ -2640,11 +2638,11 @@ Zaštitićemo funkcije kreiranja, ažuriranja i brisanja objava koristeći `logi
 - Koristite `request.user.is_authenticated` za proveru da li je trenutni korisnik autentifikovan.
 - Dekorišite stranice sa `@login_required` za zaštitu od neautentifikovanih korisnika.
 
+[Sadržaj](#sadržaj)
+
 ## Registraciona forma
 
-[Na vrh](#django-osnove)
-
-**Rezime**: U ovom tutorijalu ćete naučiti kako da:
+U ovom tutorijalu ćete naučiti kako da:
 
 - kreirate Django formu za registraciju koji omogućava korisnicima da se registruju.
 

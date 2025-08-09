@@ -86,19 +86,13 @@ Ova datoteka opisuje neke od funkcija koje mogu biti relevantne za korišćenje 
 
 ## Opšte napomene  
 
-[Na vrh](#baze-podataka)
-
 ### Trajne veze
-
-[Na vrh](#baze-podataka)
 
 Trajne veze izbegavaju troškove ponovnog uspostavljanja veze sa bazom podataka u svakom HTTP zahtevu. Njima upravlja CONN_MAX_AGEparametar koji definiše maksimalni vek trajanja veze. Može se podesiti nezavisno za svaku bazu podataka.
 
 Podrazumevana vrednost je 0, čime se čuva istorijsko ponašanje zatvaranja veze sa bazom podataka na kraju svakog zahteva. Da biste omogućili trajne veze, podesite `CONN_MAX_AGE` na pozitivan ceo broj sekundi. Za neograničene trajne veze, podesite na `None`.
 
 ### Upravljanje vezama
-
-[Na vrh](#baze-podataka)
 
 Django otvara vezu sa bazom podataka kada prvi put napravi upit ka bazi podataka. Ovu vezu drži otvorenom i ponovo je koristi u narednim zahtevima. Django zatvara vezu kada ona pređe maksimalnu starost definisanu od `CONN_MAX_AGE` ili kada više nije upotrebljiva.
 
@@ -139,13 +133,11 @@ Ako se veza kreira u dugotrajnom procesu, van Django-ovog ciklusa zahteva i odgo
 
 ### Kodiranje
 
-[Na vrh](#baze-podataka)
-
 Django pretpostavlja da sve baze podataka koriste UTF-8 kodiranje. Korišćenje drugih kodiranja može dovesti do neočekivanog ponašanja, kao što su greške "vrednost je predugačka" u vašoj bazi podataka za podatke koji su validni u Django-u. Pogledajte napomene specifične za bazu podataka u nastavku za informacije o tome kako da pravilno podesite bazu podataka.
 
-## PostgreSQL beleške
+[Sadržaj](#sadržaj)
 
-[Na vrh](#baze-podataka)
+## PostgreSQL beleške
 
 Django podržava `PostgreSQL 12` i novije verzije. Potreban je `psycopg 3.1.8+` ili `psycopg2 2.8.4+`, mada se preporučuje najnoviji psycopg `3.1.8+`.
 
@@ -158,8 +150,6 @@ Django podržava `PostgreSQL 12` i novije verzije. Potreban je `psycopg 3.1.8+` 
 > **Promenjeno u Django 4.2:**  Dodata je psycopg podrška za verziju 3.1.8+.
 
 ### Podešavanja konekcije sa PostgreSQL
-
-[Na vrh](#baze-podataka)
 
 Videti `HOST` za detalje.
 
@@ -201,8 +191,6 @@ localhost:5432:NAME:USER:PASSWORD
 
 ### Optimizacija konfiguracije PostgreSQL
 
-[Na vrh](#baze-podataka)
-
 Djangu su potrebni sledeći parametri za konekcije sa bazom podataka:
 
 - `client_encoding`: `'UTF8'`,
@@ -217,8 +205,6 @@ Ako ovi parametri već imaju ispravne vrednosti, Django ih neće postavljati za 
 Django će raditi sasvim dobro i bez ove optimizacije, ali svaka nova veza će izvršiti neke dodatne upite da bi podesila ove parametre.
 
 ### Nivo izolacije PostgreSQL
-
-[Na vrh](#baze-podataka)
 
 Kao i sam PostgreSQL, Django podrazumevano koristi `READ COMMITTED` nivo izolacije. Ako vam je potreban viši nivo izolacije, kao što je `REPEATABLE` ili `READSERIALIZABLE`, podesite ga u delu `OPTIONS` konfiguracije vaše baze podataka u `DATABASES`:  
 
@@ -244,8 +230,6 @@ DATABASES = {
 
 ### Uloge
 
-[Na vrh](#baze-podataka)
-
 > [!Note]
 >
 > **Novo u Django 4.2.**
@@ -265,8 +249,6 @@ DATABASES = {
 ```
 
 ### Parametri povezivanja na strani servera
-
-[Na vrh](#baze-podataka)
 
 > [!Note]
 >
@@ -290,25 +272,17 @@ DATABASES = {
 
 ### Indeksi za varchar i text kolone
 
-[Na vrh](#baze-podataka)
-
 Kada navodite `db_index=True` u poljima vašeg modela, Django obično izbacuje jednu `CREATE INDEX` naredbu. Međutim, ako je tip baze podataka za polje bilo `varchar` or `text` (npr. koristi ga `CharField`, `FileField` i `TextField`), onda će Django kreirati dodatni indeks koji koristi odgovarajuću `PostgreSQL klasu operatora` za kolonu. Dodatni indeks je neophodan za ispravno izvršavanje pretraga koje koriste operator `LIKE` u svom SQL-u, kao što je to urađeno sa tipovima pretraga `contains` i `startswith`.
 
 ### Operacija migracije za dodavanje ekstenzija
-
-[Na vrh](#baze-podataka)
 
 Ako treba da dodate `PostgreSQL` ekstenziju (kao što su `hstore`, `postgis`, itd.) koristeći migraciju, koristite `CreateExtension` operaciju.
 
 ### Kursori na strani servera
 
-[Na vrh](#baze-podataka)
-
 Kada se koristi `QuerySet.iterator()`, Django otvara kursor na strani servera. Podrazumevano, PostgreSQL pretpostavlja da će biti preuzeto samo prvih 10% rezultata upita kursora. Planer upita troši manje vremena na planiranje upita i počinje brže da vraća rezultate, ali to može smanjiti performanse ako se preuzme više od 10% rezultata. PostgreSQL-ove pretpostavke o broju redova preuzetih za upit kursora kontrolišu se opcijom `cursor_tuple_fraction`.
 
 #### Objedinjavanje transakcija i kursora na strani servera
-
-[Na vrh](#baze-podataka)
 
 Korišćenje objedinjavača konekcija u režimu objedinjavanja transakcija (npr. PgBouncer) zahteva onemogućavanje kursora na strani servera za tu konekciju.
 
@@ -325,8 +299,6 @@ Ako se koristi druga veza, javlja se greška kada transakcija referencira kursor
 - Druga opcija je da se svaki `QuerySet` kursor na strani servera umota u `atomic()` blok, jer se onemogućava `autocommit` tokom trajanja transakcije. Na ovaj način, kursor na strani servera će biti aktivan samo tokom trajanja transakcije.
 
 ### Ručno određivanje vrednosti automatski inkrementirajućih primarnih ključeva
-
-[Na vrh](#baze-podataka)
 
 Django koristi `PostgreSQL` kolone `identiteta` za čuvanje `automatski inkrementirajućih primarnih ključeva`. Kolona identiteta se popunjava vrednostima iz sekvence koja prati sledeću dostupnu vrednost. Ručno dodeljivanje vrednosti automatski inkrementirajućem polju ne ažurira sekvencu polja, što kasnije može izazvati sukob. Na primer:
 
@@ -352,13 +324,9 @@ Ako je potrebno da navedete takve vrednosti, resetujte sekvencu nakon toga da bi
 
 ### Šabloni za testiranje baze podataka
 
-[Na vrh](#baze-podataka)
-
 Možete koristiti TEST['TEMPLATE'] podešavanje da biste odredili šablon (npr. 'template0') iz kojeg će se kreirati testna baza podataka.
 
 ### Ubrzavanje izvršavanja testa sa netrajnim podešavanjima
-
-[Na vrh](#baze-podataka)
 
 Možete ubrzati vreme izvršavanja testova tako što ćete konfigurisati PostgreSQL da bude netrajan.
 
@@ -366,9 +334,9 @@ Možete ubrzati vreme izvršavanja testova tako što ćete konfigurisati Postgre
 >
 > Ovo je opasno: učiniće vašu bazu podataka podložnijom gubitku podataka ili oštećenju u slučaju pada servera ili nestanka struje. Koristite ovo samo na razvojnoj mašini gde možete lako da vratite ceo sadržaj svih baza podataka u klasteru.
 
-## MariaDB beleške
+[Sadržaj](#sadržaj)
 
-[Na vrh](#baze-podataka)
+## MariaDB beleške
 
 Django podržava `MariaDB 10.4` i novije verzije.
 
@@ -376,11 +344,7 @@ Da biste koristili `MariaDB`, koristite `MySQL` bekend, koji dele dva sistema. P
 
 ## MySQL beleške
 
-[Na vrh](#baze-podataka)
-
 ### Podrška za verzije
-
-[Na vrh](#baze-podataka)
 
 Django podržava `MySQL 8` i novije verzije.
 
@@ -390,8 +354,6 @@ Django očekuje da baza podataka podržava Unicode (UTF-8 kodiranje) i delegira 
 
 ### Motori za skladištenje
 
-[Na vrh](#baze-podataka)
-
 `MySQL` ima nekoliko mehanizama za skladištenje. Možete promeniti podrazumevani mehanizam za skladištenje u konfiguraciji servera.
 
 MySQL-ov podrazumevani mehanizam za skladištenje je `InnoDB`. Ovaj mehanizam je potpuno `transakcioni` i podržava `reference stranih ključeva`. To je preporučeni izbor. Međutim, brojač automatskog povećanja InnoDB-a se gubi pri ponovnom pokretanju MySQL-a jer ne pamti vrednost `AUTO_INCREMENT`, već je ponovo kreira kao `max(id)+1`. Ovo može dovesti do nenamerne ponovne upotrebe `AutoField` vrednosti.
@@ -399,8 +361,6 @@ MySQL-ov podrazumevani mehanizam za skladištenje je `InnoDB`. Ovaj mehanizam je
 Glavni nedostaci `MyISAM` su to što ne podržava `transakcije` niti primenjuje `ograničenja stranog ključa`.
 
 ### MySQL DB API drajveri
-
-[Na vrh](#baze-podataka)
 
 MySQL ima nekoliko drajvera koji implementiraju Python Database API opisan uPEP 249 :
 
@@ -418,19 +378,15 @@ Django zahteva `mysqlclient 1.4.3` ili noviji.
 
 #### MySQL konektor/Pajton
 
-[Na vrh](#baze-podataka)
+[Sadržaj](#sadržaj)
 
 MySQL konektor/Python je dostupan sa stranice za preuzimanje. Django adapter je dostupan u verzijama `1.1.x` i novijim. Možda ne podržava najnovija izdanja Django-a.
 
 ### Definicije vremenskih zona
 
-[Na vrh](#baze-podataka)
-
 Ako planirate da koristite Django-ovu podršku za vremenske zone , koristite mysql_tzinfo_to_sql da biste učitali tabele vremenskih zona u MySQL bazu podataka. Ovo je potrebno uraditi samo jednom za vaš MySQL server, a ne za svaku bazu podataka.
 
 ### Kreiranje baze podataka
-
-[Na vrh](#baze-podataka)
 
 Možete kreirati bazu podataka pomoću alata komandne linije i ovog SQL-a:
 
@@ -441,8 +397,6 @@ CREATE DATABASE <dbname> CHARACTER SET utf8;
 Ovo osigurava da će sve tabele i kolone podrazumevano koristiti UTF-8.
 
 ### Podešavanja ređanja
-
-[Na vrh](#baze-podataka)
 
 Podešavanje kolacije za kolonu kontroliše redosled kojim se podaci sortiraju, kao i koji se stringovi upoređuju kao jednaki. Možete navesti `db_collation` parametar da biste podesili ime kolacije kolone za `CharField` i `TextField`.
 
@@ -457,8 +411,6 @@ Imajte u vidu da su, prema `MySQL Unicode Character Sets`, poređenja za `utf8_g
 > Modelski skupovi obrazaca validiraju jedinstvena polja na način koji razlikuje velika i mala slova. Stoga, kada se koristi kolacija koja nije osetljiva na velika i mala slova, skup obrazaca sa jedinstvenim vrednostima polja koje se razlikuju samo po veličini slova će proći validaciju, ali će se prilikom pozivanja `save()` izazvati `IntegrityError`.
 
 ### Povezivanje sa MySQL bazom podataka
-
-[Na vrh](#baze-podataka)
 
 Pogledajte `MySQL` dokumentaciju o podešavanjima.
 
@@ -499,15 +451,11 @@ Nekoliko drugih opcija za povezivanje sa MySQLdb mogu biti korisne, kao što su 
 
 #### Podešavanje sql_mode
 
-[Na vrh](#baze-podataka)
-
 Podrazumevana vrednost opcije `sql_mode` sadrži `STRICT_TRANS_TABLES`. Ta opcija eskalira upozorenja u greške kada se podaci skraćuju prilikom umetanja, pa Django toplo preporučuje aktiviranje strogog režima za MySQL kako bi se sprečio gubitak podataka (ili `STRICT_TRANS_TABLES` ili `STRICT_ALL_TABLES`).
 
 Ako treba da prilagodite SQL režim, možete podesiti `sql_mode` promenljivu kao ili ulazom  `'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"` u `OPTIONS` delu konfiguravije baze podataka `DATABASES`.
 
 #### Nivo izolacije MySQL
-
-[Na vrh](#baze-podataka)
 
 Prilikom istovremenih učitavanja, transakcije baze podataka iz različitih sesija (recimo, odvojene niti koje obrađuju različite zahteve) mogu međusobno komunicirati. Na ove interakcije utiče nivo izolacije transakcija svake sesije. Nivo izolacije veze možete podesiti pomoću `'isolation_level'` unosa u `OPTIONS` delu konfiguracije vaše baze podataka u `DATABASES`. Važeće vrednosti za ovaj unos su četiri standardna nivoa izolacije:
 
@@ -519,8 +467,6 @@ Prilikom istovremenih učitavanja, transakcije baze podataka iz različitih sesi
 ili `None` da koristi konfigurisani nivo izolacije servera. Međutim, Django najbolje radi sa podrazumevano podešanim na čitanje potvrđenih podataka (`read committed`) umesto MySQL-ovog podrazumevanog, ponovljivog čitanja (`repeatable read`). Gubitak podataka je moguć kod ponovljivog čitanja. Konkretno, možete videti slučajeve gde `get_or_create()` će se podići `IntegrityError`, ali se objekat neće pojaviti u narednom `get()` pozivu.
 
 ### Kreiranje tabela
-
-[Na vrh](#baze-podataka)
 
 Kada Django generiše šemu, ne određuje mehanizam za skladištenje, tako da će tabele biti kreirane sa podrazumevanim mehanizmom za skladištenje za koji je konfigurisan vaš server baze podataka. Najlakše rešenje je da podesite podrazumevani mehanizam za skladištenje vašeg servera baze podataka na željeni mehanizam.
 
@@ -546,13 +492,9 @@ Ako koristite uslugu hostinga i ne možete da promenite podrazumevani mehanizam 
 
 ### Imena tabela
 
-[Na vrh](#baze-podataka)
-
 Postoje poznati problemi čak i u najnovijim verzijama MySQL-a koji mogu prouzrokovati promenu veličine imena tabele kada se određeni SQL izrazi izvršavaju pod određenim uslovima. Preporučuje se da koristite mala slova u nazivima tabela, ako je moguće, kako biste izbegli probleme koji mogu nastati zbog ovog ponašanja. Django koristi mala slova u nazivima tabela kada automatski generiše imena tabela iz modela, tako da je ovo uglavnom važno uzeti u obzir ako zamenjujete ime tabele putem `db_table` parametra.
 
 ### SAVEPOINTS
-
-[Na vrh](#baze-podataka)
 
 I Django ORM i MySQL (kada se koristi `InnoDB mehanizam` za skladištenje ) podržavaju tačke čuvanja baze podataka.
 
@@ -562,19 +504,13 @@ Ako koristite `MyISAM` mehanizam za skladištenje podataka, imajte na umu da će
 
 #### Polja za karaktere
 
-[Na vrh](#baze-podataka)
-
 Sva polja koja su sačuvana sa `VARCHAR` tipovima kolona mogu imati `max_length` ograničenje od 255 znakova ako koristite `unique=True` za polje. Ovo utiče na `CharField`, `SlugField`. Pogledajte `MySQL` dokumentaciju za više detalja.
 
 #### `TextField` ograničenja
 
-[Na vrh](#baze-podataka)
-
 MySQL može da indeksira samo prvih `N` znakova kolone `BLOB` ili `TEXT`. Pošto `TextField` nema definisanu dužinu, ne možete je označiti kao `unique=True`. `MySQL` će prijaviti: "BLOB/TEXT kolona '<db_column>' korišćena u specifikaciji ključa bez dužine ključa".
 
 #### Podrška za razlomke sekundi za polja `Time` i `Datetime`
-
-[Na vrh](#baze-podataka)
 
 MySQL može da čuva razlomke sekunde, pod uslovom da definicija kolone uključuje indikator razlomka (npr. `DATETIME(6)`).
 
@@ -588,13 +524,9 @@ ili korišćenje `RunSQL` operacije u migraciji podataka.
 
 #### `TIMESTAMP` kolone
 
-[Na vrh](#baze-podataka)
-
 Ako koristite staru bazu podataka koja sadrži `TIMESTAMP` kolone, morate podesiti da `USE_TZ = False` biste izbegli oštećenje podataka. `inspectdb` mapira ove kolone na i ako omogućite podršku za vremenske zone, i `MySQL` i `Django` će pokušati da konvertuju vrednosti iz `UTC` u lokalno vreme.
 
 ### Zaključavanje redova pomoću `QuerySet.select_for_update()`
-
-[Na vrh](#baze-podataka)
 
 `MySQL` i `MariaDB` ne podržavaju neke opcije za `SELECT ... FOR UPDATE` izraz. Ako se `select_for_update()` koristi sa nepodržanom opcijom, onda se podiže `NotSupportedError`.
 
@@ -609,23 +541,19 @@ Kada koristite `select_for_update()` na `MySQL`, obavezno filtrirajte `QuerySet`
 
 ### Automatsko pretvaranje tipova može prouzrokovati neočekivane rezultate
 
-[Na vrh](#baze-podataka)
-
 Prilikom izvršavanja upita nad tipom stringa, ali sa celobrojnom vrednošću, `MySQL` će prisiliti tipove svih vrednosti u tabeli na ceo broj pre nego što izvrši poređenje. Ako vaša tabela sadrži vrednosti 'abc', 'def' i upitate za `WHERE mycolumn=0`, oba reda će se podudarati. Slično tome, će se podudarati sa vrednošću `WHERE mycolumn=1` ili `'abc1'`. Stoga, polja tipa stringa uključena u Django će uvek konvertovati vrednost u string pre nego što je koriste u upitu.
 
 Ako implementirate prilagođena polja modela koja direktno nasleđuju iz `Field`, nadjačavaju `get_prep_value()` ili koriste `RawSQL`, `extra()`, ili `raw()`, trebalo bi da se uverite da ste izvršili odgovarajuće pretvaranje tipova.
 
-## SQLite beleške
+[Sadržaj](#sadržaj)
 
-[Na vrh](#baze-podataka)
+## SQLite beleške
 
 Django podržava `SQLite 3.21.0` i novije verzije.
 
 `SQLite` pruža odličnu alternativu za razvoj aplikacija koje su pretežno samo za čitanje ili zahtevaju manji instalacioni prostor. Međutim, kao i kod svih servera baza podataka, postoje neke razlike specifične za `SQLite` kojih bi trebalo da budete svesni.
 
 ### Podudaranje podstringova i osetljivost na velika i mala slova
-
-[Na vrh](#baze-podataka)
 
 Za sve verzije `SQLite`, postoji pomalo kontraintuitivno ponašanje pri pokušaju uparivanja nekih tipova stringova. Ovo se pokreće kada se koriste filteri `iexactor` ili `contains` u Queryset-ovima. Ponašanje se deli na dva slučaja:
 
@@ -637,13 +565,9 @@ Neka moguća rešenja za ovo su dokumentovana na sqlite.org, ali ih ne koristi p
 
 ### Decimalna obrada
 
-[Na vrh](#baze-podataka)
-
 SQLite nema pravi interni `decimal` tip. Decimalne vrednosti se interno konvertuju u `REAL` tip podataka (8-bajtni IEEE broj sa pokretnim zarezom), kao što je objašnjeno u dokumentaciji o tipovima podataka SQLite-a, tako da ne podržavaju ispravno zaokruženu decimalno-pokretnu aritmetiku sa pokretnim zarezom.
 
 ### Greške "Baza podataka je zaključana"
-
-[Na vrh](#baze-podataka)
 
 `SQLite` je zamišljen kao lagana baza podataka i stoga ne može da podrži visok nivo konkurentnosti. Greške ukazuju na to da vaša aplikacija ima više konkurentnosti nego što može da obradi u podrazumevanoj konfiguraciji. Ova greška znači da jedna nit ili proces ima ekskluzivnu bravu na vezi sa bazom podataka, a drugoj niti je isteklo vreme čekanja da se brava otpusti.
 
@@ -677,19 +601,13 @@ Ako dobijate ovu grešku, možete je rešiti na sledeći način:
 
 ### QuerySet.select_for_update() nije podržano
 
-[Na vrh](#baze-podataka)
-
 SQLite ne podržava `SELECT ... FOR UPDATE` sintaksu. Pozivanje funkcije neće imati nikakvog efekta.
 
 ### Izolacija pri korišćenju QuerySet.iterator()
 
-[Na vrh](#baze-podataka)
-
 Postoje posebna razmatranja opisana u odeljku `Izolacija u SQLite` prilikom modifikovanja tabele tokom iteracije kroz nju pomoću `QuerySet.iterator()`. Ako se red doda, promeni ili obriše unutar petlje, onda se taj red može, ali i ne mora pojaviti, ili se može pojaviti dva puta, u narednim rezultatima preuzetim iz iteratora. Vaš kod mora ovo da obradi.
 
 ### Omogućavanje JSON1 ekstenzije na SQLite
-
-[Na vrh](#baze-podataka)
 
 Da biste koristili `JSONField` na SQLite, potrebno je da omogućite `JSON1` ekstenziju u Python-ovoj `sqlite3` biblioteci. Ako ekstenzija nije omogućena na vašoj instalaciji,  pojaviće se sistemska greška ( `fields.E180` ).
 
@@ -699,9 +617,9 @@ Da biste omogućili `JSON1` ekstenziju, možete pratiti uputstva na viki stranic
 >
 > `JSON1` ekstenzija je podrazumevano omogućena na `SQLite 3.38+`.
 
-## Oracle beleške
+[Sadržaj](#sadržaj)
 
-[Na vrh](#baze-podataka)
+## Oracle beleške
 
 Django podržava Oracle Database Server verzije `19c` i novije. Potrebna je verzija `7.0` ili novija `cx_Oracle` Python drajvera.
 
@@ -740,8 +658,6 @@ GRANT EXECUTE ON SYS.DBMS_RANDOM TO user;
 
 ### Povezivanje sa Oracle bazom podataka
 
-[Na vrh](#baze-podataka)
-
 Da biste se povezali koristeći ime servisa vaše Oracle baze podataka, vaša `settings.py` datoteka bi trebalo da izgleda ovako:
 
 ```py
@@ -776,8 +692,6 @@ Trebalo bi da navedete i `HOST` i `PORT`, ili da oba ostavite kao prazne stringo
 
 #### Kompletan DSN i jednostavno povezivanje
 
-[Na vrh](#baze-podataka)
-
 Može se koristiti potpuni `DSN` ili string za jednostavno povezivanje `NAME` ako su i `HOST` i `PORT` prazni. Ovaj format je potreban kada se koristi `RAC` ili priključne baze podataka bez `tnsnames.ora`, na primer.
 
 Primer stringa za jednostavno povezivanje:
@@ -797,8 +711,6 @@ Primer punog DSN niza:
 
 ### Opcija sa nitima
 
-[Na vrh](#baze-podataka)
-
 Ako planirate da pokrećete Django u višenitnom okruženju (npr. `Apache` koristeći podrazumevani `MPM modul` na bilo kom modernom operativnom sistemu), onda morate podesiti `threaded` opciju konfiguracije vaše `Oracle` baze podataka na `True`:
 
 ```py
@@ -811,8 +723,6 @@ Ako se ovo ne uradi, može doći do padova i drugih neobičnih ponašanja.
 
 ### INSERT … RETURNING INTO
 
-[Na vrh](#baze-podataka)
-
 Podrazumevano, Oracle bekend koristi `RETURNING INTO` klauzulu za efikasno preuzimanje vrednosti `AutoField` prilikom umetanja novih redova. Ovo ponašanje može dovesti do `DatabaseError` u određenim neobičnim podešavanjima, kao što je umetanje u udaljenu tabelu ili u prikaz sa `INSTEAD OF` trigerom. Klauzula RETURNING INTO se može onemogućiti podešavanjem opcije `use_returning_into` konfiguracije baze podataka na: `False`.
 
 ```py
@@ -824,8 +734,6 @@ Podrazumevano, Oracle bekend koristi `RETURNING INTO` klauzulu za efikasno preuz
 U ovom slučaju, `Oracle` bekend će koristiti poseban `SELECT` upit za preuzimanje `AutoField` vrednosti.
 
 ### Problemi sa imenovanjem
-
-[Na vrh](#baze-podataka)
 
 Oracle nameće ograničenje dužine imena od 30 znakova. Da bi se ovo prilagodilo, bekend skraćuje identifikatore baze podataka kako bi se uklopili, zamenjujući poslednja četiri znaka skraćenog imena ponavljajućom MD5 heš vrednošću. Pored toga, bekend pretvara identifikatore baze podataka u velika slova.
 
@@ -848,8 +756,6 @@ Prilikom pokretanja `migrate`, može doći do greške `ORA-06552` ako se određe
 
 ### NULL i prazni stringovi
 
-[Na vrh](#baze-podataka)
-
 Django generalno preferira da koristi prazan string ( `''` ) umesto `NULL`, ali Oracle tretira oba identično. Da bi se ovo zaobišlo, Oracle-ov bekend ignoriše eksplicitnu `null` opciju na poljima koja imaju prazan string kao moguću vrednost i generiše DDL kao da je `null=True`. Prilikom preuzimanja iz baze podataka, pretpostavlja se da `NULL` vrednost u jednom od ovih polja zapravo znači prazan string, a podaci se tiho konvertuju da bi odražavali ovu pretpostavku.
 
 ### TextField ograničenja
@@ -863,8 +769,6 @@ Oracle bekend skladišti `TextFields` kao `NCLOB` kolone. Oracle nameće neka og
 - `LOB` kolone se ne smeju koristiti u `SELECT DISTINCT` listi. To znači da će pokušaj korišćenja `QuerySet.distinct` metode na modelu koji uključuje `TextField` kolone rezultirati greškom kada se pokrene u Oracle-u. Kao zaobilazno rešenje, koristite `QuerySet.defer` metodu zajedno sa `distinct` da biste sprečili uključivanje `TextField` kolona u `SELECT DISTINCT` listu.
 
 ## Podklasiranje ugrađenih bekendova baze podataka
-
-[Na vrh](#baze-podataka)
 
 Django dolazi sa ugrađenim bekendovima baze podataka. Možete podklasirati postojeće bekendove baze podataka da biste izmenili njihovo ponašanje, funkcije ili konfiguraciju.
 
@@ -907,8 +811,6 @@ DATABASES = {
 Trenutnu listu sistema baza podataka možete videti u `django/db/backends`.
 
 ## Korišćenje baze podataka treće strane
-
-[Na vrh](#baze-podataka)
 
 Pored zvanično podržanih baza podataka, postoje i bekendovi koje pružaju treće strane koji vam omogućavaju da koristite druge baze podataka sa Django-om:
 

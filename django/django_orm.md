@@ -1,31 +1,31 @@
 
 # Django ORM
 
-## Sadržaj
-
 U ovom odeljku ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasno koristiti za interakciju sa relacionim bazama podataka.
 
+## Sadržaj
+
 - [Uvod u Django ORM](#uvod-u-django-orm)
-  
-  Podešavanje osnovnog projekta za sledeće tutorijale u ovom odeljku. </br></br>
-  
+
+  Podešavanje osnovnog projekta za sledeće tutorijale u ovom odeljku.</br></br>
+
 - [Relacija "jedan-na-jedan"](#relacija-jedan-na-jedan)
-  
+
   Kreiranje relacije "jedan-na-jedan".</br></br>
 
-- [Relacija "jedan-na-više"]() </br></br>
+- [Relacija "jedan-na-više"](#relacija-jedan-na-više)
 
   Korišćenje ForeignKey za kreiranje relacije jedan-na-više.</br></br>
 
-- [Relacija „više-na-više“]()
-  
-  Kreiranje relacije "više-na-više". </br></br>
+- [Relacija "više-na-više"](#relacija-više-na-više)
+
+  Kreiranje relacije "više-na-više".</br></br>
 
 - [Dodavanje dodatnih polja u relaciju "više na više"]().
   
   Kako dodati dodatna polja u relaciju „više na više“. </br></br>
 
-- [Limit/Offset]() </br></br>
+- [Limit/Offset]()
   
   Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet. </br></br>
 
@@ -387,6 +387,8 @@ Django koristi `DELETE` naredbu bez `WHERE` klauzule da bi obrisao sve redove iz
   - Koristite `save()` metodu za kreiranje novog reda ili ažuriranje postojećeg reda.
   - Koristite `delete()` metodu za brisanje jednog ili više redova iz tabele.
 
+[Sadržaj](#sadržaj)
+
 ## Relacija jedan na jedan
 
 ### Uvod u relaciju jedan na jedan
@@ -667,6 +669,8 @@ Django koristi funkciju `LEFT OUTER JOIN` koja vraća sve zaposlene iz `hr_emplo
 <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
 ```
 
+[Sadržaj](#sadržaj)
+
 ## Relacija jedan-na-više
 
 ### Uvod u relacije jedan-na-više
@@ -727,9 +731,9 @@ Kako ovo funkcioniše?
   )
   ```
 
-  U `ForeignKey`, prosleđujemo `Department` kao prvi argument i `on_delete = models.CASCADE` ključnu reč kao drugi argument. `on_delete=models.CASCADE` označava da ako se department obriše, svi zaposleni povezani sa tim odeljenjem takođe se brišu.
+  U `ForeignKey`, prosleđujemo `Department` kao prvi argument i `on_delete` ključnu reč kao drugi argument. `on_delete=models.CASCADE` označava da ako se department obriše, svi zaposleni povezani sa tim odeljenjem takođe se brišu.
 
-  Imajte na umu da polje definišete sa `ForeignKey` na strani `"više"` relacije.
+  > Imajte na umu da polje definišete sa `ForeignKey` na strani `"više"` relacije.
 
 - Izvršite migracije pomoću `makemigrations` komande:
 
@@ -839,7 +843,7 @@ Kako ovo funkcioniše?
   >>> d.save()
   ```
 
-- Kreirajte dva zaposlena i dodelite ih odeljenju IT:
+- Kreirajte dva zaposlena i dodelite ih odeljenje IT:
 
   ```shell
   >>> e = Employee(first_name='John',last_name='Doe',department=d)
@@ -857,16 +861,16 @@ Kako ovo funkcioniše?
   'Information Technology'
   ```
 
-- Dobijte sve zaposlene u odeljenju koristeći employee_setatribut ovako:
+- Dobijte sve zaposlene u odeljenju koristeći `employee_set` atribut ovako:
 
   ```shell
   >>> d.employee_set.all()
   <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
   ```
 
-  Imajte na umu da nismo definisali `employee_setsvojstvo` u `Department` modelu. Interno, Django je automatski dodao `employee_set` svojstvo modelu `Department` kada smo definisali odnos `jedan-na-više` koristeći `ForeignKey`.
+  Imajte na umu da nismo definisali `employee_set` svojstvo u `Department` modelu. Interno, Django je automatski dodao `employee_set` svojstvo modelu `Department` kada smo definisali odnos `jedan-na-više` koristeći `ForeignKey`.
 
-  Metod `all()` vraća `employee_set` rezultat u `QuerySet` koji sadrži sve zaposlene koji pripadaju odeljenju.
+  Metod `all()` vraća `employee_set` rezultat u `QuerySet`-u koji sadrži sve zaposlene koji pripadaju IT odeljenju.
 
 ### Korišćenje select_related() za spajanje zaposlenog sa odeljenjem
 
@@ -891,7 +895,7 @@ SELECT "hr_employee"."id",
 Execution time: 0.003000s [Database: default]
 ```
 
-Da biste pristupili odeljenju prvog zaposlenog, koristite departmentatribut:
+Da biste pristupili odeljenju prvog zaposlenog, koristite `department` atribut:
 
 ```shell
 >>> e.department 
@@ -907,9 +911,9 @@ Execution time: 0.013211s [Database: default]
 
 U ovom slučaju, Django izvršava dva upita. Prvi upit bira prvog zaposlenog, a drugi upit bira odeljenje izabranog zaposlenog.
 
-Ako izaberete N zaposlenih da biste ih prikazali na veb stranici, onda morate da izvršite N + 1 upit da biste dobili i zaposlene i njihova odeljenja. Prvi upit (1) bira N zaposlenih, a N upita bira N odeljenja za svakog zaposlenog. Ovaj problem je poznat kao problem N + 1 upita.
+Ako izaberete N zaposlenih da biste ih prikazali na veb stranici, onda morate da izvršite N + 1 upit da biste dobili i zaposlene i njihova odeljenja. Prvi upit (1) bira N zaposlenih, a N upita bira N odeljenja za svakog zaposlenog. Ovaj problem je poznat kao "problem N + 1 upita".
 
-Da biste rešili problem sa N + 1 upitom, možete koristiti select_related()metod za izbor i zaposlenih i odeljenja pomoću jednog upita. Na primer:
+Da biste rešili problem sa N + 1 upitom, možete koristiti `select_related()` metod za izbor i zaposlenih i odeljenja pomoću jednog upita. Na primer:
 
 ```shell
 >>> Employee.objects.select_related('department').all()
@@ -929,7 +933,7 @@ Execution time: 0.012124s [Database: default]
 <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
 ```
 
-U ovom primeru, Django izvršava samo jedan upit koji spaja tabele ` hr_employeeand` hr_department.
+U ovom primeru, Django izvršava samo jedan upit koji spaja tabele ` hr_employeeand` i `hr_department`.
 
 ### Rezime
 
@@ -938,221 +942,240 @@ U ovom primeru, Django izvršava samo jedan upit koji spaja tabele ` hr_employee
 - Definišite `ForeignKey` umodelu na strani `"više"` relacije.
 - Koristite `select_related()` metodu za spajanje dve ili više tabela u relacijama `jedan-na-više`.
 
+[Sadržaj](#sadržaj)
+
 ## Relacija "više-na-više"
 
 ### Uvod u relaciju "više-na-više"
 
-U relaciji "više-na-više", više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
+U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
 
-Na primer, zaposleni može imati više programa kompenzacije, a program kompenzacije može pripadati više zaposlenih.
+Na primer, zaposleni može imati više programa kompenzacije, a programu kompenzacije može pripadati više zaposlenih.
 
-Stoga, više redova u tabeli zaposlenih povezano je sa više redova u tabeli kompenzacija. Dakle, odnos između zaposlenih i programa kompenzacija je odnos "više-na-više".
+Stoga, više redova u tabeli zaposlenih povezano je sa više redova u tabeli kompenzacija. Dakle, odnos između zaposlenih i programa kompenzacija je relacija `"više-na-više"`.
 
-Tipično, relacione baze podataka ne implementiraju direktan odnos „više-prema-više“ između dve tabele. Umesto toga, koriste treću tabelu, tabelu za spajanje, da bi uspostavile dva odnosa „jedan-na-više“ između dve tabele i tabele za spajanje.
+Tipično, relacione baze podataka ne implementiraju direktan odnos „više-na-više“ između dve tabele. Umesto toga, koriste treću tabelu, tabelu za spajanje, da bi uspostavile dva odnosa `"jedan-na-više"` između dve tabele i tabele za spajanje.
 
-Sledeći dijagram ilustruje odnose „više-prema-više“ u bazi podataka između tabela hr_employee i hr_compensation:
+Tabela `hr_employee_compensations` je tabela za spajanje. Ima dva strana ključa `employee_id` i `compensation_id`.
 
-Tabela hr_employee_compensationsje tabela za spajanje. Ima dva spoljna ključa employee_id i compensation_id.
+Strani `employee_id` ključ referencira na `id` tabele `hr_employee`, a strani ključ `compensation_id`  referencira na `id` u `hr_compensation` tabeli.
 
-Spoljni employee_idključ referencira na idtabele hr_employee, a compensation_idstrani ključ referencira na idu hr_compensationtabeli.
+Obično vam nije potrebna `id` kolona u `hr_employee_compensations` tabeli kao primarni ključ i koristite `employee_id` i `compensation_id` kao složeni primarni ključ. Međutim, Django uvek kreira `id` kolonu kao primarni ključ za tabelu koja se spaja.
 
-Obično vam nije potrebna idkolona u hr_employee_compensationstabeli kao primarni ključ i koristite i employee_idi compensation_idkao složeni primarni ključ. Međutim, Django uvek kreira idkolonu kao primarni ključ za tabelu koja se spaja.
+Takođe, Django kreira jedinstveno ograničenje koje uključuje kolone `employee_id` i `compensation_id`. Drugim rečima, u tabeli `hr_employee_compensations` neće biti duplih parova vrednosti `employee_id` i `compensation_id`.
 
-Takođe, Django kreira jedinstveno ograničenje koje uključuje kolone employee_idi . Drugim rečima, u tabeli compensation_idneće biti duplih parova vrednosti employee_idi .compensation_idhr_employee_compensations
+Da biste kreirali relaciju `"više-na-više"` u Django-u, koristite `ManyToManyField`. Na primer, sledeći kod koristi `ManyToManyField` da bi kreirao relaciju `"više-na-više"` između `Employee` i `Compensation` modela:
 
-Da biste kreirali relaciju „više-prema-više“ u Django-u, koristite ManyToManyField. Na primer, sledeći kod koristi ManyToManyFieldda bi kreirao relaciju „više-prema-više“ između Employeei Compensationmodela:
-
+```py
 # ...
 class Compensation(models.Model):
-    name = models.CharField(max_length=255)
+  name = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.name
+  def __str__(self):
+      return self.name
 
 
 class Employee(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+  first_name = models.CharField(max_length=100)
+  last_name = models.CharField(max_length=100)
 
-    contact = models.OneToOneField(
-        Contact,
-        on_delete=models.CASCADE,
-        null=True
-    )
+  contact = models.OneToOneField(
+      Contact,
+      on_delete=models.CASCADE,
+      null=True
+  )
 
-    department = models.ForeignKey(
-        Department,
-        on_delete=models.CASCADE
-    )
+  department = models.ForeignKey(
+      Department,
+      on_delete=models.CASCADE
+  )
 
-    compensations = models.ManyToManyField(Compensation)
+  compensations = models.ManyToManyField(Compensation)
 
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
-Kodni jezik:  Pajton  ( python )
+  def __str__(self):
+      return f'{self.first_name} {self.last_name}'
+```
 
-Kako to funkcioniše.
+Kako ovo funkcioniše?
 
-Prvo, definišite novu Compensationklasu modela koja proširuje models.Modelklasu.
+- Definišite novu `Compensation` klasu modela koja proširuje `models.Model` klasu.
 
-Drugo, dodajte compensationspolje klasi Employee. compensationsPolje koristi ManyToManyFieldda bi uspostavilo odnos „više-prema-više“ između klasa Employeei Compensation.
+- Dodajte `compensations` polje klasi `Employee`. `compensations` polje koristi `ManyToManyField` da bi uspostavilo odnos `"više-na-više"` između klasa `Employee` i `Compensation`.
 
-Da biste proširili izmene modela u bazu podataka, pokrećete makemigrationskomandu:
+- Da biste proširili izmene modela u bazu podataka, pokrećete `makemigrations` komandu:
 
-python manage.py makemigrations
-Jezik koda:  CSS  ( css )
+  ```shell
+  python manage.py makemigrations
+  ```
 
-Izbaciće nešto ovako:
+  Izbaciće nešto ovako:
 
-Migrations for 'hr':
-  hr\migrations\0004_compensation_employee_compensations.py
-    - Create model Compensation
-    - Add field compensations to employee
-Kodni jezik:  običan tekst  ( plaintext )
+  ```shell
+  Migrations for 'hr':
+    hr\migrations\0004_compensation_employee_compensations.py
+      - Create model Compensation
+      - Add field compensations to employee
+  ```
 
-I izvršite migratekomandu:
+- I izvršite `migrate` komandu:
 
-python manage.py migrate
-Kodni jezik:  običan tekst  ( plaintext )
+  ```shell
+  python manage.py migrate
+  ```
 
-Izlaz:
+  Izlaz:
 
-Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, hr, sessions
-Running migrations:
-  Applying hr.0004_compensation_employee_compensations... OK  
-Kodni jezik:  običan tekst  ( plaintext )
+  ```shell
+  Operations to perform:
+    Apply all migrations: admin, auth, contenttypes, hr, sessions
+  Running migrations:
+    Applying hr.0004_compensation_employee_compensations... OK  
+  ```
 
-Django je kreirao dve nove tabele hr_compensationi jednu tabelu za spajanje hr_employee_compensationsna sledeći način:
-Kreiranje podataka
+Django je kreirao dve nove tabele `hr_compensation` i jednu tabelu za spajanje `hr_employee_compensations`.
 
-Prvo, pokrenite shell_pluskomandu:
+### Kreiranje podataka
 
-python manage.py shell_plus
-Jezik koda:  CSS  ( css )
+- Pokrenite `shell_plus` komandu:
 
-Drugo, kreirajte tri programa kompenzacije, uključujući Stock, Bonusesi Profit Sharing:
+  ```shell
+  python manage.py shell_plus
+  ```
 
->>> c1 = Compensation(name='Stock')
->>> c1.save()
->>> c2 = Compensation(name='Bonuses') 
->>> c2.save()
->>> c3 = Compensation(name='Profit Sharing')  
->>> c3.save()
->>> Compensation.objects.all()
-<QuerySet [<Compensation: Stock>, <Compensation: Bonuses>, <Compensation: Profit Sharing>]>
-Kodni jezik:  Pajton  ( python )
+Drugo, kreirajte tri programa kompenzacije, uključujući Stock, Bonuses i Profit Sharing:
 
-Treće, nabavite zaposlenog sa imenom Johni prezimenom Doe:
+  ```shell
+  >>> c1 = Compensation(name='Stock')
+  >>> c1.save()
+  >>> c2 = Compensation(name='Bonuses') 
+  >>> c2.save()
+  >>> c3 = Compensation(name='Profit Sharing')  
+  >>> c3.save()
+  >>> Compensation.objects.all()
+  <QuerySet [<Compensation: Stock>, <Compensation: Bonuses>, <Compensation: Profit Sharing>]>
+  ```
 
+- Nabavite zaposlenog sa imenom John i prezimenom Doe:
+
+```shell
 >>> e = Employee.objects.filter(first_name='John',last_name='Doe').first()
 >>> e
 <Employee: John Doe>
-Kodni jezik:  Pajton  ( python )
+```
 
-Dodavanje kompenzacija zaposlenima
+### Dodavanje kompenzacija zaposlenima
 
-Prvo, upišite se John Doeu programe kompenzacije stock( c1) i bonuses ( c2) koristeći add()metod atributa compensationsi save()metod objekta Employee:
+- Upišite John Doe u programe kompenzacije stock( c1 ) i bonuses ( c2 ) koristeći add() metod atributa compensationsi save()metod objekta Employee:
 
->>> e.compensations.add(c1)
->>> e.compensations.add(c2) 
->>> e.save()
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> e.compensations.add(c1)
+  >>> e.compensations.add(c2) 
+  >>> e.save()
+  ```
 
-Drugo, pristupite svim compensationsprogramima John Doekoristeći all()metod atributa compensations:
+- Pristupite svim `compensations` programima John Doe koristeći `all()` metod atributa compensations:
 
->>> e.compensations.all()
-<QuerySet [<Compensation: Stock>, <Compensation: Bonuses>]>
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> e.compensations.all()
+  <QuerySet [<Compensation: Stock>, <Compensation: Bonuses>]>
+  ```
 
-Kao što je jasno prikazano na izlazu, John Doeima dva programa kompenzacije.
+  Kao što je jasno prikazano na izlazu, John Doe ima dva programa kompenzacije.
 
-Treće, upišite se Jane Doeu tri programa kompenzacije, uključujući akcije, bonuse i podelu dobiti:
+- U upišite se Jane Doe u tri programa kompenzacije, uključujući akcije, bonuse i podelu dobiti:
 
->>> e = Employee.objects.filter(first_name='Jane',last_name='Doe').first()
->>> e 
-<Employee: Jane Doe>
->>> e.compensations.add(c1)
->>> e.compensations.add(c2) 
->>> e.compensations.add(c3) 
->>> e.save()
->>> e.compensations.all()
-<QuerySet [<Compensation: Stock>, <Compensation: Bonuses>, <Compensation: Profit Sharing>]>
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> e = Employee.objects.filter(first_name='Jane',last_name='Doe').first()
+  >>> e 
+  <Employee: Jane Doe>
+  >>> e.compensations.add(c1)
+  >>> e.compensations.add(c2) 
+  >>> e.compensations.add(c3) 
+  >>> e.save()
+  >>> e.compensations.all()
+  <QuerySet [<Compensation: Stock>, <Compensation: Bonuses>, <Compensation: Profit Sharing>]>
+  ```
 
-Interno, Django je ubacio identifikacione brojeve zaposlenih i kompenzacija u tabelu pridruživanja:
+  Interno, Django je ubacio identifikacione brojeve zaposlenih i kompenzacija u tabelu pridruživanja:
 
- id | employee_id | compensation_id
-----+-------------+-----------------
-  1 |           5 |               1
-  2 |           5 |               2
-  3 |           6 |               1
-  4 |           6 |               2
-  5 |           6 |               3
-(5 rows)
-Kodni jezik:  običan tekst  ( plaintext )
+  ```shell
+  id | employee_id | compensation_id
+  ----+-------------+-----------------
+    1 |           5 |               1
+    2 |           5 |               2
+    3 |           6 |               1
+    4 |           6 |               2
+    5 |           6 |               3
+  (5 rows)
+  ```
 
-Četvrto, pronađite sve zaposlene koji su bili uključeni u plan nadoknade akcijama koristeći employee_setatribut objekta Compensation:
+- Pronađite sve zaposlene koji su bili uključeni u plan nadoknade akcijama koristeći `employee_set` atribut objekta `Compensation`:
 
->>> c1
-<Compensation: Stock>
->>> c1.employee_set.all()
-<QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> c1
+  <Compensation: Stock>
+  >>> c1.employee_set.all()
+  <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
+  ```
 
-Vratilo je dva zaposlena kako je i očekivano.
+  Vraćeno je dva zaposlena kako je i očekivano.
 
-Peto, možete koristiti employee_setatribut da pronađete sve zaposlene koji imaju program kompenzacije za učešće u dobiti:
+- Možete koristiti `employee_set` atribut da pronađete sve zaposlene koji imaju program kompenzacije za učešće u dobiti:
 
->>> c3                   
-<Compensation: Profit Sharing>
->>> c3.employee_set.all()
-<QuerySet [<Employee: Jane Doe>]>
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> c3
+  <Compensation: Profit Sharing>
+  >>> c3.employee_set.all()
+  <QuerySet [<Employee: Jane Doe>]>
+  ```
 
-Vratilo je jednog zaposlenog.
+  Vraćen je jedan zaposleni.
 
 Django vam omogućava da vršite upite kroz celu relaciju. Na primer, možete pronaći sve zaposlene koji imaju kompenzaciju sa ID-om 1:
 
+```shell
 >>> Employee.objects.filter(compensations__id=1) 
 <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
-Kodni jezik:  Pajton  ( python )
+```
 
-Ili sa imenom "Profit Sharing":
+Ili sa imenom kompenzacije "Profit Sharing":
 
+```
 >>> Employee.objects.filter(compensations__name="Profit Sharing") 
 <QuerySet [<Employee: Jane Doe>]>
-Kodni jezik:  Pajton  ( python )
+```
 
-Ukidanje naknada zaposlenima
+### Ukidanje naknada zaposlenima
 
-Da biste uklonili program kompenzacije zaposlenom, koristite remove()metod atributa compensationsobjekta Employee. Na primer:
+Da biste uklonili program kompenzacije zaposlenom, koristite `remove()` metod atributa `compensations` objekta Employee. Na primer:
 
-Prvo, pronađite zaposlenog čije je ime Jane Doe:
+- Pronađite zaposlenog čije je ime Jane Doe:
 
->>> e = Employee.objects.filter(first_name='Jane',last_name='Doe').first()
->>> e                                                                     
-<Employee: Jane Doe>
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> e = Employee.objects.filter(first_name='Jane',last_name='Doe').first()
+  <Employee: Jane Doe>
+  ```
 
-Drugo, uklonite profit sharingkompenzaciju ( c3) iz Jane Doebaze podataka i sačuvajte izmene u njoj:
+- Uklonite "profit sharing" kompenzaciju ( c3 ) iz Jane Doe baze podataka i sačuvajte izmene u njoj:
 
->>> e.compensations.remove(c3)
->>> e.save()
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> e.compensations.remove(c3)
+  >>> e.save()
+  ```
 
-Treće, nabavite sve programe kompenzacije od Jane Doe:
+- Nabavite sve programe kompenzacije od Jane Doe:
 
->>> e.compensations.all()
-<QuerySet [<Compensation: Stock>, <Compensation: Bonuses>]>
-Kodni jezik:  Pajton  ( python )
+  ```shell
+  >>> e.compensations.all()
+  <QuerySet [<Compensation: Stock>, <Compensation: Bonuses>]>
+  ```
 
-Sada Jane Doesu preostala dva programa kompenzacije.
+Sada su Jane Doe preostala dva programa kompenzacije.
 
-Preuzmite izvorni kod za relaciju „više-prema-više“ u Django-u .
-Rezime
+### Rezime relacije "više na više"
 
-    U relaciji „više-prema-više“, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
-    Relacione baze podataka koriste tabelu za spajanje da bi uspostavile odnos „više-prema-više“ između dve tabele.
-    Koristi se ManyToManyFieldza modeliranje odnosa „više-prema-više“ između modela u Django-u.
+- U relaciji `"više-prema-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
+Relacione baze podataka koriste tabelu za spajanje da bi uspostavile odnos `"više-prema-više"` između dve tabele.
+Koristite `ManyToManyField` za modeliranje relacije `"više-prema-više"` između modela u Django-u.
 
+[Sadržaj](#sadržaj)
