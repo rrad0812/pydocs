@@ -21,53 +21,59 @@ U ovom odeljku ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasno kor
 
   Kreiranje relacije "više-na-više".</br></br>
 
-- [Dodavanje dodatnih polja u relaciju "više na više"]().
+- [Dodatna polja u spojnoj tabeli relacije "više na više"](#manytomanyfield-through)
   
-  Kako dodati dodatna polja u relaciju „više na više“. </br></br>
+  Dodatna polja u spojnoj tabeli relacije „više na više“. </br></br>
 
-- [Limit/Offset]()
-  
-  Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet. </br></br>
-
-- [order_by]()
+- [order_by](#order_by)
   
   Kako koristiti metod order_by() za sortiranje rezultata koje vraća QuerySet. ( ORDER BY ) </br></br>
 
-- [Startswith, endswith i contains]()
+- [Limit/Offset](#limitoffset-ograničenje)
+  
+  Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet. </br></br>
+
+- [Operator LIKE](#operator-like)
   
   Odabir podataka na osnovu podudaranja obrazaca ( LIKE ). </br></br>
 
-- [In]()
+- [Operatori IN i NOT IN](#operatori-in-i-not-in)
 
   Provera da li se vrednost nalazi na listi vrednosti ( IN ). </br></br>
 
-- [Range]()
+- [Operator RANGE i NOT RANGE](#operator-range-i-not-range)
 
   Korišćenje Django opsega za proveru da li je vrednost unutar opsega inkluzivno ( BETWEEN ). </br></br>
 
-- [Isnull]() 
-
-  Provera da li je vrednost NULL ( IS NULL ). </br></br>
-
-- [Exist]()
+- [Operator EXISTS](#operator-exists)
 
   Vrati True ako upit sadrži bilo koji objekat ili False ako ne sadrži. </br></br>
 
-- [Aggregate]()
+- [Operator IS NULL](#operator-is-null)
+
+  Provera da li je vrednost NULL ( IS NULL ). </br></br>
+
+- [Agregati](#agregati)
   
   Kako izvršavati agregatne funkcije kao što su avg, count, max, min i sum. </br></br>
 
-- [Group by]() 
+- [GROUP BY](#group-by)
 
   Grupiši objekte po kriterijumu u grupe. </br></br>
 
-## Uvod u Django ORM
+- [Dumpdata](#dumpdata)
 
-[00]: https://docs.djangoproject.com/en/4.2/ref/databases/
+  Kako izvesti podatke u fajl sistem.</br></br>
+
+- [Loaddata](#loaddata)
+  
+  Kako obezbediti početne podatke za modele.</br></br>
+
+## Uvod u Django ORM
 
 ORM je skraćenica od `objektno-relaciono mapiranje`. ORM je tehnika koja vam omogućava da manipulišete podacima u relacionoj bazi podataka koristeći objektno orijentisano programiranje.
 
-Django ORM vam omogućava da koristite isti Python API za interakciju sa različitim relacionim bazama podataka, uključujući `PostgreSQL`, `MySQL`, `Oracle` i `SQLite`. Pogledajte kompletnu listu podržanih baza podataka [ovde][00].
+Django ORM vam omogućava da koristite isti Python API za interakciju sa različitim relacionim bazama podataka, uključujući `PostgreSQL`, `MySQL`, `Oracle` i `SQLite`. Pogledajte kompletnu listu podržanih baza podataka [ovde](django_baze_podataka.md).
 
 Django ORM koristi `obrazac aktivnog zapisa`:
 
@@ -84,7 +90,7 @@ Pogledajmo jednostavan primer da bismo videli kako Django ORM funkcioniše.
 
 Postavićemo osnovni projekat sa novim virtuelnim okruženjem.
 
-#### Kreiranje novog virtuelnog okruženja
+Prvo, kreiramo novo virtuelno okruženje i u njega instaliramo potrebne pakete:
 
 - Kreirajte novo virtuelno okruženje koristeći ugrađeni `venv` modul:
 
@@ -105,8 +111,6 @@ Postavićemo osnovni projekat sa novim virtuelnim okruženjem.
   ```
 
   Paket `django-extensions` pruža neka prilagođena proširenja za Django frejmvork. Koristićemo `django-extensions` paket za prikazivanje generisanog SQL-a pomoću Django ORM-a.
-
-#### Kreiranje novog projekta
 
 - Kreirajte novi Django projekat pod nazivom `django_orm`:
 
@@ -131,11 +135,11 @@ Postavićemo osnovni projekat sa novim virtuelnim okruženjem.
   ]
   ```
 
-#### Podešavanje PostgreSQL servera baze podataka
+Potom ćemo da uradimo neka podešavanjaPostgreSQL servera baze podataka:
 
 - Instalirajte `PostgreSQL` server baze podataka na vaš lokalni računar.
 
-- Drugo, prijavite se na `PostgreSQL` server baze podataka. Biće vam zatražena lozinka korisnika `postgres`. Imajte na umu da koristite istu lozinku koju ste uneli za `postgres` korisnika tokom instalacije.
+- Prijavite se na `PostgreSQL` server baze podataka. Biće vam zatražena lozinka korisnika `postgres`. Imajte na umu da koristite istu lozinku koju ste uneli za `postgres` korisnika tokom instalacije.
 
   ```shell
   psql -U postgres
@@ -150,7 +154,7 @@ CREATE DATABASE
 postgres=# exit
 ```
 
-#### Povezivanje sa PostgreSQL-om
+Zatim podešavamo parametre veze sa PostgreSQL serverom baze podataka
 
 - Konfigurišite vezu sa bazom podataka u `settings.py` projekta `django_orm`:
 
@@ -181,7 +185,7 @@ postgres=# exit
   python manage.py runserver
   ```
 
-  Videćete podrazumevanu početnu stranicu Django-a.
+Videćete podrazumevanu početnu stranicu Django-a.
 
 ### Definisanje modela
 
@@ -242,7 +246,7 @@ Pokrenite `shell_plus` komandu sa `--print-sql` opcijom:
 python manage.py shell_plus --print-sql
 ```
 
-#### Unošenje podataka
+### Unošenje podataka
 
 - Kreirajte novi `Employee` objekat i pozovite `save()` metodu za umetanje novog reda u tabelu:
 
@@ -270,7 +274,7 @@ python manage.py shell_plus --print-sql
 
   Sada, `hr_employee` tabela ima dva reda sa `ID` vrednostima 1 i 2.
 
-#### Izbor podataka
+### Izbor podataka
 
 Da biste izabrali sve redove iz `hr_employees` tabele, koristite `all()` metodu ovako:
 
@@ -323,7 +327,7 @@ Execution time: 0.000000s [Database: default]
 <QuerySet [<Employee: Jane Doe>]>
 ```
 
-#### Ažuriranje podataka
+### Ažuriranje podataka
 
 - Izaberite zaposlenog sa ID-om 2:
 
@@ -352,7 +356,7 @@ Execution time: 0.000000s [Database: default]
   <Employee: Jane Smith>
   ```
 
-#### Brisanje podataka
+### Brisanje podataka
 
 Da biste obrisali instancu modela, koristite `delete()` metodu. Sledeći primer briše zaposlenog sa ID-om 2:
 
@@ -389,9 +393,7 @@ Django koristi `DELETE` naredbu bez `WHERE` klauzule da bi obrisao sve redove iz
 
 [Sadržaj](#sadržaj)
 
-## Relacija jedan na jedan
-
-### Uvod u relaciju jedan na jedan
+## Relacija "jedan na jedan"
 
 Relacija `jedan-na-jedan` definiše vezu između dve tabele, gde svakom redu u jednoj tabeli odgovara samo jedan red u drugoj tabeli.
 
@@ -673,8 +675,6 @@ Django koristi funkciju `LEFT OUTER JOIN` koja vraća sve zaposlene iz `hr_emplo
 
 ## Relacija jedan-na-više
 
-### Uvod u relacije jedan-na-više
-
 U relaciji `jedan-na-više`, red u tabeli je povezan sa jednim ili više redova u drugoj tabeli. Na primer, depatment (odeljenje) može imati jednog ili više employees (zaposlenih) i svaki employee  pripada jednom departmentu.
 
 Relacija između departmenta i employee je `jedan-na-više`. Suprotno tome, relacija između employee i departmenta je `više-na-jedan`.
@@ -933,9 +933,9 @@ Execution time: 0.012124s [Database: default]
 <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
 ```
 
-U ovom primeru, Django izvršava samo jedan upit koji spaja tabele ` hr_employeeand` i `hr_department`.
+U ovom primeru, Django izvršava samo jedan upit koji spaja tabele `hr_employeeand` i `hr_department`.
 
-### Rezime
+### Rezime relacije "jedan na više"
 
 - U relaciji `jedan-na-više`, red u tabeli je povezan sa jednim ili više redova u drugoj tabeli.
 - Koristi se `ForeignKey` za uspostavljanje odnosa `jedan-na-više` između modela u Django-u.
@@ -945,8 +945,6 @@ U ovom primeru, Django izvršava samo jedan upit koji spaja tabele ` hr_employee
 [Sadržaj](#sadržaj)
 
 ## Relacija "više-na-više"
-
-### Uvod u relaciju "više-na-više"
 
 U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
 
@@ -1140,7 +1138,7 @@ Django vam omogućava da vršite upite kroz celu relaciju. Na primer, možete pr
 
 Ili sa imenom kompenzacije "Profit Sharing":
 
-```
+```shell
 >>> Employee.objects.filter(compensations__name="Profit Sharing") 
 <QuerySet [<Employee: Jane Doe>]>
 ```
@@ -1182,17 +1180,17 @@ Sada su Jane Doe preostala dva programa kompenzacije.
 
 ## ManyToManyField through
 
-U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli. Da bi se uspostavio odnos `"više-na-više"`, relacione baze podataka koriste treću tabelu koja se naziva tabela za spajanje i kreiraju dva odnosa `"jedan-na-više"` iz izvornih tabela.
+U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli. Da bi se uspostavio odnos `"više-na-više"`, relacione baze podataka koriste treću tabelu koja se naziva tabela za spajanje i kreiraju dva odnosa `"jedan-na-više"` sa izvornim tabelama.
 
 Tipično, tabela spajanja sadrži vrednosti identifikatora izvornih tabela tako da redovi u jednoj tabeli mogu biti povezani sa redovima u drugoj tabeli.
 
-Ponekad ćete možda želeti da dodate dodatna polja u tabelu za pridruživanje. Na primer, svaki zaposleni može imati više poslova tokom svoje karijere.
+Ponekad ćete možda želeti da dodate dodatna polja u tabelu spajanja. Na primer, svaki zaposleni može imati više poslova tokom svoje karijere.
 
-Da biste pratili kada zaposleni preuzima posao, možete dodati polja `begin_date` i `end_date` u tabelu za pridruživanje.
+Da biste pratili kada zaposleni preuzima posao, možete dodati polja `begin_date` i `end_date` u tabelu spajanja.
 
-Da biste to uradili u Django-u, koristite argument `ManyToManyField` `through`.
+Da biste to uradili u Django-u, koristite za `ManyToManyField` argument  `through`.
 
-Na primer, sledeće pokazuje kako povezati zaposlenog sa više poslova putem dodela:
+Na primer, sledeće pokazuje kako povezati `Employee` sa više `Job` putem `Assigment` modela:
 
 ```py
 class Employee(models.Model):
@@ -1214,8 +1212,8 @@ class Assignment(models.Model):
 
 Kako to funkcioniše?
 
-- Definišite `Job` model, dodate `employees` atribut koji koristi `ManyToManyField` i prosledite ga `Assignment` kao `through` argument.
-- Definišite `Assignment` klasu koja ima dva strana ključa, jedan je povezan sa `Employee` modelom, a drugi je povezan sa `Job` modelom. Takođe, dodajte atribute `begin_date` i `end_date` modelu `Assignment`.
+- Definišite `Job` model, dodajte `employees` atribut `Job` modelu koji koristi `ManyToManyField` i prosledite mu `Assignment`, i `through` kao argument.
+- Definišite `Assignment` klasu koja ima dva strana ključa, jedan je povezan sa `Employee` modelom, a drugi je povezan sa `Job` modelom. Takođe, dodajte dodatne atribute `begin_date` i `end_date` modelu `Assignment`.
 - Pokrenite `makemigrations` da biste napravili nove migracije:
 
   ```py
@@ -1248,9 +1246,10 @@ Kako to funkcioniše?
   ```
 
 Iza kulisa, Django kreira tabele `hr_job` i `hr_assignment` u bazi podataka:
-`hr_assignment` je tabela spajanja. Pored polja `employee_id` i `position_id`, ona ima `begin_date`i `end_date` polja.
 
-### Stvaranje novih radnih mesta
+- `hr_assignment` je tabela spajanja. Pored polja `employee_id` i `position_id`, ona ima `begin_date` i `end_date` dodatna polja.
+
+### Kreiranje novih radnih mesta
 
 - Pokrenite `shell_plus` komandu:
 
@@ -1258,7 +1257,7 @@ Iza kulisa, Django kreira tabele `hr_job` i `hr_assignment` u bazi podataka:
   python manage.py shell_plus
   ```
 
-- Kreirajte tri nove pozicije:
+- Kreirajte tri nove pozicije (posla):
 
   ```shell
   >>> j1 = Job(title='Software Engineer I')
@@ -1284,7 +1283,7 @@ Iza kulisa, Django kreira tabele `hr_job` i `hr_assignment` u bazi podataka:
   <Employee: Jane Doe>
   ```
 
-- Kreirajte instance srednjeg modela ( `Assignment` ):
+- Kreirajte instance spojnog modela ( `Assignment` ):
 
   ```shell
   >>> from datetime import date
@@ -1318,12 +1317,11 @@ INNER JOIN "hr_assignment"
 WHERE "hr_assignment"."job_id" = 1
 ```
 
-Slično tome, možete pronaći sve zaposlene koji zauzimaju tu "Software Engineer II" poziciju:
+Slično tome, možete pronaći sve zaposlene koji zauzimaju "Software Engineer II" poziciju ( p2 ):
 
 ```shell
 >>> j2.employees.all()
 <QuerySet [<Employee: John Doe>]>
-Kodni jezik:  Pajton  ( python )
 ```
 
 ### Uklanjanje instanci spojnog modela
@@ -1334,7 +1332,7 @@ Kodni jezik:  Pajton  ( python )
   >>> j2.employees.remove(e2) 
   ```
 
-- Uklonite sve zaposlene sa "Software Engineer I" posla koristeći sledeću `clear()` metodu:
+- Uklonite sve zaposlene sa "Software Engineer I" posla koristeći `clear()` metodu:
 
   ```shell
   >>> j1.employees.clear() 
@@ -1349,4 +1347,1335 @@ Posao "j1" sada ne bi trebalo da ima zaposlene:
 
 ### Rezime through
 
-- Koristite `through` argument u `ManyToManyField` da biste dodali dodatna polja u relaciju `"više-na-više"`.
+- Koristite `through` argument u `ManyToManyField` da biste napravili realciju `"više-na-više"` sa dodatnim poljima.
+
+[Sadržaj](#sadržaj)
+
+## order_by
+
+Prilikom definisanja modela, možete odrediti podrazumevani redosled `QuerySet` rezultata koje vraća model korišćenjem `ordering` opcije u klasi modela `Meta`.
+
+Koristićemo model `Employee` za demonstraciju. Model `Employee` se mapira na tabelu `hr_employee` u bazi podataka:
+
+Na primer, da biste sortirali zaposlenog po "first_name" i "last_name" po abecednom redu, možete da navedete opciju `first_name` i `last_name` u polju `ordering` u  `Meta` klasi na sledeći način:
+
+Da biste sortirali vrednosti u opadajućem redosledu, dodajete `-` znak ispred imena polja. Na primer, sledeći primer koristi `ordering` opciju za sortiranje zaposlenih po "first_name" u opadajućem redosledu i "last_name" u rastućem redosledu:
+
+```py
+class Employee(models.Model):
+    # ...
+
+    class Meta:
+        ordering = ['-first_name', 'last_name']
+```
+
+Takođe, možete koristiti izraz upita `F()` da biste učinili da se NULL vrednosti pojave prve ili poslednje u sortiranom rezultatu:
+
+```py
+from django.db.models import F
+
+class Employee(models.Model):
+    # ...
+
+    class Meta:
+        ordering = [F('first_name').asc(nulls_last=True)]
+```
+
+Da biste poništili podrazumevani redosled sortiranja, koristite `order_by()` metod `QuerySet`:
+
+```py
+order_by(*fields)
+```
+
+Sledeći primer koristi `order_by()` za sortiranje zaposlenih po imenu u rastućem redosledu:
+
+```shell
+>>> Employee.objects.all().order_by('first_name')
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ ORDER BY "hr_employee"."first_name" ASC
+ LIMIT 21
+Execution time: 0.001034s [Database: default]
+<QuerySet [<Employee: Aaron Pearson>, <Employee: Adam Crane>, <Employee: Adam Stewart>, <Employee: Adrienne Green>, <Employee: Alan Johnson>, <Employee: Alexa West>, <Employee: Alicia Wyatt>, <Employee: Amanda Benson>, <Employee: Amber Brown>, <Employee: Amy Lopez>, <Employee: Amy Lee>, <Employee: Andre Perez>, <Employee: 
+Andrea Mcintosh>, <Employee: Andrew Guerra>, <Employee: Andrew Dixon>, <Employee: Ann Chang>, <Employee: Anne Odom>, <Employee: Anthony Welch>, <Employee: Anthony Fuentes>, <Employee: Ashley Brown>, '...(remaining elements truncated)...']>
+```
+
+Kao i kod `ordering` opcije, možete koristiti `order_by()` metodu za sortiranje zaposlenog po imenu u opadajućem redosledu:
+
+```shell
+>>> Employee.objects.all().order_by('-first_name') 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ ORDER BY "hr_employee"."first_name" DESC
+ LIMIT 21
+Execution time: 0.000998s [Database: default]
+<QuerySet [<Employee: William Wise>, <Employee: Wendy Reilly>, <Employee: Victoria Forbes>, <Employee: Victoria Schneider>, <Employee: Vicki Baker>, <Employee: Veronica Blackburn>, <Employee: Vanessa Allen>, <Employee: Valerie Nguyen>, <Employee: Tyler Coleman>, <Employee: Tyler Briggs>, <Employee: Troy Ashley>, <Employee: Travis Goodwin>, <Employee: Tony Jordan>, <Employee: Todd Evans>, <Employee: Timothy Dillon>, <Employee: Timothy Mckay>, <Employee: Timothy Williams>, <Employee: Timothy Lewis>, <Employee: Tiffany Holt>, <Employee: Tiffany Jackson>, '...(remaining elements truncated)...']>
+```
+
+Takođe `order_by()` vam omogućava da sortirate rezultate po više polja. Na primer, sledeći primer koristi `order_by()` za sortiranje zaposlenih po imenu i prezimenu:
+
+```shell
+>>> Employee.objects.all().order_by('first_name','last_name')
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ ORDER BY "hr_employee"."first_name" ASC,
+          "hr_employee"."last_name" ASC
+ LIMIT 21
+Execution time: 0.000998s [Database: default]
+<QuerySet [<Employee: Aaron Pearson>, <Employee: Adam Crane>, <Employee: Adam Stewart>, <Employee: Adrienne Green>, <Employee: Alan Johnson>, <Employee: Alexa West>, <Employee: Alicia Wyatt>, <Employee: Amanda Benson>, <Employee: Amber Brown>, <Employee: Amy Lee>, <Employee: Amy Lopez>, <Employee: Andre Perez>, <Employee: 
+Andrea Mcintosh>, <Employee: Andrew Dixon>, <Employee: Andrew Guerra>, <Employee: Ann Chang>, <Employee: Anne Odom>, <Employee: Anthony Fuentes>, <Employee: Anthony Welch>, <Employee: Ashley Brown>, '...(remaining elements truncated)...']>
+```
+
+Da biste nasumično poređali, možete koristiti znak pitanja `?` ovako:
+
+```shell
+>>> Employee.objects.all().order_by('?')
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ ORDER BY RANDOM() ASC
+ LIMIT 21
+Execution time: 0.010370s [Database: default]
+<QuerySet [<Employee: Daniel Meyer>, <Employee: Todd Evans>, <Employee: Roger Robinson>, <Employee: Dwayne Williams>, <Employee: Michael Murphy>, <Employee: Daniel Friedman>, <Employee: Claudia Aguilar>, <Employee: Craig Hunter>, <Employee: Amanda Benson>, <Employee: Renee Wright>, <Employee: Wendy Reilly>, <Employee: Jamie Jackson>, <Employee: Philip Jones>, <Employee: Kelly Stewart>, <Employee: Barbara Vincent>, <Employee: Drew Gonzalez>, <Employee: Derek Owens>, <Employee: Lauren Mcdonald>, <Employee: Perry Rodriguez>, <Employee: Matthew Hernandez>, '...(remaining elements truncated)...']>
+```
+
+Operacija `order_by('?')` može biti spora i skupa, u zavisnosti od baze podataka koju koristite. Gore navedeno je SQL iz PostgreSQL-a. Druge baze podataka mogu imati drugačije implementacije.
+
+### Ređanje po srodnim modelima
+
+`order_by()` vam omogućava da sortirate po polju u povezanom modelu. Sintaksa sortiranja za povezani model je:
+
+```py
+Entity.objects.order_by(related_model__field_name)
+```
+
+Za demonstraciju ćemo koristiti modele `Employee` i `Department`. Modeli `Employee` i `Department` se mapiraju na tabele `Employee` i `hr_employee` i `hr_department`:
+
+Sledeći primer koristi `order_by()` za sortiranje zaposlenih po nazivima njihovih odeljenja:
+
+```shell
+>>> Employee.objects.all().order_by('department__name')
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ INNER JOIN "hr_department"
+    ON ("hr_employee"."department_id" = "hr_department"."id")
+ ORDER BY "hr_department"."name" ASC
+ LIMIT 21
+Execution time: 0.037173s [Database: default]
+<QuerySet [<Employee: Brandy Morris>, <Employee: Jay Carlson>, <Employee: Jessica Lewis>, <Employee: Amanda Benson>, <Employee: Jacqueline Weaver>, <Employee: Patrick Griffith>, <Employee: Adam Stewart>, <Employee: Tiffany Holt>, <Employee: Amber Brown>, <Employee: Martin Raymond>, <Employee: Kyle Pratt>, <Employee: Cheryl Thomas>, <Employee: Linda Garcia>, <Employee: Jeanette Hendrix>, <Employee: Kimberly Gallagher>, <Employee: Kelly Stewart>, <Employee: Alan Johnson>, <Employee: 
+William Wise>, <Employee: Debra Webb>, <Employee: Ryan Garcia>, '...(remaining elements truncated)...']>
+```
+
+Generisani SQL pokazuje da prilikom uređivanja po polju u povezanom modelu, Django koristi spajanje koje spaja tabelu trenutnog modela ( Employee) sa tabelom povezanog modela ( Department).
+
+### Rezime order_by
+
+- Koristite Django `order_by()` za sortiranje podataka po jednom ili više polja u rastućem ili opadajućem redosledu.
+
+[Sadržaj](#sadržaj)
+
+## Limit$Offset ograničenje
+
+U praksi, retko dobijate sve redove iz jedne ili više tabela u bazi podataka. Umesto toga, dobijate podskup redova za prikazivanje na veb stranici.
+
+Django koristi sintaksu isecanja da bi ograničio `QuerySet` na određeni broj objekata. Iza kulisa, Django izvršava SQL `SELECT` izraz sa `LIMIT` i `OFFSET` klauzulama.
+
+Pretpostavimo da želite da pristupite prvih 10 redova u tabeli, možete koristiti sledeće isecanje:
+
+```py
+Entity.objects.all()[:10]
+```
+
+Pošto tabela čuva redove u neodređenom redosledu, "prvih 10 objekata" postaje nepredvidivo.
+
+Stoga, uvek bi trebalo da sortirate rezultate pre nego što raščlanite upit. Na primer, sledeći kod dobija prvih 10 redova poređanih po field_name:
+
+```py
+Entity.objects.all().order_by(field_name)[:10]
+```
+
+Da biste dobili redove od 10 do 20, možete koristiti sledeće isecanje:
+
+```py
+Entity.objects.all().order_by(field_name)[10:20]
+```
+
+Generalno, sintaksa za ograničavanje rezultata je sledeća:
+
+```py
+Entity.objects.all()[Offset:Offset+Limit]
+```
+
+U ovoj sintaksi,
+
+- `Offset` je broj redova koje želite da preskočite,
+- `Limit` je broj redova koje želite da preuzmete.
+
+Imajte na umu da Django ne podržava negativno indeksiranje kao što je:
+
+```py
+Entity.objects.all().order_by(field_name)[-10]
+```
+
+Takođe, kada isecate `QuerySet`, Django vraća novi `QuerySet`.
+
+Da biste preuzeli prvi ili poslednji red, trebalo bi da koristite metod `first()` `last()` jer ako je `QuerySet` prazan i koristite isec:
+
+```py
+Entity.objects.all().order_by(field_name)[0]
+```
+
+...onda ćete dobiti IndexErrorizuzetak.
+
+### Primer Limit&Offset ograničenja
+
+Koristićemo `Employee` model iz `HR` aplikacije za demonstraciju. `Employee` model se mapira u `hr_employee` tabelu:
+
+Sledeći primer prikazuje prvih 10 zaposlenih poređanih po imenu:
+
+```shell
+>>> Employee.objects.all().order_by('first_name')[:10] 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ ORDER BY "hr_employee"."first_name" ASC
+ LIMIT 10
+Execution time: 0.000000s [Database: default]
+<QuerySet [<Employee: Aaron Pearson>, <Employee: Adam Crane>, <Employee: Adam Stewart>, <Employee: Adrienne Green>, <Employee: Alan Johnson>, <Employee: Alexa West>, <Employee: Alicia Wyatt>, <Employee: Amanda Benson>, <Employee: Amber Brown>, <Employee: Amy Lopez>]>
+```
+
+Sledeći primer preskače prvih 10 redova i dobija sledećih 10 redova iz `hr_employee` tabele:
+
+```shell
+>>> Employee.objects.order_by('first_name')[10:20] 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ ORDER BY "hr_employee"."first_name" ASC
+ LIMIT 10
+OFFSET 10
+Execution time: 0.001001s [Database: default]
+<QuerySet [<Employee: Amy Lee>, <Employee: Andre Perez>, <Employee: Andrea Mcintosh>, <Employee: Andrew Dixon>, <Employee: Andrew Guerra>, <Employee: Ann Chang>, 
+<Employee: Anne Odom>, <Employee: Anthony Fuentes>, <Employee: Anthony Welch>, <Employee: Ashley Brown>]>
+```
+
+### Rezime Limit&Offset ograničenje
+
+- Django koristi sintaksu isecanja nizova da bi ograničio broj objekata koje vraća `QuerySet`.
+
+[Sadržaj](#sadržaj)
+
+## Operator LIKE
+
+Za demonstraciju ćemo koristiti model `Employee` iz `HR` aplikacije. `Employee` model se mapira na `hr_employee` tabelu u bazi podataka:
+
+### startswith i istartswith
+
+Ponekad želite da proverite da li string počinje podstringom. Na primer, možda želite da pronađete zaposlene čije ime počinje sa Je.
+
+Da biste to uradili u SQL-u, koristite LIKE operator ovako:
+
+```sql
+SELECT *
+FROM hr_employee
+WHERE first_name LIKE 'Je%';
+```
+
+Ovde je `%` džoker znak koji odgovara bilo kom broju znakova. 'Je%' odgovara stringovima koji počinju sa `Je` i praćeni su sa nula ili više znakova.
+
+Da biste dobili podatke iz Django ORM-a koristeći kao LIKE operator, koristite `startswith` tako što ga dodajete nazivu polja:
+
+```py
+field_name__startswith
+```
+
+Na primer, sledeći primer koristi `filter()` metodu za pronalaženje zaposlenih čija imena počinju sa Je:
+
+```shell
+>>> Employee.objects.filter(first_name__startswith='Je') 
+SELECT "hr_employee"."id",        
+       "hr_employee"."first_name",
+       "hr_employee"."last_name", 
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."first_name"::text LIKE 'Je%'
+ LIMIT 21
+Execution time: 0.000998s [Database: default]
+<QuerySet [<Employee: Jennifer Thompson>, <Employee: Jerry Cunningham>, <Employee: Jesus Reilly>, <Employee: Jessica Lewis>, <Employee: Jeanette Hendrix>, <Employee: Jeffrey Castro>, <Employee: Jessica Jackson>, <Employee: Jennifer Bender>, <Employee: Jennifer Moyer>]>
+```
+
+Ako želite da pronađete zaposlene čija imena počinju sa "Je" bez razlikovanja velikih i malih slova, možete koristiti `istartswith`:
+
+```shell
+>>> Employee.objects.filter(first_name__istartswith='je') 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE UPPER("hr_employee"."first_name"::text) LIKE UPPER('je%')
+ LIMIT 21
+Execution time: 0.001398s [Database: default]
+<QuerySet [<Employee: Jennifer Thompson>, <Employee: Jerry Cunningham>, <Employee: Jesus Reilly>, <Employee: Jessica Lewis>, <Employee: Jeanette Hendrix>, <Employee: Jeffrey Castro>, <Employee: Jessica Jackson>, <Employee: Jennifer Bender>, <Employee: Jennifer Moyer>]>
+```
+
+U ovom slučaju, `__istartswith` koristi verziju vrednosti napisanu velikim slovima za podudaranje.
+
+### endswith i iendswith
+
+Operatori `endswith` i `iendswith` vraćaju `True` ako se vrednost završava podstringomm. `endswith` je ekvivalentan sledećem LIKE operatoru:
+
+```sql
+LIKE '%substring'
+```
+
+Na primer, sledeći kod koristi `endswith` da pronađe zaposlene čija se imena završavaju sa "er":
+
+```shell
+>>> Employee.objects.filter(first_name__endswith='er')
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."first_name"::text LIKE '%er'
+ LIMIT 21
+Execution time: 0.000999s [Database: default]
+<QuerySet [<Employee: Jennifer Thompson>, <Employee: Tyler Briggs>, <Employee: Spencer Riggs>, <Employee: Roger Robinson>, <Employee: Hunter Boyd>, <Employee: Amber Brown>, <Employee: Tyler Coleman>, <Employee: Jennifer Bender>, <Employee: Jennifer Moyer>]>
+```
+
+Upit je vratio zaposlene sa imenima Jennifer, Tyler, Spencer, Roger, itd.
+
+`iendswith` je verzija od koja ne razlikuje velika i mala slova kao `endswith`. Na primer:
+
+```shell
+>>> Employee.objects.filter(first_name__iendswith='ER') 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE UPPER("hr_employee"."first_name"::text) LIKE UPPER('%ER')
+ LIMIT 21
+Execution time: 0.000999s [Database: default]
+<QuerySet [<Employee: Jennifer Thompson>, <Employee: Tyler Briggs>, <Employee: Spencer Riggs>, <Employee: Roger Robinson>, <Employee: Hunter Boyd>, <Employee: Amber Brown>, <Employee: Tyler Coleman>, <Employee: Jennifer Bender>, <Employee: Jennifer Moyer>]>
+```
+
+### contains i icontains
+
+`contains` vam omogućava da proverite da li string sadrži podstring. Ekvivalentno je sledećem LIKE operatoru:
+
+```sql
+LIKE '%substring%'
+```
+
+Na primer, sledeći kod pronalazi zaposlene čije ime sadrži podstring ff:
+
+```shell
+>>> Employee.objects.filter(first_name__contains='ff')  
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."first_name"::text LIKE '%ff%'
+ LIMIT 21
+Execution time: 0.001293s [Database: default]
+<QuerySet [<Employee: Tiffany Jackson>, <Employee: Tiffany Holt>, <Employee: Jeffrey Castro>]>
+```
+
+Upit vraća zaposlene sa imenima Tiffani i DŽeffri.
+
+`icontains` je verzija `contains` koja ne razlikuje velika i mala slova. Dakle, možete koristiti `icontains` da proverite da li string sadrži podstring bez razlikovanja velikih i malih slova:
+
+```shell
+>>> Employee.objects.filter(first_name__icontains='ff') 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE UPPER("hr_employee"."first_name"::text) LIKE UPPER('%ff%')
+ LIMIT 21
+Execution time: 0.002012s [Database: default]
+<QuerySet [<Employee: Tiffany Jackson>, <Employee: Tiffany Holt>, <Employee: Jeffrey Castro>]>
+```
+
+### Rezime LIKE operatora
+
+Django ORM vs SQL LIKE operatori:
+
+|Django ORM                           |SQL Like
+|-------------------------------------|--------------------------------------------
+|field_name__startswith = 'substring' | field_name LIKE '%substring'
+|field_name__istartswith = 'substring'| UPPER(field_name) LIKE UPPER('%substring')
+|field_name__endswith = 'substring'   | field_name LIKE 'substring%'
+|field_name__iendswith = 'substring'  | UPPER(field_name) LIKE UPPER('substring%')
+|field_name__contains = 'substring'   | field_name LIKE '%substring%'
+|field_name__icontains = 'substring'  | UPPER(field_name) LIKE UPPER('%substring%')
+
+[Sadržaj](#sadržaj)
+
+## Operatori IN i NOT IN
+
+### Operator IN
+
+Koristićemo `Employee` model u `HR` aplikaciji za demonstraciju. `Employee` model se mapira na `hr_employee` tabelu u bazi podataka:
+
+`SQL` `IN` operator vraća vrednost "True" ako se vrednost nalazi u skupu vrednosti:
+
+```sql
+field_name IN (v1, v2, ...)
+```
+
+Na primer, možete koristiti `IN` operator da biste upitali za redove iz `hr_employee` tabele čiji `department_id` je na listi, ovako:
+
+```sql
+SELECT *
+FROM hr_employee
+WHERE department_id IN (1,2,3)
+```
+
+U Django-u koristite in operator ovako:
+
+```shell
+>>> Employee.objects.filter(department_id__in=(1,2,3)) 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."department_id" IN (1, 2, 3)
+```
+
+Obično se koristi podupit sa `in` operatorom, a ne lista doslovnih vrednosti. Na primer, sve zaposlene u odeljenjima `Sales` i `Marketing` pronalazite na sledeći način:
+
+```shell
+>>> departments = Department.objects.filter(Q(name='Sales') | Q(name='Marketing')) 
+>>> Employee.objects.filter(department__in=departments)
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."department_id" IN (
+        SELECT U0."id"
+          FROM "hr_department" U0
+         WHERE (U0."name" = 'Sales' OR U0."name" = 'Marketing')
+       )
+```
+
+Kako to funkcioniše?
+
+- Nabavite odeljenja sa nazivima Sales ili Marketing:
+  Ovde koristimo <a name="Q-objects"></a> [Q() objekte](F_izrazi_i_Q_objekti.md) Qjango ORM-a.
+
+  ```py
+  departments = Department.objects.filter(Q(name='Sales') | Q(name='Marketing'))
+  ```
+
+- Prosledite department `QuerySet` operatoru in:
+
+  ```py
+  Employee.objects.filter(department__in=departments)
+  ```
+
+  Iza kulisa, Django izvršava upit sa `IN` operatorom koji upoređuje ID odeljenja sa listom ID-ova odeljenja sa liste:
+
+  ```sql
+  SELECT "hr_employee"."id",
+        "hr_employee"."first_name",
+        "hr_employee"."last_name",
+        "hr_employee"."contact_id",
+        "hr_employee"."department_id"
+    FROM "hr_employee"
+  WHERE "hr_employee"."department_id" IN (
+          SELECT U0."id"
+            FROM "hr_department" U0
+          WHERE (U0."name" = 'Sales' OR U0."name" = 'Marketing')
+        )
+  ```
+
+### Operator NOT IN
+
+Operator `NOT` negira `IN` operator. `NOT INO` perator vraća vrednost `True` ako vrednost nije u listi vrednosti:
+
+```sql
+field_name NOT IN (v1, v2, ...)
+```
+
+Da biste izvršili `NOT IN` u Django ORM-u možete koristiti `Q` objekat i operator `~`:
+
+```py
+~Q(field_name__in=(v1,v2,..))
+```
+
+Na primer, sledeći kod pronalazi zaposlene čiji ID odeljenja nije 1, 2 ili 3:
+
+```shell
+>>> Employee.objects.filter(~Q(department_id__in=(1,2,3))) 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE NOT ("hr_employee"."department_id" IN (1, 2, 3))
+```
+
+Alternativno, možete koristiti `exclude()` metod umesto `filter()` metode:
+
+```shell
+>>> Employee.objects.exclude(department_id__in=(1,2,3))
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE NOT ("hr_employee"."department_id" IN (1, 2, 3))
+```
+
+### Rezime
+
+- Koristite Django `in` da proverite da li se vrednost nalazi u listi vrednosti.
+
+| Django ORM                                    | SQL
+|-----------------------------------------------|-------------------
+| Entity.objects.filter(id__in = (v1,v2,v3)     | id IN (v1,v2,v3)
+| Entity.objects.filter(~Q(id__in = (v1,v2,v3)) | NOT (id IN (v1,v2,v3))
+| Entity.objects.exclude(id__in = (v1,v2,v3)    | NOT (id IN (v1,v2,v3))
+
+[Sadržaj](#sadržaj)
+
+## Operator RANGE i NOT RANGE
+
+### Operator RANGE
+
+U SQL-u, koristite BETWEEN operator da biste proverili da li se vrednost nalazi između dve vrednosti:
+
+```sql
+field_name BETWEEN low_value AND high_value
+```
+
+Operator BETWEEN vraća vrednost `True` ako je vrednost  `field_name` između `low_value` i `high_value` . U suprotnom, vraća vrednost `False`.
+
+#### Korišćenje RANGE sa brojevima
+
+Djangov ekvivalent operatora `BETWEEN` je `__range`:
+
+```py
+Entity.objects.filter(field_name__range=(low_value,high_value))
+```
+
+Na primer, možete pronaći zaposlene čiji je ID između 1 i 5 koristeći opseg kao što je ovaj:
+
+```shell
+>>> Employee.objects.filter(id__range=(1,5))
+```
+
+Iza kulisa, Django izvršava sledeći upit:
+
+```sql
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."id" BETWEEN 1 AND 5
+```
+
+#### Korišćenje Django opsega sa datumima
+
+Pored brojeva i stringova, opseg funkcioniše i sa datumima. Na primer, sledeći kod vraća sve dodele poslova počev od "January 1, 2020", do "March 31, 2020":
+
+```shell
+>>> Assignment.objects.filter(begin_date__range=(start_date,end_date))      
+SELECT "hr_assignment"."id",
+       "hr_assignment"."employee_id",
+       "hr_assignment"."job_id",
+       "hr_assignment"."begin_date",
+       "hr_assignment"."end_date"
+  FROM "hr_assignment"
+ WHERE "hr_assignment"."begin_date" BETWEEN '2020-01-01'::date AND '2020-03-31'::date
+```
+
+### Operator NOT RANGE
+
+U SQL operator NOT negira operator BETWEEN:
+
+```sql
+field_name NOT BETWEEN (low_value, high_value)
+```
+
+Drugim rečima, NOT BETWEEN vraća vrednost `True` ako vrednost nije u opsegu vrednosti.
+
+U Django-u, možete koristiti `Q` objekat sa opsegom da biste proverili da li vrednost nije u opsegu:
+
+```py
+Entity.objects.filter(~Q(field_name__range=(low_value,high_value)))
+```
+
+Na primer, možete pronaći zaposlene čiji ID nije u opsegu (1,5):
+
+```shell
+>>> Employee.objects.filter(~Q(id__range=(1,5)))
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE NOT ("hr_employee"."id" BETWEEN 1 AND 5)
+```
+
+### Rezime operatora range i not range
+
+- Koristite Django `range` da proverite da li je vrednost u opsegu vrednosti.
+
+[Sadržaj](#sadržaj)
+
+## Operator EXISTS
+
+Ponekad želite da proverite da li upit sadrži bilo kakve redove. Da biste to uradili, koristite `exists()` metod objekta `QuerySet`.
+
+Metoda `exists()` vraća vrednost `True` ako `QuerySet` sadrži bilo kakve redove ili `False` ako je prazan.
+
+Iza kulisa, `exists()` će pokušat da izvrši upit na najbrži mogući način.Međutim, upit će biti gotovo identičan običnom `QuerySet` upitu.
+
+Pretpostavimo da imate `QuerySet` i želite da proverite da li ima neke objekte. Umesto da uradite ovo:
+
+```py
+if query_set:
+   print('the queryset has at least one object')
+```
+
+...trebalo bi da koristite `exists()` jer je malo brži:
+
+```py
+if query_set.exists():
+   print('the queryset has at least one object')
+```
+
+`Django 4.1` je dodao `aexists()`, što je asinhrona verzija `exists()`.
+
+### Primer metode exists()
+
+Koristićemo `Employee` model za demonstraciju. `Employee` model se mapira na `hr_employee` tabelu u bazi podataka:
+
+- Pokrenite `shell_plus` komandu:
+
+```py
+python manage.py shell_plus
+```
+
+- Pronađite zaposlene čija imena počinju slovom "J":
+
+```shell
+>>> Employee.objects.filter(first_name__startswith='J').exists()
+SELECT 1 AS "a"
+  FROM "hr_employee"
+ WHERE "hr_employee"."first_name"::text LIKE 'J%'
+ LIMIT 1
+Execution time: 0.000000s [Database: default]
+True
+```
+
+> Imajte na umu da je Django generisao SQL na osnovu PostgreSQL-a. Ako koristite druge baze podataka, možete videti malo drugačiji SQL izraz.
+
+U ovom primeru, `exists()` metod vraća vrednost `True`. On bira samo prvi red da bi utvrdio da li `QuerySet` sadrži bilo koji red.
+
+Ako ne koristite `exists()` metod, u `QuerySet` biće svi redovi iz `hr_employee` tabele koji zadovoljavaju dati uslov:
+
+```shell
+>>> qs = Employee.objects.filter(first_name__startswith='J') 
+>>> print(qs.query)
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+FROM "hr_employee"
+WHERE "hr_employee"."first_name"::text LIKE J%
+ORDER BY "hr_employee"."first_name" ASC,
+         "hr_employee"."last_name" ASC
+```
+
+### Rezime operatora exists
+
+- Koristite Django `exists()` metodu da proverite da li `QuerySet` sadrži bilo kakve redove.
+
+[Sadržaj](#sadržaj)
+
+## Operator IS NULL
+
+Za demonstraciju ćemo koristiti modele `Employee` i `Contact` iz `HR` aplikacije. Modeli `Emloyee` i `Contact` se mapiraju na tabele `hr_employee` i `hr_contact` baze podataka.
+
+U relacionim bazama podataka, `NULL` označava nedostajuće informacije. Na primer, ako ne znate kontakt zaposlenog, možete koristiti `NULL` za kontakt zaposlenog u trenutku snimanja podataka.
+
+`NULL` je posebna vrednost jer ne možete koristiti operator = da biste uporedili vrednost sa njom. Umesto toga, koristite `IS NULL` operator.
+
+Na primer, da biste proverili da li je vrednost u contact_id `NULL` ili ne, koristite `IS NULL` operator na sledeći način:
+
+```sql
+contact_id IS NULL
+```
+
+`IS NULL` operator vraća vrednost `True`“ ako je vrednost `contact_id` nevažeća, tj `NULL` ili `False` u suprotnom.
+
+Da biste negirali `IS NULL` operator, možete koristiti `NOT` operator ovako:
+
+```sql
+contact_id IS NOT NULL
+```
+
+Django koristi `__isnull` da proveri da li je vrednost `NULL` ili ne:
+
+```py
+Entity.objects.filter(field_name__isnull=True)
+```
+
+Metoda `filter()` vraća sve instance sa `field_name` jednako `NULL`. Da biste negirali `is isnull`, uporedite ga sa `False`:
+
+```py
+Entity.objects.filter(field_name__isnull=False)
+```
+
+U ovom slučaju, `filter()` vraća sve instance entiteta čiji `field_name` nije `NULL`.
+
+### isnull
+
+Sledeći primer koristi `isnull` da bi se dobili zaposleni koji nemaju kontakte:
+
+```shell
+>>> Employee.objects.filter(contact_id__isnull=True)
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."contact_id" IS NULL
+```
+
+Generisani upit koristi `IS NULL` operator za upoređivanje `contact_id` sa `NULL`.
+
+Sledeći primer koristi `isnull` da bi dobio sve zaposlene koji imaju kontakte:
+
+```shell
+>>> Employee.objects.filter(contact_id__isnull=False) 
+SELECT "hr_employee"."id",
+       "hr_employee"."first_name",
+       "hr_employee"."last_name",
+       "hr_employee"."contact_id",
+       "hr_employee"."department_id"
+  FROM "hr_employee"
+ WHERE "hr_employee"."contact_id" IS NOT NULL
+```
+
+U ovom slučaju, generisani upit koristi `IS NOT NULL` da bi uporedio vrednosti u `contact_id` koloni sa `NULL`.
+
+### Rezime operator isnull
+
+- Koristite `isnull` da proverite da li je vrednost `NULL` ili nije.
+
+[Sadržaj](#sadržaj)
+
+## Agregati
+
+U ovom tutorijalu ćete naučiti kako da koristite Django da biste dobili agregatne vrednosti iz baze podataka, uključujući `count`, `min`, `max`, `sum` i `avg`.
+
+### Priprema podataka
+
+Za demonstraciju ćemo koristiti modele `Employee` i `Department` iz `HR` aplikacije. Modeli `Employee` i `Department` se mapiraju na tabele `hr_employee` i `hr_department`.
+
+- Dodajmo `salary` polje modelu `Employee`:
+
+```py
+class Employee(models.Model):
+
+    salary = models.DecimalField(max_digits=15, decimal_places=2)
+    # ...
+```
+
+- Izvršite migracije pomoću `makemigrations` komande:
+
+```shell
+python manage.py makemigrations
+```
+
+Izlaz:
+
+```shell
+Migrations for 'hr':
+  hr\migrations\0005_employee_salary.py
+    - Add field salary to employee
+```
+
+Proširite izmene u bazu podataka pokretanjem `migrate` komande:
+
+```shell
+python manage.py migrate
+```
+
+Izlaz:
+
+```shell
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, hr, sessions
+Running migrations:
+  Applying hr.0005_employee_salary... OK
+```
+
+Konačno, popunite vrednosti u `salary` kolonu podacima iz `data.json` jedinice:
+
+```shell
+python manage.py loaddata data.json
+```
+
+Preuzmite kompletan izvorni kod projekta ovde.
+
+### Uvod u agregate
+
+Agregatna funkcija prihvata listu vrednosti i vraća jednu vrednost. Uobičajeno korišćene agregatne funkcije su `count`, `max`, `min`, `avg` i `sum`.
+
+#### Count
+
+Objekat `QuerySet` vam pruža `count()` metodu koja vraća broj objekata koje sadrži. Na primer, možete koristiti `count()` metodu da biste dobili broj zaposlenih:
+
+```shell
+>>> Employee.objects.count()
+SELECT COUNT(*) AS "__count"
+  FROM "hr_employee"        
+Execution time: 0.002160s [Database: default]
+220
+```
+
+Metoda `count()` koristi `SQL` `COUNT(*)` funkciju da vrati broj redova u `hr_employee` tabeli.
+
+Da biste dobili broj zaposlenih čija imena počinju slovom "J", možete koristiti obe `filter()` metode `count()` objekta, `QuerySet` kao što je ovaj:
+
+```shell
+>>> Employee.objects.filter(first_name__startswith='J').count()
+SELECT COUNT(*) AS "__count"
+  FROM "hr_employee"
+ WHERE "hr_employee"."first_name"::text LIKE 'J%'
+Execution time: 0.000000s [Database: default]
+29
+```
+
+U ovom slučaju, `filter()` metoda formira `WHERE` klauzulu dok `count()` metoda formira `COUNT()` funkciju.
+
+#### Max
+
+`Max()` vraća maksimalnu vrednost u skupu vrednosti. Prihvata kolonu u kojoj želite da dobijete najveću vrednost.
+
+Na primer, sledeći izraz koristi `Max()` da bi vratio najvišu platu:
+
+```shell
+>>> Employee.objects.aggregate(Max('salary'))
+SELECT MAX("hr_employee"."salary") AS "salary__max"
+  FROM "hr_employee"
+Execution time: 0.002001s [Database: default]
+{'salary__max': Decimal('248312.00')}
+```
+
+Izvršava Max()SQL MAX()na koloni sa platama u hr_employeetabeli i vraća najvišu platu.
+
+#### Min
+
+Vraća `Min()` minimalnu vrednost u skupu vrednosti. Kao i `Max()`, prihvata kolonu u kojoj želite da dobijete najnižu vrednost.
+
+Sledeći primer koristi Min()da bi vratio najnižu platu zaposlenih:
+
+```shell
+>>> Employee.objects.aggregate(Min('salary')) 
+SELECT MIN("hr_employee"."salary") AS "salary__min"
+  FROM "hr_employee"
+Execution time: 0.002015s [Database: default]
+{'salary__min': Decimal('40543.00')}
+```
+
+Funkcija `Min()` izvršava `SQL` `MIN()` funkciju koja vraća minimalnu vrednost u koloni plata.
+
+#### AVG
+
+Vraća `Avg()` prosečnu vrednost u skupu vrednosti. Prihvata naziv kolone i vraća prosečnu vrednost svih vrednosti u toj koloni:
+
+```shell
+>>> Employee.objects.aggregate(Avg('salary')) 
+SELECT AVG("hr_employee"."salary") AS "salary__avg"
+  FROM "hr_employee"
+Execution time: 0.005468s [Database: default]
+{'salary__avg': Decimal('137100.490909090909')}
+```
+
+Iza kulisa, `Avg()` izvršava `SQL` `AVG()` funkciju na koloni sa platama `hr_employee` i vraća prosečnu platu.
+
+#### Sum
+
+`Sum()` vraća zbir vrednosti. Na primer, možete koristiti `Sum()` da biste izračunali ukupnu platu kompanije:
+
+```shell
+>>> Employee.objects.aggregate(Sum('salary')) 
+SELECT SUM("hr_employee"."salary") AS "salary__sum"
+  FROM "hr_employee"
+Execution time: 0.000140s [Database: default]
+{'salary__sum': Decimal('30162108.00')}
+```
+
+`Sum()` izvršava `SQL` `SUM()` funkciju i vraća ukupnu vrednost svih vrednosti u koloni plata u `hr_employee` tabeli.
+
+### Rezime agregati
+
+- Koristite `count()` metodu da biste dobili broj objekata u `QuerySet`.
+- Koristite `Max()` da biste dobili maksimalnu vrednost u skupu vrednosti.
+- Koristite `Min()` da biste dobili minimalnu vrednost u skupu vrednosti.
+- Koristite `Avg()` da biste dobili prosečnu vrednost u skupu vrednosti.
+- Koristite `Sum()` da biste dobili ukupnu vrednost seta.
+
+[Sadržaj](#sadržaj)
+
+## GROUP BY
+
+`SQL` `GROUP BY` klauzula grupiše redove koje vraća upit. Obično se koriste agregatne funkcije kao što su `count`, `min`, `max`, `avg` i `sum` sa `GROUP BY` klauzulom da bi se vratila agregirana vrednost za svaku grupu.
+
+Evo osnovne upotrebe klauzule `GROUP BY` u `SELECT` izjavi:
+
+```sql
+SELECT column_1, AGGREGATE(column_2)
+FROM table_name
+GROUP BY column1;
+```
+
+U Djangu, možete koristiti `annotate()` metodu sa `values()` da biste primenili agregaciju na grupe poput ove:
+
+```py
+(Entity.objects
+  .values('column_2')
+  .annotate(value=AGGREGATE('column_1'))
+)
+```
+
+U ovoj sintaksi;
+
+- `values('column_2')` – prosledite metodi `values()` kolonu koju želite da grupišete.
+- `annotate(value=AGGREGATE('column_1'))` – navedite šta treba agregirati u `annotate()` metodi.
+
+Obratite pažnju da je redosled pozivanja `values()` i `annotates()` važan. Ako ne pozovete `values()` metodu prvo i `annotate()` zatim, izraz neće proizvesti agregatne rezultate.
+
+### GROUP BY primeri
+
+Za demonstraciju ćemo koristiti modele `Employee` i `Department` iz aplikacije `HR`. Modeli `Emloyee` i `Department` se mapiraju na tabele `hr_employee` i `hr_department` u bazi podataka:
+
+#### Primer GROUP BY sa Count
+
+Sledeći primer koristi metodu `values()` `annotate()` da bi se dobio broj zaposlenih po odeljenju:
+
+```shell
+>>> (Employee.objects
+...     .values('department')
+...     .annotate(head_count=Count('department'))
+...     .order_by('department')
+...  )
+```
+
+```sql
+SELECT "hr_employee"."department_id",
+       COUNT("hr_employee"."department_id") AS "head_count"
+  FROM "hr_employee"
+ GROUP BY "hr_employee"."department_id"
+ ORDER BY "hr_employee"."department_id" ASC
+ LIMIT 21
+Execution time: 0.001492s [Database: default]
+<QuerySet [{'department': 1, 'head_count': 30}, {'department': 2, 'head_count': 40}, {'department': 3, 'head_count': 28}, {'department': 4, 'head_count': 29}, {'department': 5, 'head_count': 29}, {'department': 6, 'head_count': 30}, {'department': 7, 'head_count': 34}]>
+```
+
+Kako to funkcioniše?
+
+- Grupišete zaposlene po odeljenjima koristeći `values()` metodu:
+
+```py
+values('department')
+```
+
+- Primenite `Count()` na svaku grupu:
+
+```py
+annotate(head_count=Count('department'))
+```
+
+- Sortirajte objekte `QuerySet`-a po `department` koloni:
+
+```py
+order_by('department')
+```
+
+Iza kulisa, Django izvršava `SELECT` sa `GROUP BY` klauzulom:
+
+```sql
+SELECT "hr_employee"."department_id",
+       COUNT("hr_employee"."department_id") AS "head_count"
+  FROM "hr_employee"
+ GROUP BY "hr_employee"."department_id"
+ ORDER BY "hr_employee"."department_id" ASC
+ LIMIT 21
+```
+
+#### Primer GROUP BY sa Sum
+
+Slično tome, možete koristiti `Sum()` agregat za izračunavanje ukupne plate zaposlenih u svakom odeljenju:
+
+```py
+>>> (Employee.objects
+...     .values('department')
+...     .annotate(total_salary=Sum('salary'))
+...     .order_by('department')
+...  )
+```
+
+```sql
+SELECT "hr_employee"."department_id",
+       SUM("hr_employee"."salary") AS "total_salary"
+  FROM "hr_employee"
+ GROUP BY "hr_employee"."department_id"
+ ORDER BY "hr_employee"."department_id" ASC
+ LIMIT 21
+Execution time: 0.000927s [Database: default]
+<QuerySet [{'department': 1, 'total_salary': Decimal('3615341.00')}, {'department': 2, 'total_salary': Decimal('5141611.00')}, {'department': 3, 'total_salary': Decimal('3728988.00')}, {'department': 4, 'total_salary': Decimal('3955669.00')}, {'department': 5, 'total_salary': Decimal('4385784.00')}, {'department': 6, 'total_salary': Decimal('4735927.00')}, {'department': 7, 'total_salary': Decimal('4598788.00')}]>
+```
+
+#### Primer GROUP BYsa min, max i avg
+
+Sledeći primer primenjuje više agregatnih funkcija na grupe da bi se dobila najniža, prosečna i najviša plata zaposlenih u svakom odeljenju:
+
+```py
+>>> (Employee.objects
+...     .values('department')
+...     .annotate(
+...         min_salary=Min('salary'),
+...         max_salary=Max('salary'),
+...         avg_salary=Avg('salary')
+...     )
+...     .order_by('department')
+...  )
+```
+
+```sql
+SELECT "hr_employee"."department_id",
+       MIN("hr_employee"."salary") AS "min_salary",
+       MAX("hr_employee"."salary") AS "max_salary",
+       AVG("hr_employee"."salary") AS "avg_salary"
+  FROM "hr_employee"
+ GROUP BY "hr_employee"."department_id"
+ ORDER BY "hr_employee"."department_id" ASC
+ LIMIT 21
+Execution time: 0.001670s [Database: default]
+<QuerySet [{'department': 1, 'min_salary': Decimal('45427.00'), 'max_salary': Decimal('149830.00'), 'avg_salary': Decimal('120511.366666666667')}, {'department': 
+2, 'min_salary': Decimal('46637.00'), 'max_salary': Decimal('243462.00'), 'avg_salary': Decimal('128540.275000000000')}, {'department': 3, 'min_salary': Decimal('40762.00'), 'max_salary': Decimal('248265.00'), 'avg_salary': Decimal('133178.142857142857')}, {'department': 4, 'min_salary': Decimal('43000.00'), 'max_salary': 
+Decimal('238016.00'), 'avg_salary': Decimal('136402.379310344828')}, {'department': 5, 'min_salary': Decimal('42080.00'), 'max_salary': Decimal('246403.00'), 'avg_salary': Decimal('151233.931034482759')}, {'department': 6, 'min_salary': Decimal('58356.00'), 'max_salary': Decimal('248312.00'), 'avg_salary': Decimal('157864.233333333333')}, {'department': 7, 'min_salary': Decimal('40543.00'), 'max_salary': Decimal('238892.00'), 'avg_salary': Decimal('135258.470588235294')}]>
+```
+
+#### Primer GROUP BY pomoću JOLIN-a
+
+Sledeći primer koristi metode values()i annotate()da bi se dobio broj zaposlenih po odeljenju:
+
+```py
+>>> (Department.objects
+...     .values('name')
+...     .annotate(
+...         head_count=Count('employee')
+...     )
+...  )
+```
+
+```sql
+SELECT "hr_department"."name",
+       COUNT("hr_employee"."id") AS "head_count"
+  FROM "hr_department"
+  LEFT OUTER JOIN "hr_employee"
+    ON ("hr_department"."id" = "hr_employee"."department_id")
+ GROUP BY "hr_department"."name"
+ LIMIT 21
+Execution time: 0.001953s [Database: default]
+<QuerySet [{'name': 'Marketing', 'head_count': 28}, {'name': 'Finance', 'head_count': 29}, {'name': 'SCM', 'head_count': 29}, {'name': 'GA', 'head_count': 30}, {'name': 'Sales', 'head_count': 40}, {'name': 'IT', 'head_count': 30}, {'name': 'HR', 'head_count': 34}]>
+```
+
+Kako to funkcioniše?
+
+- `values('name')` – grupiše odeljenje po `name`.
+- `annotate(headcount=Count('employee'))` – broji zaposlene u svakom odeljenju.
+
+Iza kulisa, Django koristi `LEFT JOIN` da spoji `hr_department` tabelu sa `hr_employee` tablom i primeni `COUNT()` funkciju na svaku grupu.
+
+#### GROUP BY sasa HAVING
+
+Da biste primenili uslov na grupe, koristite `filter()` metodu. Na primer, sledeći primer koristi `filter()` metodu da bi dobio odeljenje sa brojem zaposlenih većim od 30:
+
+```shell
+>>> (Department.objects
+...     .values('name')
+...     .annotate(
+...         head_count=Count('employee')
+...     )
+...     .filter(head_count__gt=30)
+...  )
+SELECT "hr_department"."name",
+       COUNT("hr_employee"."id") AS "head_count"
+  FROM "hr_department"
+  LEFT OUTER JOIN "hr_employee"
+    ON ("hr_department"."id" = "hr_employee"."department_id")
+ GROUP BY "hr_department"."name"
+HAVING COUNT("hr_employee"."id") > 30
+ LIMIT 21
+Execution time: 0.002893s [Database: default]
+<QuerySet [{'name': 'Sales', 'head_count': 40}, {'name': 'HR', 'head_count': 34}]>
+```
+
+Iza kulisa, Django koristi `HAVING` klauzulu za filtriranje grupe na osnovu uslova koji prosleđujemo `filter()` metodi:
+
+```sql
+SELECT "hr_department"."name",
+       COUNT("hr_employee"."id") AS "head_count"
+  FROM "hr_department"
+  LEFT OUTER JOIN "hr_employee"
+    ON ("hr_department"."id" = "hr_employee"."department_id")
+ GROUP BY "hr_department"."name"
+HAVING COUNT("hr_employee"."id") > 30
+```
+
+### Rezime group by
+
+- Koristite metodu `values()` i `annotate()` za grupisanje redova u grupe.
+- Koristite `filter()` za dodavanje filterskog uslova grupama.
+
+[Sadržaj](#sadržaj)
+
+## Dumpdata
+
+Ponekad želite da premestite neke uobičajene podatke iz test baze podataka u produkcijsku bazu podataka.
+
+Da biste to uradili, koristite `dumpdata` komandu za izvoz podataka iz test baze podataka u datoteku i uvoz u proizvodnu bazu podataka pomoću `loaddata` komande.
+
+Komanda `dumpdata` ima mnogo opcija koje vam omogućavaju da:
+
+- Izvezete sve instance modela svih aplikacija (celove baze podataka) u datoteku.
+- Izvezete sve instance modela jedne aplikacije u datoteku.
+- Izvezete neke instance modela (neke tabele u bazi podataka) u datoteku.
+
+Format izlazne datoteke može biti `xml`, `json`, `jsonl`, ili `yaml`. Sledeći kod vrši damp cele baze podataka u `data.json` datoteku:
+
+```shell
+python manage.py dumpdata > data.json
+```
+
+Ako otvorite `data.json` datoteku, videćete mnoštvo podataka. Na primer, sledeći primer prikazuje instancu Employee:
+
+```json
+...
+{
+    "model": "hr.employee",
+    "pk": 5,
+    "fields": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "contact": null,
+      "department": 1,
+      "compensations": [1, 2]
+    }
+  },
+...
+```
+
+Uzorak modela sadrži sledeće informacije:
+
+- Naziv modela ( `hr.employee` ).
+- Vrednost primarnog ključa ( `pk` ).
+- Polja ( `first_name`, `last_name`, `contact`, `department`, i `compensations`) modela `Employee`.
+
+Ako želite da izvezete celu bazu podataka u drugi format kao što je `XML`, potrebno je da navedete opciju formata:
+
+```shell
+python manage.py dumpdata > filename --format file_format
+```
+
+`file_format` može biti `json`, `jsonl`, `xml`, i `yaml`.
+
+Na primer, sledeća komanda eksportuje celu bazu podataka u `XML` datoteku:
+
+```shell
+python manage.py dumpdata > data.xml --format xml
+```
+
+### Izvoz podataka iz određene aplikacije
+
+Da biste izvezli podatke određene aplikacije, navedite naziv aplikacije:
+
+```shell
+python manage.py dumpdata app_name > filename.json
+```
+
+Na primer, sledeća komanda izvozi instance modela aplikacije `hr`:
+
+```shell
+python manage.py dumpdata hr > hr.json
+```
+
+### Izvoz podataka iz određenog modela
+
+Da biste ispisali podatke određene tabele, navedite naziv aplikacije i naziv modela na sledeći način:
+
+```shell
+python manage.py app_name.model_name > filename
+```
+
+Na primer, sledeća komanda ispisuje sve instance tabele Employee u HRaplikaciji:
+
+```shell
+python manage.py dumpdata hr.employee > hr_employee.json
+```
+
+### Izvoz podataka isključivanjem jednog ili više
+
+Ponekad želite da izvezete podatke iz svih modela osim jednog ili više modela. U tom slučaju možete koristiti `--exclude` opciju:
+
+```shell
+python manage.py --exclude app_name.model_name > filename
+```
+
+Imajte na umu da komanda može da sadrži više `--exclude` opcija tako da možete da isključite više modela.
+
+Na primer, sledeći izvoz podataka iz cele baze podataka osim modela `Contact`:
+
+```shell
+python manage.py --exclude hr.contact > data.json
+```
+
+Sledeća komanda izvozi podatke iz cele baze podataka osim modela `Contact` i `Department`:
+
+```shell
+python manage.py --exclude hr.contact --exclude department > data.json
+```
+
+### Rezime dumpdata
+
+- Koristite `dumpdata` komandu za izvoz podataka jednog ili više modela.
+
+[Sadržaj](#sadržaj)
+
+## Loaddata
+
+Komanda `loaddata` vam omogućava da učitate podatke iz datoteke u bazu podataka. Obično se `dumpdata` komanda koristi za izvoz podataka iz baze podataka a komanda `loaddata` za uvoz podataka iz datoteke u istu ili drugu bazu podataka.
+
+```shell
+python manage.py loaddata fixture_name
+```
+
+Fiksčer ( `Fixture` ) je kolekcija datoteka sa podacima koje će se koristiti za uvoz u bazu podataka.
+
+Po konvenciji, Django će tražiti uređaje u `fixtures` direktorijumu ispod svake aplikacije i uvoziti podatke iz njih.
+
+Na primer, sledeće prikazuje `fixtures` direktorijum i `hr.json` fiksčer datoteku u `hr` aplikaciji projekta:
+
+```shell
+├── admin.py
+├── apps.py
+├── fixtures
+|  └── hr.json
+...
+```
+
+Sledeći primer prikazuje odlomak iz `hr.json` datoteke:
+
+```json
+[
+  {
+    "model": "hr.contact",
+    "pk": 1,
+    "fields": {
+      "phone": "40812345678",
+      "address": "101 N 1st Street, San Jose, CA"
+    }
+  },
+  {
+    "model": "hr.contact",
+    "pk": 2,
+    "fields": {
+      "phone": "4081111111",
+      "address": "202 N 1st Street, San Jose, CA"
+    }
+  },
+...
+```
+
+Da biste učitali podatke `hr.json` u bazu podataka, koristite sledeću `loaddata` komandu:
+
+```shell
+python manage.py loaddata hr.json
+```
+
+### Podešavanja direktorijuma uređaja
+
+Podrazumevano, Django pronalazi datoteke sa podacima u `fixtures` direktorijumu unutar svake aplikacije. Da biste naveli dodatne direktorijume koji sadrže fiksčer datoteke, možete ih postaviti na `FIXTURE_DIR` Slistu u `settings.py` datoteci projekta:
+
+```py
+FIXTURE_DIRS = ['path/to/fixtures/dir', 'path/to/fixtures/dir2']
+```
+
+### Učitavanje primera HR podataka pomoću loaddata
+
+Koristićemo `loaddata` komandu za učitavanje podataka iz fikstura za `HR aplikaciju Django projekta.
+
+- Neka direktorijum aplikacije `hr/fixtures` sadrži `data.json` datoteku koja sadrži primere `HR` podataka.
+
+- Pokrenite `loaddata` komandu za učitavanje podataka iz `data.json` datoteke:
+
+```shell
+python manage.py loaddata data.json
+```
+
+Trebalo bi da izlaz bude nešto ovako:
+
+```shell
+Installed 471 object(s) from 1 fixture(s)
+```
+
+### Rezime loaddata
+
+- Koristite `loaddata` komandu da učitate podatke iz uređaja u bazu podataka.
+
+[Sadržaj](#sadržaj)
