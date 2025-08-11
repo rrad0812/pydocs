@@ -547,5 +547,3 @@ Rezime ListView
 - Napravite prikaz zasnovan na klasi koji prikazuje listu objekata nasleđivanjem iz `ListView` klase.
 
 [Sadržaj](#sadržaj)
-
-
