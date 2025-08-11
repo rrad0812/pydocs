@@ -8,8 +8,8 @@ U ovim tutorijalima ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasn
 - [Uvod u Django ORM](#uvod-u-django-orm)  
   Podešavanje osnovnog projekta za sledeće tutorijale u ovom odeljku.
 
-- [Relacija jedan na jedan](#relacija-jedan-na-jedan)  
-  Kreiranje relacije jedan-na-jedan.
+- [Relacija jedan na jedan](#relacija-jedan na jedan)  
+  Kreiranje relacije jedan na jedan.
 
 - [Relacija jedan na više](#relacija-jedan-na-više)  
   Korišćenje ForeignKey za kreiranje relacije jedan-na-više.
@@ -59,7 +59,7 @@ ORM je skraćenica od `objektno-relaciono mapiranje`. ORM je tehnika koja vam om
 
 Django ORM vam omogućava da koristite isti Python API za interakciju sa različitim relacionim bazama podataka, uključujući `PostgreSQL`, `MySQL`, `Oracle` i `SQLite`. Pogledajte kompletnu listu podržanih baza podataka [ovde](django_baze_podataka.md).
 
-Django ORM koristi `obrazac aktivnog zapisa`:
+Django ORM koristi obrazac `aktivnog zapisa`:
 
 - Klasa se mapira na jednu tabelu u bazi podataka. Klasa se često naziva model klasa.
 - Objekat klase se preslikava na jedan red u tabeli.
@@ -74,21 +74,21 @@ Pogledajmo jednostavan primer da bismo videli kako Django ORM funkcioniše.
 
 Postavićemo osnovni projekat sa novim virtuelnim okruženjem.
 
-Prvo, kreiramo novo virtuelno okruženje i u njega instaliramo potrebne pakete:
+Kreiramo novo virtuelno okruženje i u njega instaliramo potrebne pakete:
 
-- Kreirajte novo virtuelno okruženje koristeći ugrađeni `venv` modul:
+Kreirajte novo virtuelno okruženje koristeći ugrađeni `venv` modul:
 
-  ```shell
-  python -m venv venv
-  ```
+```shell
+python -m venv venv
+```
 
-- Aktivirajte virtuelno okruženje:
+Aktivirajte virtuelno okruženje:
 
-  ```shell
-  venv\scripts\activate
-  ```
+```shell
+venv\scripts\activate
+```
 
-- Instalirajte `django` i `django-extensions` paket:
+Instalirajte `django` i `django-extensions` paket:
 
   ```shell
   pip install django django-extensions
@@ -96,41 +96,41 @@ Prvo, kreiramo novo virtuelno okruženje i u njega instaliramo potrebne pakete:
 
   Paket `django-extensions` pruža neka prilagođena proširenja za Django frejmvork. Koristićemo `django-extensions` paket za prikazivanje generisanog SQL-a pomoću Django ORM-a.
 
-- Kreirajte novi Django projekat pod nazivom `django_orm`:
+Kreirajte novi Django projekat pod nazivom `django_orm`:
 
   ```shell
   django-admin startproject django_orm
   ```
 
-- Kreirajte `HR` aplikaciju unutar `django_orm` projekta:
+Kreirajte `HR` aplikaciju unutar `django_orm` projekta:
 
-  ```shell
-  cd django_orm
-  python manage.py startapp hr
-  ```
+```shell
+cd django_orm
+python manage.py startapp hr
+```
 
-- Registrujte `HR` i `django_extensions` u `INSTALLED_APPS` u `settings.py` projekta:
+Registrujte `HR` i `django_extensions` u `INSTALLED_APPS` u `settings.py` projekta:
 
-  ```py
-  INSTALLED_APPS = [
-      # ...
-      'django_extensions',
-      'hr',
-  ]
-  ```
+```py
+INSTALLED_APPS = [
+    # ...
+    'django_extensions',
+    'hr',
+]
+```
 
 Potom ćemo da uradimo neka podešavanjaPostgreSQL servera baze podataka:
 
-- Instalirajte `PostgreSQL` server baze podataka na vaš lokalni računar.
+Instalirajte `PostgreSQL` server baze podataka na vaš lokalni računar.
 
-- Prijavite se na `PostgreSQL` server baze podataka. Biće vam zatražena lozinka korisnika `postgres`. Imajte na umu da koristite istu lozinku koju ste uneli za `postgres` korisnika tokom instalacije.
+Prijavite se na `PostgreSQL` server baze podataka. Biće vam zatražena lozinka korisnika `postgres`. Imajte na umu da koristite istu lozinku koju ste uneli za `postgres` korisnika tokom instalacije.
 
-  ```shell
-  psql -U postgres
-  Password for user postgres:
-  ```
+```shell
+psql -U postgres
+Password for user postgres:
+```
 
-- Kreirajte novu bazu podataka sa imenom `hr` i unesite `exit` da biste zatvorili `psql` program:
+Kreirajte novu bazu podataka sa imenom `hr` i unesite `exit` da biste zatvorili `psql` program:
 
 ```shell
 postgres=# create database hr;
@@ -138,42 +138,40 @@ CREATE DATABASE
 postgres=# exit
 ```
 
-Zatim podešavamo parametre veze sa PostgreSQL serverom baze podataka
+Zatim podešavamo parametre veze sa PostgreSQL serverom baze podataka. Konfigurišite vezu sa bazom podataka u `settings.py` projekta `django_orm`:
 
-- Konfigurišite vezu sa bazom podataka u `settings.py` projekta `django_orm`:
+```py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hr',
+        'USER': 'postgres',
+        'PASSWORD': 'POSTGRES_PASSWORD',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+```
 
-  ```py
-  DATABASES = {
-      'default': {
-          'ENGINE': 'django.db.backends.postgresql',
-          'NAME': 'hr',
-          'USER': 'postgres',
-          'PASSWORD': 'POSTGRES_PASSWORD',
-          'HOST': 'localhost',
-          'PORT': '',
-      }
-  }
-  ```
+Imajte na umu da promenite `POSTGRES_PASSWORD` u svoju lozinku.
 
-  Imajte na umu da promenite `POSTGRES_PASSWORD` u svoju lozinku.
+Instalirajte `psycopg2` paket da biste omogućili Django-u da se poveže sa `PostgreSQL` serverom baze podataka:
 
-- Instalirajte `psycopg2` paket da biste omogućili Django-u da se poveže sa `PostgreSQL` serverom baze podataka:
+```shell
+pip install psycopg2
+```
 
-  ```shell
-  pip install psycopg2
-  ```
+Pokrenite Django razvojni server:
 
-- Pokrenite Django razvojni server:
-
-  ```shell
-  python manage.py runserver
-  ```
+```shell
+python manage.py runserver
+```
 
 Videćete podrazumevanu početnu stranicu Django-a.
 
 ### Definisanje modela
 
-- Definišite `Employee` klasu u `hr` aplikaciji koja ima dva polja `first_name` i `last_name`:
+Definišite `Employee` klasu u `hr` aplikaciji koja ima dva polja `first_name` i `last_name`:
 
 ```py
 from django.db import models
@@ -186,25 +184,21 @@ class Employee(models.Model):
         return f'{self.first_name} {self.last_name}'
 ```
 
-- Izvršite `migracije` pomoću `makemigrations` komande:
+Izvršite `migracije` pomoću `makemigrations` komande:
 
-  ```shell
-  python manage.py makemigrations
-  ```
+```shell
+python manage.py makemigrations
 
-  Izlaz:
+Migrations for 'hr':
+  hr\migrations\0001_initial.py
+    - Create model Employee
+```
 
-  ```shell
-  Migrations for 'hr':
-    hr\migrations\0001_initial.py
-      - Create model Employee
-  ```
+Prosledite izmene u bazu podataka pomoću `migrate` komande:
 
-- Prosledite izmene u bazu podataka pomoću `migrate` komande:
-
-  ```shell
-  python manage.py migrate
-  ```
+```shell
+python manage.py migrate
+```
 
 Django kreira mnogo tabela, uključujući i one za ugrađene modele kao što su `User` i `Group`. U ovom tutorijalu ćemo se fokusirati na `Employee` klasu.
 
@@ -216,9 +210,11 @@ Django kombinuje `ime aplikacije` i `ime klase` da bi generisao `ime tabele`:
 app_modelclass
 ```
 
-U ovom primeru, naziv aplikacije je `hr`, a naziv klase je `Employee`. Stoga, Django kreira tabelu sa nazivom `hr_employee`. Imajte na umu da Django konvertuje naziv klase u mala slova pre nego što je doda nazivu aplikacije.
+U ovom primeru, naziv aplikacije je `hr`, a naziv klase modela je `Employee`. Stoga, Django kreira tabelu sa nazivom `hr_employee`.
 
-Klasa `Employee` modela ima dva polja `first_name` i `last_name`. Pošto klasa `Employee` nasleđuje od `models.Modelklase`, Django automatski dodaje polje `id` kao polje za automatsko povećanje pod nazivom `id`. Stoga, `hr_employee` tabela ima tri kolone `id`, `first_name` i `last_name`.
+> Imajte na umu da Django konvertuje naziv klase u mala slova pre nego što je doda nazivu aplikacije.
+
+Klasa `Employee` modela ima dva polja `first_name` i `last_name`. Pošto klasa `Employee` nasleđuje od `models.Model` klase, Django automatski dodaje polje `id` kao polje za automatsko povećanje pod nazivom `id`. Stoga, `hr_employee` tabela ima tri kolone `id`, `first_name` i `last_name`.
 
 Da biste interagovali sa `hr_employee` tabelom, možete pokrenuti `shell_plus` komandu koja dolazi iz `django-extensions` paketa.
 
@@ -226,37 +222,41 @@ Imajte na umu da vam Django pruža ugrađenu `shell` komandu. Međutim, `shell_p
 
 Pokrenite `shell_plus` komandu sa `--print-sql` opcijom:
 
-```py
+```shell
 python manage.py shell_plus --print-sql
 ```
 
 ### Unošenje podataka
 
-- Kreirajte novi `Employee` objekat i pozovite `save()` metodu za umetanje novog reda u tabelu:
+Kreirajte novi `Employee` objekat i pozovite `save()` metodu za umetanje novog reda u tabelu:
 
-  ```shell
-  >>> e = Employee(first_name='John',last_name='Doe')
-  >>> e.save()
-  INSERT INTO "hr_employee" ("first_name", "last_name")
-  VALUES ('John', 'Doe') RETURNING "hr_employee"."id"
-  Execution time: 0.003234s [Database: default]
-  ```
+```shell
+>>> e = Employee(first_name='John',last_name='Doe')
+>>> e.save()
+```
 
-  U ovom primeru, ne morate da podešavate vrednost za kolonu `id`. Baza podataka automatski generiše njenu vrednost i Django će je prihvatiti kada ubacite novi red u tabelu.
+```sql  
+INSERT INTO "hr_employee" ("first_name", "last_name")
+VALUES ('John', 'Doe') RETURNING "hr_employee"."id"
+```
 
-  Kao što je prikazano na izlazu, Django koristi `INSERT` naredbu da ubaci novi red sa dve kolone `first_name` i `last_name` u tabelu `hr_employee`.
+U ovom primeru, ne morate da podešavate vrednost za kolonu `id`. Baza podataka automatski generiše njenu vrednost i Django će je prihvatiti kada ubacite novi red u tabelu.
 
-- Unesite drugog zaposlenog sa imenom Jane i prezimenom Doe:
+Kao što je prikazano, Django koristi `INSERT ... VALUES ... RETURNING` naredbu da ubaci novi red sa dve kolone `first_name` i `last_name` u tabelu `hr_employee`.
 
-  ```shell
-  >>> e = Employee(first_name='Jane',last_name='Doe')
-  >>> e.save()
-  INSERT INTO "hr_employee" ("first_name", "last_name")
-  VALUES ('Jane', 'Doe') RETURNING "hr_employee"."id"
-  Execution time: 0.002195s [Database: default]
-  ```
+Unesite drugog zaposlenog sa imenom Jane i prezimenom Doe:
 
-  Sada, `hr_employee` tabela ima dva reda sa `ID` vrednostima 1 i 2.
+```shell
+>>> e = Employee(first_name='Jane',last_name='Doe')
+>>> e.save()
+```
+
+```sql
+INSERT INTO "hr_employee" ("first_name", "last_name")
+VALUES ('Jane', 'Doe') RETURNING "hr_employee"."id"
+```
+  
+Sada, `hr_employee` tabela ima dva reda sa `ID` vrednostima 1 i 2.
 
 ### Izbor podataka
 
@@ -264,81 +264,102 @@ Da biste izabrali sve redove iz `hr_employees` tabele, koristite `all()` metodu 
 
 ```shell
 >>> Employee.objects.all()
+```
+  
+```sql
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name"
   FROM "hr_employee"
  LIMIT 21
-Execution time: 0.001856s [Database: default]
+```
+  
+```shell
 <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
 ```
 
 Kako ovo funkcioniše.
 
-- Prvo, Django koristi `SELECT` naredbu da bi izabrao redove iz `hr_employee` tabele.
-- Drugo, Django konvertuje redove u `Employee` objekte i vraća tip `QuerySet` koji sadrži `Employee` objekte.
-
-Obratite pažnju da je Django dodao `LIMIT` da bi vratio 21 zapis za prikazivanje na shell-u.
+- Django koristi `SELECT` naredbu da bi izabrao redove iz `hr_employee` tabele.
+- Django konvertuje redove u `Employee` objekte i vraća tip `QuerySet` koji sadrži `Employee` objekte.
+- Obratite pažnju da je Django dodao `LIMIT` da bi vratio 21 zapis za prikazivanje na shell-u.
 
 Da biste izabrali jedan red po `ID`, možete koristiti `get()` metodu. Na primer, sledeći kod vraća zaposlenog sa ID-om 1:
 
 ```shell
 >>> e = Employee.objects.get(id=1)
+```
+  
+```sql
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name"
   FROM "hr_employee"
  WHERE "hr_employee"."id" = 1
  LIMIT 21
-Execution time: 0.001003s [Database: default]
+```
+  
+```shell
 >>> e
 <Employee: John Doe>
 ```
 
-Za razliku od `all()` metode, `get()` metod vraća `Employee` objekat umesto `QuerySet`.
+Za razliku od `all()` metoda, `get()` metod vraća `Employee` objekat umesto `QuerySet`.
 
 Da biste pronašli zaposlene po njihovom imenu, možete koristiti `filter()` metod objekta `QuerySet`. Na primer, sledeći kod pronalazi zaposlene sa imenom Jane:
 
 ```shell
 >>> Employee.objects.filter(first_name='Jane')
+```
+  
+```sql
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name"
   FROM "hr_employee"
  WHERE "hr_employee"."first_name" = 'Jane'
  LIMIT 21
-Execution time: 0.000000s [Database: default]
+```
+  
+```shell
 <QuerySet [<Employee: Jane Doe>]>
 ```
 
 ### Ažuriranje podataka
 
-- Izaberite zaposlenog sa ID-om 2:
+Izaberite zaposlenog sa ID-om jednakim 2:
 
-  ```shell
-  >>> e = Employee.objects.get(id=2)
-  SELECT "hr_employee"."id",
-        "hr_employee"."first_name",
-        "hr_employee"."last_name"
-    FROM "hr_employee"
-  WHERE "hr_employee"."id" = 2
-  LIMIT 21
-  Execution time: 0.001022s [Database: default]
-  ```
+```shell
+>>> e = Employee.objects.get(id=2)
+```
 
-- Ažurirajte prezime izabranog zaposlenog na Smith:
+```sql
+SELECT "hr_employee"."id",
+      "hr_employee"."first_name",
+      "hr_employee"."last_name"
+  FROM "hr_employee"
+WHERE "hr_employee"."id" = 2
+LIMIT 21
+```
+  
+Ažurirajte prezime izabranog zaposlenog na Smith:
 
-  ```shell
-  >>> e.last_name = 'Smith'
-  >>> e.save()
-  UPDATE "hr_employee"
-    SET "first_name" = 'Jane',
-        "last_name" = 'Smith'
-  WHERE "hr_employee"."id" = 2
-  Execution time: 0.004019s [Database: default]
-  >>> e
-  <Employee: Jane Smith>
-  ```
+```shell
+>>> e.last_name = 'Smith'
+>>> e.save()
+```
+
+```sql
+UPDATE "hr_employee"
+  SET "first_name" = 'Jane',
+      "last_name" = 'Smith'
+WHERE "hr_employee"."id" = 2
+```
+
+```shell
+>>> e
+<Employee: Jane Smith>
+```
 
 ### Brisanje podataka
 
@@ -346,10 +367,15 @@ Da biste obrisali instancu modela, koristite `delete()` metodu. Sledeći primer 
 
 ```shell
 >>> e.delete()
+```
+  
+```sql  
 DELETE
   FROM "hr_employee"
  WHERE "hr_employee"."id" IN (2)
-Execution time: 0.002001s [Database: default]
+```
+  
+```shell
 (1, {'hr.Employee': 1})
 ```
 
@@ -357,9 +383,14 @@ Da biste obrisali sve instance modela, koristite `all()` metodu za izbor svih za
 
 ```shell
 >>> Employee.objects.all().delete()
+```
+
+```sql
 DELETE
   FROM "hr_employee"
-Execution time: 0.001076s [Database: default]
+```
+  
+```shell
 (1, {'hr.Employee': 1})
 ```
 
@@ -379,11 +410,11 @@ Django koristi `DELETE` naredbu bez `WHERE` klauzule da bi obrisao sve redove iz
 
 ## Relacija jedan na jedan
 
-Relacija `jedan-na-jedan` definiše vezu između dve tabele, gde svakom redu u jednoj tabeli odgovara samo jedan red u drugoj tabeli.
+Relacija `jedan na jedan` definiše vezu između dve tabele, gde svakom redu u jednoj tabeli odgovara samo jedan red u drugoj tabeli.
 
-Na primer, svaki zaposleni ima kontakt i svaki kontakt pripada jednom zaposlenom. Dakle, odnos između zaposlenih i kontakata je odnos `jedan-na-jedan`.
+Na primer, svaki zaposleni ima kontakt i svaki kontakt pripada jednom zaposlenom. Dakle, odnos između zaposlenih i kontakata je odnos `jedan na jedan`.
 
-Da biste kreirali relaciju `jedan-na-jedan`, koristite `OneToOneField` klasu:
+Da biste kreirali relaciju `jedan na jedan`, koristite `OneToOneField` klasu:
 
 ```py
 OneToOneField(to, on_delete, parent_link=False, **options)
@@ -394,7 +425,7 @@ U ovoj sintaksi:
 - `to` parametar definiše naziv modela.
 - `on_delete` određuje akciju nad kontaktom kada se zaposleni obriše.
 
-Sledeći primer koristi `OneToOneField` klasu za definisanje relacije `jedan-na-jedan` između `Contact` i `Employee` modela u `models.py`:
+Sledeći primer koristi `OneToOneField` klasu za definisanje relacije `jedan na jedan` između `Contact` i `Employee` modela u `models.py`:
 
 ```py
 from django.db import models
@@ -421,31 +452,33 @@ U `OneToOneField`, navodimo `Contact` model i `on_delete` opciju koja definiše 
 
 Opcija `on_delete=models.CASCADE` znači da ako se `Employeese` objekat obriše, `Contact` objekat povezan sa njim takođe će biti automatski obrisan.
 
-Imajte na umu da Django kreira ograničenje stranog ključa u bazi podataka bez `ON DELETE CASCADE` opcije. Umesto toga, Django ručno obrađuje brisanje u aplikaciji. Imajte na umu da se ova interna implementacija može promeniti u budućnosti.
+Imajte na umu da Django ne kreira ograničenje stranog ključa u bazi podataka bez `ON DELETE CASCADE` opcije. Umesto toga, Django ručno obrađuje brisanje u aplikaciji.
+
+Imajte na umu da se ova interna implementacija može promeniti u budućnosti.
 
 ### Migriranje modela u bazu podataka
 
-- Izvršite migracije pomoću `makemigrations` komande:
+Pripremite migracije pomoću `makemigrations` komande:
 
-  ```shell
-  python manage.py makemigrations
+```shell
+python manage.py makemigrations
 
-  Migrations for 'hr':
-    hr\migrations\0002_contact_employee_contact.py
-      - Create model Contact
-      - Add field contact to employee
-  ```
+Migrations for 'hr':
+  hr\migrations\0002_contact_employee_contact.py
+    - Create model Contact
+    - Add field contact to employee
+```
 
-- Primenite migracije na bazu podataka pomoću `migrate` komande:
+Primenite migracije na bazu podataka pomoću `migrate` komande:
 
-  ```shell
-  python manage.py migrate
-  
-  Operations to perform:
-    Apply all migrations: admin, auth, contenttypes, hr, sessions
-  Running migrations:
-    Applying hr.0002_contact_employee_contact... OK
-  ```
+```shell
+python manage.py migrate
+
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, hr, sessions
+Running migrations:
+  Applying hr.0002_contact_employee_contact... OK
+```
 
 Iza kulisa, Django kreira dve tabele `hr_contact` i `hr_employee` u bazi podataka:
 
@@ -461,56 +494,52 @@ python manage.py shell_plus --print-sql
 
 Opcija `--print-sql` prikazuje SQL komandu koju Django izvršava.
 
-- Kreirajte novi `Employee` objekat i sačuvajte ga u bazi podataka:
+Kreirajte novi `Employee` objekat i sačuvajte ga u bazi podataka:
 
-  ```shell
-  >>> e = Employee(first_name='John',last_name='Doe')
-  >>> e.save()
-  ```
+```shell
+>>> e = Employee(first_name='John',last_name='Doe')
+>>> e.save()
+```
 
-  Django izvršava sledeću SQL komandu:
+```sql
+INSERT INTO "hr_employee" ("first_name", "last_name", "contact_id")
+VALUES ('John', 'Doe', NULL) 
+RETURNING "hr_employee"."id"
+```
 
-  ```sql
-  INSERT INTO "hr_employee" ("first_name", "last_name", "contact_id")
-  VALUES ('John', 'Doe', NULL) 
-  RETURNING "hr_employee"."id"
-  ```
+Kreirajte i sačuvajte novi kontakt u bazi podataka:
 
-- Kreirajte i sačuvajte novi kontakt u bazi podataka:
+```shell
+>>> c = Contact(phone='40812345678', address='101 N 1st Street, San Jose, CA')
+>>> c.save()
+```
 
-  ```shell
-  >>> c = Contact(phone='40812345678', address='101 N 1st Street, San Jose, CA')
-  >>> c.save()
-  ```
+```sql
+INSERT INTO "hr_contact" ("phone", "address")
+VALUES ('40812345678', '101 N 1st Street, San Jose, CA') 
+RETURNING "hr_contact"."id"
+```
 
-  Django takođe izvršava sledeću INSERTkomandu:
+Povežite kontakt sa zaposlenim:
 
-    ```sql
-    INSERT INTO "hr_contact" ("phone", "address")
-    VALUES ('40812345678', '101 N 1st Street, San Jose, CA') 
-    RETURNING "hr_contact"."id"
-  ```
+```shell
+>>> e.contact = c
+>>> e.save()
+```
 
-- Povežite kontakt sa zaposlenim:
+Django ažurira vrednost `contact_id` kolone u `hr_employee` tabeli na vrednost `id` kolone u `hr_contact`tabeli.
 
-  ```shell
-  >>> e.contact = c
-  >>> e.save()
-  ```
+```sql
+UPDATE "hr_employee"
+  SET "first_name" = 'John',
+      "last_name" = 'Doe',
+      "contact_id" = 1
+WHERE "hr_employee"."id" = 3
+```
 
-  Django ažurira vrednost `contact_id` kolone u `hr_employee` tabeli na vrednost `id` kolone u `hr_contact`tabeli.
+### Dobijanje podataka iz odnosa jedan na jedan
 
-  ```sql
-  UPDATE "hr_employee"
-    SET "first_name" = 'John',
-        "last_name" = 'Doe',
-        "contact_id" = 1
-  WHERE "hr_employee"."id" = 3
-  ```
-
-### Dobijanje podataka iz odnosa jedan-na-jedan
-
-- Pronađite zaposlenog sa imenom John Doe:
+Pronađite zaposlenog sa imenom John Doe:
 
 ```shell
 >>> e = Employee.objects.filter(first_name='John',last_name='Doe').first()
@@ -523,16 +552,16 @@ Može `hr_employee` imati više zaposlenih sa istim imenom i prezimenom. Stoga, 
 
 Da bismo dobili prvi red u `QuerySet`, koristimo `first()` metodu. `first()` metoda vraća jednu instancu klase `Employee`.
 
-```sql
-SELECT "hr_employee"."id",
-       "hr_employee"."first_name",
-       "hr_employee"."last_name",
-       "hr_employee"."contact_id"
-  FROM "hr_employee"
- WHERE ("hr_employee"."first_name" = 'John' AND "hr_employee"."last_name" = 'Doe')
- ORDER BY "hr_employee"."id" ASC
- LIMIT 1
- ```
+  ```sql
+  SELECT "hr_employee"."id",
+        "hr_employee"."first_name",
+        "hr_employee"."last_name",
+        "hr_employee"."contact_id"
+    FROM "hr_employee"
+  WHERE ("hr_employee"."first_name" = 'John' AND "hr_employee"."last_name" = 'Doe')
+  ORDER BY "hr_employee"."id" ASC
+  LIMIT 1
+  ```
 
 Imajte na umu da upit ne dobija kontakt podatke iz `hr_contact` tabele. On dobija podatke samo iz `hr_employee` tabele.
 
@@ -551,7 +580,6 @@ SELECT "hr_contact"."id",
   FROM "hr_contact"
  WHERE "hr_contact"."id" = 1
  LIMIT 21
-<Contact: 40812345678>
 ```
 
 Sledeće upit dobija kontakt sa ID-om 1:
@@ -600,23 +628,26 @@ Ako pronađete kontakt koji se ne povezuje ni sa jednim zaposlenim i pokušate d
 
 ### Izbor povezanih objekata
 
-- Kreirajte novog zaposlenog:
+Kreirajte novog zaposlenog:
 
 ```shell
 >>> e = Employee(first_name='Jane',last_name='Doe')
 >>> e.save()
+```
+
+```sql
 INSERT INTO "hr_employee" ("first_name", "last_name", "contact_id")
 VALUES ('Jane', 'Doe', NULL) RETURNING "hr_employee"."id"
 Execution time: 0.003079s [Database: default]
 ```
 
-- Pokupite sve zaposlene:
+Pokupite sve zaposlene:
 
 ```shell
 >>> Employee.objects.all()
 ```
 
-DŽango vraća dva zaposlena:
+Django vraća dva zaposlena:
 
 ```shell
 <QuerySet [<Employee: John Doe>, <Employee: Jane Doe>]>
@@ -624,10 +655,10 @@ DŽango vraća dva zaposlena:
 
 Ako morate da prikažete sve zaposlene, kao i njihove kontakte na istoj stranici, onda imate problem `N+1` upita:
 
-- Prvo, potreban vam je jedan upit da biste dobili sve zaposlene (N zaposlenih).
-- Drugo, potrebno vam je N upita da biste izabrali povezani kontakt svakog zaposlenog.
+- Potreban vam je jedan upit da biste dobili sve zaposlene (N zaposlenih).
+- Potrebno vam je N upita da biste izabrali povezani kontakt svakog zaposlenog.
 
-Da biste ovo izbegli, možete pošaljiti upit svim zaposlenima i kontaktima pomoću jednog upita koristeći `select_related()` metodu:
+Da biste ovo izbegli, možete poslati upit za sve zaposlenima i kontakte pomoću jednog upita koristeći `select_related()` metodu:
 
 ```shell
 >>> Employee.objects.select_related('contact').all()
@@ -659,11 +690,11 @@ Django koristi funkciju `LEFT OUTER JOIN` koja vraća sve zaposlene iz `hr_emplo
 
 ## Relacija jedan-na-više
 
-U relaciji `jedan-na-više`, red u tabeli je povezan sa jednim ili više redova u drugoj tabeli. Na primer, depatment (odeljenje) može imati jednog ili više employees (zaposlenih) i svaki employee  pripada jednom departmentu.
+U relaciji `jedan na više`, red u tabeli je povezan sa jednim ili više redova u drugoj tabeli. Na primer, depatment (odeljenje) može imati jednog ili više employees (zaposlenih) i svaki employee  pripada jednom departmentu.
 
-Relacija između departmenta i employee je `jedan-na-više`. Suprotno tome, relacija između employee i departmenta je `više-na-jedan`.
+Relacija između departmenta i employee je `jedan na više`. Suprotno tome, relacija između employee i departmenta je `više na jedan`.
 
-Da biste kreirali relaciju `jedan-na-više` u Django-u, koristite `ForeignKey`. Na primer, sledeći kod koristi `ForeignKey` da bi kreirao relaciju `jedan-na-više` između `Department` i `Employee` modela:
+Da biste kreirali relaciju `jedan na više` u Django-u, koristite `ForeignKey`. Na primer, sledeći kod koristi `ForeignKey` da bi kreirao relaciju `jedan na više` između `Department` i `Employee` modela:
 
 ```py
 from django.db import models
@@ -688,7 +719,6 @@ class Employee(models.Model):
 
   contact = models.OneToOneField(
     Contact,
-
     on_delete=models.CASCADE,
     null=True
   )
@@ -704,41 +734,43 @@ class Employee(models.Model):
 
 Kako ovo funkcioniše?
 
-- Definišite `Department` klasu modela.
+Definišite `Department` klasu modela.
 
-- Izmenite `Employee` klasu dodavanjem odnosa `jedan-na-više` koristeći `ForeignKey`:
+Izmenite `Employee` klasu dodavanjem odnosa `jedan na više` koristeći `ForeignKey`:
 
-  ```py
-  department = models.ForeignKey(
-    Department,
-    on_delete=models.CASCADE
-  )
-  ```
+```py
+department = models.ForeignKey(
+  Department,
+  on_delete=models.CASCADE
+)
+```
 
-  U `ForeignKey`, prosleđujemo `Department` kao prvi argument i `on_delete` ključnu reč kao drugi argument. `on_delete=models.CASCADE` označava da ako se department obriše, svi zaposleni povezani sa tim odeljenjem takođe se brišu.
+U `ForeignKey`, prosleđujemo `Department` kao prvi argument i `on_delete` ključnu reč kao drugi argument. `on_delete=models.CASCADE` označava da ako se department obriše, svi zaposleni povezani sa tim odeljenjem takođe se brišu.
 
-  > Imajte na umu da polje definišete sa `ForeignKey` na strani `"više"` relacije.
+> Imajte na umu da polje definišete sa `ForeignKey` na strani `više` relacije.
 
-- Izvršite migracije pomoću `makemigrations` komande:
+Izvršite migracije pomoću `makemigrations` komande:
 
-  ```shell
-  python manage.py makemigrations
-  ```
+```shell
+python manage.py makemigrations
+```
 
-  Django će izdati sledeću poruku:
+Django će izdati sledeću poruku:
 
-  > It is impossible to add a non-nullable field 'department' to employee without specifying a default. This is because the database needs something to populate existing rows.
-  Please select a fix:
-  > 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
-  > 2) Quit and manually define a default value in `models.py`.
-  >
-  > Select an option:
+> It is impossible to add a non-nullable field 'department' to employee without specifying a default. This is because the database needs something to populate existing rows.
+>
+> Please select a fix:
+>
+> 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
+> 2) Quit and manually define a default value in models.py.
+>
+> Select an option:
 
-    U `Employee` modelu, polje `department` definišemo kao polje koje se ne može nulirati. Stoga, Django-u je potrebna podrazumevana vrednost za ažuriranje `department` polja (ili `department_id` kolone) za postojeće redove u tabeli baze podataka.
+  U `Employee` modelu, polje `department` definišemo kao polje koje se ne može nulirati. Stoga, Django-u je potrebna podrazumevana vrednost za ažuriranje `department` polja (ili `department_id` kolone) za postojeće redove u tabeli baze podataka.
 
-    Čak i ako `hr_employees` tabela nema redove, Django takođe zahteva da unesete podrazumevanu vrednost.
+  Čak i ako `hr_employees` tabela nema redove, Django takođe zahteva da unesete podrazumevanu vrednost.
 
-    Kao što je jasno prikazano u poruci, Django vam pruža dve opcije. Potrebno je da unesete 1 ili 2 da biste izabrali odgovarajuću opciju.
+  Kao što je jasno prikazano u poruci, Django vam pruža dve opcije. Potrebno je da unesete 1 ili 2 da biste izabrali odgovarajuću opciju.
 
   - Ako izaberete prvu opciju, Django zahteva jednokratnu podrazumevanu vrednost. Ako unesete 1, Django će prikazati komandnu liniju Python-a:
 
@@ -1375,6 +1407,7 @@ Sledeći primer koristi `order_by()` za sortiranje zaposlenih po imenu u rastuć
 
 ```shell
 >>> Employee.objects.all().order_by('first_name')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1391,7 +1424,8 @@ Andrea Mcintosh>, <Employee: Andrew Guerra>, <Employee: Andrew Dixon>, <Employee
 Kao i kod `ordering` opcije, možete koristiti `order_by()` metodu za sortiranje zaposlenog po imenu u opadajućem redosledu:
 
 ```shell
->>> Employee.objects.all().order_by('-first_name') 
+>>> Employee.objects.all().order_by('-first_name')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1408,6 +1442,7 @@ Takođe `order_by()` vam omogućava da sortirate rezultate po više polja. Na pr
 
 ```shell
 >>> Employee.objects.all().order_by('first_name','last_name')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1426,6 +1461,7 @@ Da biste nasumično poređali, možete koristiti znak pitanja `?` ovako:
 
 ```shell
 >>> Employee.objects.all().order_by('?')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1454,6 +1490,7 @@ Sledeći primer koristi `order_by()` za sortiranje zaposlenih po nazivima njihov
 
 ```shell
 >>> Employee.objects.all().order_by('department__name')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1644,6 +1681,7 @@ Na primer, sledeći kod koristi `endswith` da pronađe zaposlene čija se imena 
 
 ```shell
 >>> Employee.objects.filter(first_name__endswith='er')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1662,6 +1700,7 @@ Upit je vratio zaposlene sa imenima Jennifer, Tyler, Spencer, Roger, itd.
 
 ```shell
 >>> Employee.objects.filter(first_name__iendswith='ER') 
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1685,7 +1724,8 @@ LIKE '%substring%'
 Na primer, sledeći kod pronalazi zaposlene čije ime sadrži podstring ff:
 
 ```shell
->>> Employee.objects.filter(first_name__contains='ff')  
+>>> Employee.objects.filter(first_name__contains='ff')
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1704,6 +1744,7 @@ Upit vraća zaposlene sa imenima Tiffani i DŽeffri.
 
 ```shell
 >>> Employee.objects.filter(first_name__icontains='ff') 
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1755,6 +1796,7 @@ U Django-u koristite in operator ovako:
 
 ```shell
 >>> Employee.objects.filter(department_id__in=(1,2,3)) 
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
@@ -1769,6 +1811,7 @@ Obično se koristi podupit sa `in` operatorom, a ne lista doslovnih vrednosti. N
 ```shell
 >>> departments = Department.objects.filter(Q(name='Sales') | Q(name='Marketing')) 
 >>> Employee.objects.filter(department__in=departments)
+
 SELECT "hr_employee"."id",
        "hr_employee"."first_name",
        "hr_employee"."last_name",
