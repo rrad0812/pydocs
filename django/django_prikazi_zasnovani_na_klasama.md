@@ -11,10 +11,10 @@ U ovom odeljku ćete naučiti prikaze zasnovane na klasama tako što ćete napra
 - [ListView](#listview)  
   Kako da koristite klasu ListView za prikazivanje liste zadataka.
 
-- DetailView  
+- [DetailView](#detailview)  
   Kako da koristite klasu DetailView za prikazivanje zadatka.
 
-- CreateView  
+- [CreateView](#createview)  
   Kako da koristite klasu CreateView za kreiranje formulara koji kreira zadatak.
 
 - UpdateView  
@@ -348,7 +348,7 @@ Running migrations:
   Applying todo.0001_initial... OK
 ```
 
-Kreirajte `superuser`-a izvršavanjem `createsuperuser``komande:
+Kreirajte `superuser`-a izvršavanjem `createsuperuser` komande:
 
 ```shell
 python manage.py createsuperuser
@@ -422,7 +422,7 @@ app/model_list.html
 
 Ako želite da podesite drugačije ime, možete koristiti `template_name` atribut. U ovom tutorijalu ćemo koristiti podrazumevano ime šablona, koje je `task_list`.html.
 
-### Definišite rutu
+### Definišite ListView rutu
 
 Promenite naziv `urls.py` aplikacije `todo` na sledeći način:
 
@@ -542,8 +542,322 @@ Ako otvorite URL adresu: `html<http://128.0.0.1:8000/tasks/>` videćete listu za
 >
 > Konačni kod za ovaj Django ListView tutorijal možete preuzeti ovde.
 
-Rezime ListView
+### Rezime ListView
 
 - Napravite prikaz zasnovan na klasi koji prikazuje listu objekata nasleđivanjem iz `ListView` klase.
 
 [Sadržaj](#sadržaj)
+
+## DetailView
+
+U ovom tutorijalu ćete naučiti kako da koristite `DetailView` klasu za prikazivanje objekta.
+
+### Definisanje detaljnog prikaza
+
+Django `DetailView` vam omogućava da definišete prikaz zasnovan na klasi koji prikazuje detalje objekta. Da biste koristili DetailViewklasu, definišete klasu koja nasleđuje tu `DetailView` klasu.
+
+Na primer, sledeće definiše `TaskDetail` prikaz zasnovan na klasi koji prikazuje detalje zadatka aplikacije `Todo`:
+
+```py
+from django.shortcuts import render
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from .models import Task
+
+class TaskDetail(DetailView):
+    model = Task
+    context_object_name = 'task'
+    
+#...  
+```
+
+Kako to funkcioniše?
+
+Uvezite `DetailView` iz `django.views. generic.detail`:
+
+```py
+from django.views.generic.detail import DetailView
+```
+
+Definišite `TaskDetail` klasu koja nasleđuje klasu `DetailView`. U `TaskDetail` klasi definišemo sledeće atribute:
+
+- `modelo` dređuje klasu objekta koji će biti prikazan.
+- `context_object_name` određuje ime objekta u šablonu. Podrazumevano, Django koristi `object` kao ime objekta u šablonu. Da bismo to učinili očiglednijim, umesto toga koristimo `task` kao ime objekta.
+
+Podrazumevano, `TaskDetail` klasa će učitati šablon sa imenom `task_detail.html` iz `templates/todo` aplikacije.
+
+Ako želite da koristite drugačije ime šablona, možete koristiti `template_name` atribut u `TaskDetail` klasi.
+
+### Napravite šablon
+
+Napravite `task_detail.html` šablon u `templates/todo` direktorijumu pomoću sledećeg koda:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+ <article class="task">
+    <header>
+    <h2>{{ task.title }}</h2>
+        <span class="badge {% if task.completed %}badge-completed{% else %}badge-pending{%endif%}">
+            {% if task.completed %} Completed {%else%} Pending {%endif%}
+        </span>
+    </header>
+    <p>{{task.description}}</p>
+</article>
+{%endblock content%}
+```
+
+Šablon `task_detail.html` proširuje `base.html` šablon.
+
+Šablon `task_detail.html` koristi `task` kao objekat i prikazuje atribute zadatka, uključujući naslov, status (završen ili ne) i opis.
+
+### Definisanje DetailView rute
+
+Definišite rutu koja mapira URL adresu koja prikazuje zadatak sa rezultatom metode `as_view()` klase `TaskDetail`:
+
+```py
+from django.urls import path
+from .views import home, TaskList, TaskDetail
+
+urlpatterns = [
+    path('', home, name='home'),
+    path('tasks/', TaskList.as_view(),name='tasks'),
+    path('task/<int:pk>/',TaskDetail.as_view(),name='task'),
+]
+```
+
+URL prihvata ceo broj kao ID (ili primarni ključ, pk) zadatka. `TaskDetail` će uzeti ovaj pkparametar, izabrati zadatak iz baze podataka prema ID-u, konstruisati objekat `Task` i proslediti ga šablonu.
+
+### Izmena šablona
+
+Izmenite `task_list.html` šablon da biste uključili vezu do svakog zadatka na listi zadataka koristeći `url` oznaku:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="center">
+    <h2>My Todo List</h2>
+    {% if tasks %}
+    <ul class="tasks">
+        {% for task in tasks %}
+            <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
+                <div  class="task-controls">
+                    <a href="#"><i class="bi bi-trash"></i> </a>
+                    <a href="#"><i class="bi bi-pencil-square"></i></a>
+                </div>
+            </li>   
+        {% endfor %}
+    {% else %}
+        <p>🎉 Yay, you have no pending tasks!</p>
+    {% endif %}
+    </ul>
+</div>
+{%endblock content%}
+```
+
+Kada kliknete na vezu svake oznake, bićete preusmereni na stranicu sa detaljima zadatka.
+
+### Pokrenite Django dev server
+
+```shell
+python manage.py runserver
+```
+
+i otvorite listu zadataka: <http://127.0.0.1:8000/tasks/>.
+
+videćete sledeću listu zadataka.
+
+I kliknite na zadatak, npr. Learn Python, bićete preusmereni na stranicu sa detaljima zadatka.
+
+> [!Note]
+>
+> Konačni kod za ovaj Django DetailView tutorijal možete preuzeti ovde.
+
+### Rezime DetailView
+
+- Koristite `DetailView` za prikaz detalja objekta.
+
+[Sadržaj](#sadržaj)
+
+## CreateView
+
+U ovom tutorijalu ćete naučiti kako da koristite `CreateView` klasu za definisanje prikaza zasnovanog na klasi koji kreira zadatak za aplikaciju `Todo`.
+
+### Definisanje klase
+
+Klasa `CreateView` vam omogućava da kreirate prikaz zasnovan na klasi koji prikazuje obrazac za kreiranje objekta, ponovno prikazivanje obrasca sa greškama u validaciji i čuvanje objekta u bazi podataka.
+
+Da biste koristili `CreateView` klasu, definišete klasu koja nasleđuje od nje i dodate joj neke atribute i metode.
+
+Na primer, sledeći primer koristi `CreateView` klasu za definisanje prikaza zasnovanog na klasi koji prikazuje obrazac za kreiranje novog zadatka u aplikaciji `Todo`:
+
+```py
+# ..
+from django.views.generic.edit import CreateView
+from django.contrib import messages
+from django.urls import reverse_lazy
+from .models import Task
+
+class TaskCreate(CreateView):
+  model = Task
+  fields = ['title','description','completed']
+  success_url = reverse_lazy('tasks')
+    
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    messages.success(self.request, "The task was created successfully.")
+    return super(TaskCreate,self).form_valid(form)
+
+# other classes & functions
+```
+
+Kako ovo funkcioniše?
+
+Uvezite `CreateView` klasu, `reverse_lazy()` funkciju i `messages` modul.
+
+Definišite `TaskCreate` klasu koja nasleđuje od `CreateView` klase. U `CreateView` klasi definišemo sledeće atribute i metode:
+
+- `model` određuje klasu objekta koji treba kreirati ( `Task` ).
+- `fields` je lista polja koja se prikazuju na obrascu. U ovom primeru, obrazac će prikazivati naslov, opis i popunjene atribute modela `Task`.
+- `success_url` je ciljni URL na koji će Django preusmeriti nakon što se zadatak uspešno kreira. U ovom primeru, preusmeravamo na listu zadataka koristeći `reverse_lazy()` funkciju. `reverse_lazy()` prihvata ime prikaza i vraća URL.
+- `form_valid()`je metoda koja se poziva nakon uspešnog slanja forme. U ovom primeru, postavljamo korisnika na trenutno prijavljenog korisnika, kreiramo fleš poruku i vraćamo rezultat `form_valid()` metode nadklase.
+
+Podrazumevano, `CreateView` klasa koristi `task_form.html` šablon iz `templates/todo` sa sledećom konvencijom imenovanja:
+
+```py
+model_form.html
+```
+
+Ako želite da koristite drugi šablon, možete da zamenite podrazumevani šablon koristeći `template_name` atribut u `TaskCreate` klasi.
+
+### Kreiranje šablona
+
+Kreirajte `task_form.html` u `templates/todo` direktorijumu pomoću sledećeg koda:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="center">
+    <form method="post" novalidate class="card">
+         {%csrf_token %}
+         
+         <h2>Create Task</h2>
+        {% for field in form %}
+            {% if field.name == 'completed' %}
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                </p>
+                {% if field.errors %}
+                    <small class="error">{{ field.errors|striptags  }}</small> 
+                {% endif %}
+            {% else %}
+                {{ field.label_tag }} 
+                {{ field }}
+                {% if field.errors %}
+                    <small class="error">{{ field.errors|striptags  }}</small> 
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        
+        <div class="form-buttons">
+            <input type="submit" value="Save" class="btn btn-primary"/>
+            <a href="{%url 'tasks'%}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{%endblock content%}
+```
+
+U `task_form.html`, polja obrasca prikazujemo ručno. Ako želite da automatski generišete obrazac, možete koristiti jedan od sledećih atributa:
+
+```html
+{{ form.as_p }}   # render the form as <p>
+{{ form.as_div }} # render the form as <div>
+{{ form.as_ul }}  # redner the form as <ul>
+```
+
+### Definisanje rute za CreateView
+
+Dodajte rutu u `urls.py` aplikacije `todo` mapiranjem URL-a sa rezultatom metode `as_view()` klase `TaskCreate`:
+
+```py
+from django.urls import path
+from .views import home, TaskList, TaskDetail, TaskCreate
+
+urlpatterns = [
+    path('', home, name='home'),
+    path('tasks/', TaskList.as_view(),name='tasks'),
+    path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
+    path('task/create/', TaskCreate.as_view(),name='task-create'),
+]
+```
+
+### Prikazivanje fleš poruka i dodavanje linka u navigaciju
+
+Izmenite `base.html` šablon projekta na:
+
+- Prikažite fleš poruke.
+- Dodajte New Task vezu u navigaciju.
+
+```html
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <title>Todo List</title>
+    </head>
+
+    <body>
+        <header class="header">
+            <div class="container">
+                <a href="{%url 'home'%}" class="logo">Todo</a>
+                <nav class="nav">
+                    <a href="{% url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+                    <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+                    <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+                </nav>
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{message.tags}}">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {%block content %}
+            
+            {%endblock content%}
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="container">
+                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+            </div>
+        </footer>
+    </body>
+
+</html>
+```
+
+Pokrenite Django dev server i otvorite URL adresu <http://127.0.0.1:8000/task/create/>, videćete obrazac za kreiranje novog `Todo` objekta.
+
+Unesite naslov i opis i kliknite na dugme "Save", bićete preusmereni na stranicu sa listom zadataka sa porukom.
+
+> [!Note]
+>
+> Konačni kod za ovaj Django CreateView tutorijal možete preuzeti ovde.
+
+### Rezime CreateView
+
+- Koristite klasu `CreateView` da definišete prikaz zasnovan na klasi koji kreira objekat.
