@@ -607,7 +607,7 @@ SELECT "hr_employee"."id",
  LIMIT 21
 ```
 
-> !Note
+> [!Note]
 >
 > Imajte na umu da `Contact` klasa nema `employee` atribut. Međutim, možete mu pristupiti ako je kontakt povezan.
 
@@ -749,7 +749,7 @@ department = models.ForeignKey(
 
 U `ForeignKey`, prosleđujemo `Department` kao prvi argument i `on_delete` ključnu reč kao drugi argument. `on_delete=models.CASCADE` označava da ako se department obriše, svi zaposleni povezani sa tim odeljenjem takođe se brišu.
 
-> !Note
+> [!Note]
 >
 > Imajte na umu da polje definišete sa `ForeignKey` na strani `"više"` relacije.
 
@@ -2129,7 +2129,7 @@ SELECT 1 AS "a"
 True
 ```
 
-> !Note
+> [!Note]
 >
 > Imajte na umu da je Django generisao SQL na osnovu PostgreSQL-a. Ako koristite druge baze podataka, možete videti malo drugačiji SQL izraz.
 

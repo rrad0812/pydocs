@@ -368,7 +368,7 @@ python manage.py runserver
 
 Prijavite se na administratorsku stranicu i kreirajte tri zadatka.
 
-> !Note
+> [!Note]
 >
 > Konačni kod za ovaj Django ListView tutorijal možete preuzeti ovde.
 
@@ -389,7 +389,7 @@ Prikazi zasnovani na klasama su alternativni način implementacije prikaza. Oni 
 
 Koristićemo prikaze zasnovane na klasama da bismo izgradili `Todo` aplikaciju.
 
-> !Note
+> [!Note]
 >
 > Konačni kod za ovaj Django ListView tutorijal možete preuzeti ovde.
 
@@ -513,10 +513,10 @@ Izmenite `base.html` šablon da biste uključili `My Tasks` vezu u navigaciju:
     <body>
         <header class="header">
             <div class="container">
-            	<a href="{%url 'home'%}" class="logo">Todo</a>
+                <a href="{%url 'home'%}" class="logo">Todo</a>
                 <nav class="nav">
-                	<a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
-                	<a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+                    <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
                 </nav>
             </div>
         </header>
@@ -538,7 +538,7 @@ Izmenite `base.html` šablon da biste uključili `My Tasks` vezu u navigaciju:
 
 Ako otvorite URL adresu: `html<http://128.0.0.1:8000/tasks/>` videćete listu zadataka.
 
-> !Note
+> [!Note]
 >
 > Konačni kod za ovaj Django ListView tutorijal možete preuzeti ovde.
 
@@ -547,4 +547,5 @@ Rezime ListView
 - Napravite prikaz zasnovan na klasi koji prikazuje listu objekata nasleđivanjem iz `ListView` klase.
 
 [Sadržaj](#sadržaj)
+
 
