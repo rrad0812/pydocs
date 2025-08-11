@@ -1,73 +1,57 @@
 
 # Django ORM
 
-U ovom odeljku ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasno koristiti za interakciju sa relacionim bazama podataka.
+U ovim tutorijalima ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasno koristiti za interakciju sa relacionim bazama podataka.
 
 ## Sadržaj
 
 - [Uvod u Django ORM](#uvod-u-django-orm)
+  Podešavanje osnovnog projekta za sledeće tutorijale u ovom odeljku.
 
-  Podešavanje osnovnog projekta za sledeće tutorijale u ovom odeljku.</br></br>
+- [Relacija jedan na jedan](#relacija-jedan-na-jedan)
+  Kreiranje relacije jedan-na-jedan.
 
-- [Relacija "jedan-na-jedan"](#relacija-jedan-na-jedan)
+- [Relacija jedan na više](#relacija-jedan-na-više)
+  Korišćenje ForeignKey za kreiranje relacije jedan-na-više.
 
-  Kreiranje relacije "jedan-na-jedan".</br></br>
+- [Relacija više na više](#relacija-više-na-više)
+  Kreiranje relacije više-na-više.
 
-- [Relacija "jedan-na-više"](#relacija-jedan-na-više)
+- [Dodatna polja u spojnoj tabeli relacije više na više](#manytomanyfield-through)
+  Dodatna polja u spojnoj tabeli relacije „više na više“.
 
-  Korišćenje ForeignKey za kreiranje relacije jedan-na-više.</br></br>
+- [Metod order_by](#metod-order_by)
+  Kako koristiti metod order_by() za sortiranje rezultata koje vraća QuerySet ( ORDER BY ).
 
-- [Relacija "više-na-više"](#relacija-više-na-više)
+- [Isecanja QuerySeta](#isecanja-queryseta)
+  Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet (LIMIT / OFFSET).
 
-  Kreiranje relacije "više-na-više".</br></br>
-
-- [Dodatna polja u spojnoj tabeli relacije "više na više"](#manytomanyfield-through)
-  
-  Dodatna polja u spojnoj tabeli relacije „više na više“. </br></br>
-
-- [order_by](#order_by)
-  
-  Kako koristiti metod order_by() za sortiranje rezultata koje vraća QuerySet. ( ORDER BY ) </br></br>
-
-- [Limit/Offset](#limitoffset-ograničenje)
-  
-  Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet. </br></br>
-
-- [Operator LIKE](#operator-like)
-  
-  Odabir podataka na osnovu podudaranja obrazaca ( LIKE ). </br></br>
+- [Operatori __startswith, __endswith i __contains](#operatori-__startswith__endswith-i-__contains)
+  Odabir podataka na osnovu obrazaca podudaranja ( LIKE ).
 
 - [Operatori IN i NOT IN](#operatori-in-i-not-in)
-
-  Provera da li se vrednost nalazi na listi vrednosti ( IN ). </br></br>
+  Provera da li se vrednost nalazi na listi vrednosti ( IN ).
 
 - [Operator RANGE i NOT RANGE](#operator-range-i-not-range)
+  Korišćenje Django opsega za proveru da li je vrednost unutar opsega inkluzivno ( BETWEEN ).
 
-  Korišćenje Django opsega za proveru da li je vrednost unutar opsega inkluzivno ( BETWEEN ). </br></br>
+- [Prazni i neprazni QuerySetovi](#prazni-i-neprazni-querysetovi)
+  Vrati True ako upit sadrži bilo koji objekat ili False ako ne sadrži ( EXISTS ).
 
-- [Operator EXISTS](#operator-exists)
-
-  Vrati True ako upit sadrži bilo koji objekat ili False ako ne sadrži. </br></br>
-
-- [Operator IS NULL](#operator-is-null)
-
-  Provera da li je vrednost NULL ( IS NULL ). </br></br>
+- [Metod isnull()](#metod-isnull)
+  Provera da li je vrednost NULL ( IS NULL ).
 
 - [Agregati](#agregati)
-  
-  Kako izvršavati agregatne funkcije kao što su avg, count, max, min i sum. </br></br>
+  Agregatne funkcije count, max, min i avg, sum.
 
-- [GROUP BY](#group-by)
-
-  Grupiši objekte po kriterijumu u grupe. </br></br>
+- [Grupisanje i agregacija podataka](#grupisanje-i-agregacija-podataka)
+  Grupisanje objekata po kriterijumu u grupe i agregiraj podatke.
 
 - [Dumpdata](#dumpdata)
-
-  Kako izvesti podatke u fajl sistem.</br></br>
+  Kako izvesti podatke u fajl sistem.
 
 - [Loaddata](#loaddata)
-  
-  Kako obezbediti početne podatke za modele.</br></br>
+  Kako obezbediti početne podatke za modele.
 
 ## Uvod u Django ORM
 
@@ -393,7 +377,7 @@ Django koristi `DELETE` naredbu bez `WHERE` klauzule da bi obrisao sve redove iz
 
 [Sadržaj](#sadržaj)
 
-## Relacija "jedan na jedan"
+## Relacija jedan na jedan
 
 Relacija `jedan-na-jedan` definiše vezu između dve tabele, gde svakom redu u jednoj tabeli odgovara samo jedan red u drugoj tabeli.
 
@@ -743,7 +727,7 @@ Kako ovo funkcioniše?
 
   Django će izdati sledeću poruku:
 
-  > It is impossible to add a non-nullable field 'department' to employee without specifying a default. This is because the database needs something to populate existing rows. </br>
+  > It is impossible to add a non-nullable field 'department' to employee without specifying a default. This is because the database needs something to populate existing rows.
   Please select a fix:
   > 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
   > 2) Quit and manually define a default value in `models.py`.
@@ -935,7 +919,7 @@ Execution time: 0.012124s [Database: default]
 
 U ovom primeru, Django izvršava samo jedan upit koji spaja tabele `hr_employeeand` i `hr_department`.
 
-### Rezime relacije "jedan na više"
+### Rezime relacije jedan na više
 
 - U relaciji `jedan-na-više`, red u tabeli je povezan sa jednim ili više redova u drugoj tabeli.
 - Koristi se `ForeignKey` za uspostavljanje odnosa `jedan-na-više` između modela u Django-u.
@@ -944,15 +928,15 @@ U ovom primeru, Django izvršava samo jedan upit koji spaja tabele `hr_employeea
 
 [Sadržaj](#sadržaj)
 
-## Relacija "više-na-više"
+## Relacija više-na-više
 
-U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
+U relaciji `više-na-više`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
 
 Na primer, zaposleni može imati više programa kompenzacije, a programu kompenzacije može pripadati više zaposlenih.
 
-Stoga, više redova u tabeli zaposlenih povezano je sa više redova u tabeli kompenzacija. Dakle, odnos između zaposlenih i programa kompenzacija je relacija `"više-na-više"`.
+Stoga, više redova u tabeli zaposlenih povezano je sa više redova u tabeli kompenzacija. Dakle, odnos između zaposlenih i programa kompenzacija je relacija `više-na-više`.
 
-Tipično, relacione baze podataka ne implementiraju direktan odnos „više-na-više“ između dve tabele. Umesto toga, koriste treću tabelu, tabelu za spajanje, da bi uspostavile dva odnosa `"jedan-na-više"` između dve tabele i tabele za spajanje.
+Tipično, relacione baze podataka ne implementiraju direktan odnos „više-na-više“ između dve tabele. Umesto toga, koriste treću tabelu, tabelu za spajanje, da bi uspostavile dva odnosa `jedan-na-više` između dve tabele i tabele za spajanje.
 
 Tabela `hr_employee_compensations` je tabela za spajanje. Ima dva strana ključa `employee_id` i `compensation_id`.
 
@@ -962,7 +946,7 @@ Obično vam nije potrebna `id` kolona u `hr_employee_compensations` tabeli kao p
 
 Takođe, Django kreira jedinstveno ograničenje koje uključuje kolone `employee_id` i `compensation_id`. Drugim rečima, u tabeli `hr_employee_compensations` neće biti duplih parova vrednosti `employee_id` i `compensation_id`.
 
-Da biste kreirali relaciju `"više-na-više"` u Django-u, koristite `ManyToManyField`. Na primer, sledeći kod koristi `ManyToManyField` da bi kreirao relaciju `"više-na-više"` između `Employee` i `Compensation` modela:
+Da biste kreirali relaciju `više-na-više` u Django-u, koristite `ManyToManyField`. Na primer, sledeći kod koristi `ManyToManyField` da bi kreirao relaciju `više-na-više` između `Employee` i `Compensation` modela:
 
 ```py
 # ...
@@ -998,7 +982,7 @@ Kako ovo funkcioniše?
 
 - Definišite novu `Compensation` klasu modela koja proširuje `models.Model` klasu.
 
-- Dodajte `compensations` polje klasi `Employee`. `compensations` polje koristi `ManyToManyField` da bi uspostavilo odnos `"više-na-više"` između klasa `Employee` i `Compensation`.
+- Dodajte `compensations` polje klasi `Employee`. `compensations` polje koristi `ManyToManyField` da bi uspostavilo odnos `više-na-više` između klasa `Employee` i `Compensation`.
 
 - Da biste proširili izmene modela u bazu podataka, pokrećete `makemigrations` komandu:
 
@@ -1170,7 +1154,7 @@ Da biste uklonili program kompenzacije zaposlenom, koristite `remove()` metod at
 
 Sada su Jane Doe preostala dva programa kompenzacije.
 
-### Rezime relacije "više na više"
+### Rezime relacije više na više
 
 - U relaciji `"više-prema-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli.
 - Relacione baze podataka koriste tabelu za spajanje da bi uspostavile odnos `"više-prema-više"` između dve tabele.
@@ -1180,7 +1164,7 @@ Sada su Jane Doe preostala dva programa kompenzacije.
 
 ## ManyToManyField through
 
-U relaciji `"više-na-više"`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli. Da bi se uspostavio odnos `"više-na-više"`, relacione baze podataka koriste treću tabelu koja se naziva tabela za spajanje i kreiraju dva odnosa `"jedan-na-više"` sa izvornim tabelama.
+U relaciji `više-na-više`, više redova u jednoj tabeli je povezano sa više redova u drugoj tabeli. Da bi se uspostavio odnos `više-na-više`, relacione baze podataka koriste treću tabelu koja se naziva tabela za spajanje i kreiraju dva odnosa `jedan-na-više` sa izvornim tabelama.
 
 Tipično, tabela spajanja sadrži vrednosti identifikatora izvornih tabela tako da redovi u jednoj tabeli mogu biti povezani sa redovima u drugoj tabeli.
 
@@ -1347,11 +1331,11 @@ Posao "j1" sada ne bi trebalo da ima zaposlene:
 
 ### Rezime through
 
-- Koristite `through` argument u `ManyToManyField` da biste napravili realciju `"više-na-više"` sa dodatnim poljima.
+- Koristite `through` argument u `ManyToManyField` da biste napravili realciju `više-na-više` sa dodatnim poljima.
 
 [Sadržaj](#sadržaj)
 
-## order_by
+## Metod order_by
 
 Prilikom definisanja modela, možete odrediti podrazumevani redosled `QuerySet` rezultata koje vraća model korišćenjem `ordering` opcije u klasi modela `Meta`.
 
@@ -1493,7 +1477,7 @@ Generisani SQL pokazuje da prilikom uređivanja po polju u povezanom modelu, Dja
 
 [Sadržaj](#sadržaj)
 
-## Limit$Offset ograničenje
+## Isecanja QuerySeta
 
 U praksi, retko dobijate sve redove iz jedne ili više tabela u bazi podataka. Umesto toga, dobijate podskup redova za prikazivanje na veb stranici.
 
@@ -1590,7 +1574,7 @@ Execution time: 0.001001s [Database: default]
 
 [Sadržaj](#sadržaj)
 
-## Operator LIKE
+## Operatori __startswith,__endswith i __contains
 
 Za demonstraciju ćemo koristiti model `Employee` iz `HR` aplikacije. `Employee` model se mapira na `hr_employee` tabelu u bazi podataka:
 
@@ -1969,7 +1953,7 @@ SELECT "hr_employee"."id",
 
 [Sadržaj](#sadržaj)
 
-## Operator EXISTS
+## Prazni i neprazni QuerySetovi
 
 Ponekad želite da proverite da li upit sadrži bilo kakve redove. Da biste to uradili, koristite `exists()` metod objekta `QuerySet`.
 
@@ -2041,7 +2025,7 @@ ORDER BY "hr_employee"."first_name" ASC,
 
 [Sadržaj](#sadržaj)
 
-## Operator IS NULL
+## Metod isnull()
 
 Za demonstraciju ćemo koristiti modele `Employee` i `Contact` iz `HR` aplikacije. Modeli `Emloyee` i `Contact` se mapiraju na tabele `hr_employee` i `hr_contact` baze podataka.
 
@@ -2270,7 +2254,7 @@ Execution time: 0.000140s [Database: default]
 
 [Sadržaj](#sadržaj)
 
-## GROUP BY
+## Grupisanje i agregacija podataka
 
 `SQL` `GROUP BY` klauzula grupiše redove koje vraća upit. Obično se koriste agregatne funkcije kao što su `count`, `min`, `max`, `avg` i `sum` sa `GROUP BY` klauzulom da bi se vratila agregirana vrednost za svaku grupu.
 
