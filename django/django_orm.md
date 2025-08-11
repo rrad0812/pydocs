@@ -2248,7 +2248,7 @@ U ovom tutorijalu ćete naučiti kako da koristite Django da biste dobili agrega
 
 Za demonstraciju ćemo koristiti modele `Employee` i `Department` iz `HR` aplikacije. Modeli `Employee` i `Department` se mapiraju na tabele `hr_employee` i `hr_department`.
 
-Podatke za primere možete dobiti [ovde](https://www.pythontutorial.net/wp-content/uploads/2023/01/django_orm_7_1.zip)
+Podatke za primere možete dobiti [ovde](https://www.pythontutorial.net/wp-content/uploads/2023/01/django_orm_7_1.zip).
 
 Dodajmo `salary` polje modelu `Employee`:
 
