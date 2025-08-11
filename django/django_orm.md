@@ -23,10 +23,10 @@ U ovim tutorijalima ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasn
 - [Metod order_by](#metod-order_by)
   Kako koristiti metod order_by() za sortiranje rezultata koje vraća QuerySet ( ORDER BY ).
 
-- [Isecanja QuerySeta](#isecanja-queryseta)
+- [Ograničavanje broja vraćenih objekata u QuerySetu](#ograničavanje-broja-vraćenih-objekata-u-querysetu)
   Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet (LIMIT / OFFSET).
 
-- [Operatori __startswith, __endswith i __contains](#operatori-__startswith__endswith-i-__contains)
+- [Operatori startswith, endswith i contains](#operatori-startswith-endswith-i-contains)
   Odabir podataka na osnovu obrazaca podudaranja ( LIKE ).
 
 - [Operatori IN i NOT IN](#operatori-in-i-not-in)
@@ -35,14 +35,14 @@ U ovim tutorijalima ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasn
 - [Operator RANGE i NOT RANGE](#operator-range-i-not-range)
   Korišćenje Django opsega za proveru da li je vrednost unutar opsega inkluzivno ( BETWEEN ).
 
-- [Prazni i neprazni QuerySetovi](#prazni-i-neprazni-querysetovi)
+- [Metod exists](#metod-exists)
   Vrati True ako upit sadrži bilo koji objekat ili False ako ne sadrži ( EXISTS ).
 
 - [Metod isnull()](#metod-isnull)
   Provera da li je vrednost NULL ( IS NULL ).
 
 - [Agregati](#agregati)
-  Agregatne funkcije count, max, min i avg, sum.
+  Agregatne metode count, max, min i avg, sum.
 
 - [Grupisanje i agregacija podataka](#grupisanje-i-agregacija-podataka)
   Grupisanje objekata po kriterijumu u grupe i agregiraj podatke.
@@ -1477,7 +1477,7 @@ Generisani SQL pokazuje da prilikom uređivanja po polju u povezanom modelu, Dja
 
 [Sadržaj](#sadržaj)
 
-## Isecanja QuerySeta
+## Ograničavanje broja vraćenih objekata u QuerySetu
 
 U praksi, retko dobijate sve redove iz jedne ili više tabela u bazi podataka. Umesto toga, dobijate podskup redova za prikazivanje na veb stranici.
 
@@ -1574,7 +1574,7 @@ Execution time: 0.001001s [Database: default]
 
 [Sadržaj](#sadržaj)
 
-## Operatori __startswith,__endswith i __contains
+## Operatori startswith, endswith i contains
 
 Za demonstraciju ćemo koristiti model `Employee` iz `HR` aplikacije. `Employee` model se mapira na `hr_employee` tabelu u bazi podataka:
 
@@ -1953,7 +1953,7 @@ SELECT "hr_employee"."id",
 
 [Sadržaj](#sadržaj)
 
-## Prazni i neprazni QuerySetovi
+## Metod exists()
 
 Ponekad želite da proverite da li upit sadrži bilo kakve redove. Da biste to uradili, koristite `exists()` metod objekta `QuerySet`.
 
