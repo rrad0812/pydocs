@@ -5,52 +5,52 @@ U ovim tutorijalima ćemo se detaljno pozabaviti Django ORM-om i kako ga efikasn
 
 ## Sadržaj
 
-- [Uvod u Django ORM](#uvod-u-django-orm)
+- [Uvod u Django ORM](#uvod-u-django-orm)  
   Podešavanje osnovnog projekta za sledeće tutorijale u ovom odeljku.
 
-- [Relacija jedan na jedan](#relacija-jedan-na-jedan)
+- [Relacija jedan na jedan](#relacija-jedan-na-jedan)  
   Kreiranje relacije jedan-na-jedan.
 
-- [Relacija jedan na više](#relacija-jedan-na-više)
+- [Relacija jedan na više](#relacija-jedan-na-više)  
   Korišćenje ForeignKey za kreiranje relacije jedan-na-više.
 
-- [Relacija više na više](#relacija-više-na-više)
+- [Relacija više na više](#relacija-više-na-više)  
   Kreiranje relacije više-na-više.
 
-- [Dodatna polja u spojnoj tabeli relacije više na više](#manytomanyfield-through)
+- [Dodatna polja u spojnoj tabeli relacije više na više](#manytomanyfield-through)  
   Dodatna polja u spojnoj tabeli relacije „više na više“.
 
-- [Metod order_by](#metod-order_by)
+- [Metod order_by](#metod-order_by)  
   Kako koristiti metod order_by() za sortiranje rezultata koje vraća QuerySet ( ORDER BY ).
 
-- [Ograničavanje broja vraćenih objekata u QuerySetu](#ograničavanje-broja-vraćenih-objekata-u-querysetu)
+- [Ograničavanje broja vraćenih objekata u QuerySetu](#ograničavanje-broja-vraćenih-objekata-u-querysetu)  
   Kako koristiti isecanje za ograničenje broja objekata koje vraća QuerySet (LIMIT / OFFSET).
 
-- [Operatori startswith, endswith i contains](#operatori-startswith-endswith-i-contains)
+- [Operatori startswith, endswith i contains](#operatori-startswith-endswith-i-contains)  
   Odabir podataka na osnovu obrazaca podudaranja ( LIKE ).
 
-- [Operatori IN i NOT IN](#operatori-in-i-not-in)
+- [Operatori IN i NOT IN](#operatori-in-i-not-in)  
   Provera da li se vrednost nalazi na listi vrednosti ( IN ).
 
 - [Operator RANGE i NOT RANGE](#operator-range-i-not-range)
   Korišćenje Django opsega za proveru da li je vrednost unutar opsega inkluzivno ( BETWEEN ).
 
-- [Metod exists](#metod-exists)
+- [Metod exists](#metod-exists)  
   Vrati True ako upit sadrži bilo koji objekat ili False ako ne sadrži ( EXISTS ).
 
-- [Metod isnull()](#metod-isnull)
+- [Metod isnull()](#metod-isnull)  
   Provera da li je vrednost NULL ( IS NULL ).
 
-- [Agregati](#agregati)
+- [Agregati](#agregati)  
   Agregatne metode count, max, min i avg, sum.
 
-- [Grupisanje i agregacija podataka](#grupisanje-i-agregacija-podataka)
+- [Grupisanje i agregacija podataka](#grupisanje-i-agregacija-podataka)  
   Grupisanje objekata po kriterijumu u grupe i agregiraj podatke.
 
-- [Dumpdata](#dumpdata)
+- [Dumpdata](#dumpdata)  
   Kako izvesti podatke u fajl sistem.
 
-- [Loaddata](#loaddata)
+- [Loaddata](#loaddata)  
   Kako obezbediti početne podatke za modele.
 
 ## Uvod u Django ORM
