@@ -17,16 +17,16 @@ U ovom odeljku ćete naučiti prikaze zasnovane na klasama tako što ćete napra
 - [CreateView](#createview)  
   Kako da koristite klasu CreateView za kreiranje forme koja kreira zadatak.
 
-- [UpdateView](#updateview)
+- [UpdateView](#updateview)  
   Kako da koristite klasu UpdateView za kreiranje forme koja uređuje zadatak.
 
-- DeleteView  
+- [DeleteView](#deleteview)  
   Kako da koristite klase DeleteView za brisanje postojećeg zadatka.
 
-- LoginView  
+- [LoginView](#deleteview)  
 - Kako da koristite LoginView za kreiranje stranice za prijavu na aplikaciju Todo.
 
-- FormView  
+- [FormView](#formview)  
   Kako da koristite FormView za kreiranje stranice za registraciju.
 
 - Resetovanje lozinke  
@@ -1140,6 +1140,8 @@ Konačni kod za ovaj `DeleteView` tutorijal možete preuzeti ovde.
 
 Koristite `DeleteView` klasu da definišete prikaz zasnovan na klasi koji briše postojeći objekat.
 
+[Sadržaj](#sadržaj)
+
 ## LoginView
 
 U ovom tutorijalu ćete naučiti kako da koristite `LoginView` za kreiranje stranice za prijavu za `Todo` aplikaciju.
@@ -1470,3 +1472,993 @@ http://127.0.0.1:8000/login/?next=/task/create/
 - Koristite `LoginView` klasu da biste kreirali stranicu za prijavu.
 - Koristite `LogoutView` klasu da odjavite korisnika.
 - Koristite `LoginRequiredMixin` klasu da zaštitite stranicu.
+
+[Sadržaj](#sadržaj)
+
+## FormView
+
+U ovom tutorijalu ćete naučiti kako da koristite `FormView` klasu za kreiranje registracionog formulara za aplikaciju Todo.
+
+Klasa `FormView` vam omogućava da kreirate prikaz fotmr. Koristićemo `FormView` klasu za kreiranje forme za registraciju za `Todo` aplikaciju.
+
+### Kreiranje forme za prijavu
+
+Napravite `forms.py` datoteku u `users` aplikaciji i definišite `RegisterForm` klasu na sledeći način:
+
+```py
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(max_length=254)
+
+    class Meta:
+        model = User
+        fields = ('username',  'email', 'password1', 'password2', )
+```
+
+RegisterForm koristi model `User` i prikazuje polja korisničko `username`, `email`, `password1` i `password2`.
+
+### Definisanje FormView klase
+
+Definišite `RegisterView` klasu u `views.py` aplikacije `users.py`:
+
+```py
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login 
+from django.contrib.auth.models import User
+from .forms import RegisterForm
+
+class RegisterView(FormView):
+    template_name = 'users/register.html'
+    form_class = RegisterForm
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('tasks')
+    
+    def form_valid(self, form):
+        user = form.save()
+        if user:
+            login(self.request, user)
+        
+        return super(RegisterView, self).form_valid(form)
+```
+
+Klasa `RegisterView` nasleđuje klasu `FormView` i ima sledeće atribute i metode:
+
+- `template_name` određuje ime šablona za prikazivanje forme za prijavu.
+- `form_class` određuje formu ( RegisterForm ) koji se koristi u šablonu.
+- `redirect_authenticated_user` je postavljeno na `True` da bi se korisnik preusmerio nakon autentifikacije.
+- `success_url` određuje URL adresu za preusmeravanje nakon što se korisnik uspešno registruje. U ovom primeru, preusmerava korisnika na Task listu.
+- `form_valid()` metoda se poziva nakon uspešnog slanja formulara. U ovom primeru, čuvamo `User` model i automatski prijavljujemo korisnika.
+
+### Definisanje RegisterView rute
+
+Definišite rutu koja mapira URL adresu za registraciju `register/` sa rezultatom metode `as_view()` klase `RegisterView` u `urls.py` aplikacije `users`:
+
+```py
+from django.urls import path
+from django.contrib.auth.views import LogoutView
+from .views import MyLoginView, RegisterView
+
+urlpatterns = [
+    path('login/', MyLoginView.as_view(),name='login'),
+    path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
+    path('register/', RegisterView.as_view(),name='register'),
+]
+```
+
+### Šablon RegisterView
+
+Napravite datoteku `register.html` u `templates/users` direktorijumu aplikacije `users` sa sledećim kodom:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+    <div class="center">
+      <form method="post" novaldiate class="card">
+          {% csrf_token %}
+        <h2 class="text-center">Create your account</h2>
+        {% for field in form %}
+                {{ field.label_tag }} 
+                {{ field }}
+                {% if field.errors %}
+                    <small class="error">{{ field.errors|striptags  }}</small> 
+                {% endif %}
+        {% endfor %}
+        
+        <input type="submit" value="Register" class="btn btn-primary full-width">
+        <hr>
+        <p class="text-center">Already have an account? <a href="{% url 'login'%}">Login Here</a></p>
+        </form>
+    </div>
+
+{%endblock content%}
+```
+
+Forma `users/register.html` je za `RegisterForm` klasu koju smo definisali u `forms.py` datoteci.
+
+### RegisterForm link
+
+Izmenite `login.html` šablon dodavanjem linka za registraciju:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+  <div class="center">
+      <form method="post" class="card" novalidate>
+          {% csrf_token %}
+        <h2 class="text-center">Log in to your account</h2>
+        {% for field in form %}
+                {{ field.label_tag }} 
+                {{ field }}
+                {% if field.errors %}
+                    <small>{{ field.errors|striptags  }}</small> 
+                {% endif %}
+        {% endfor %}
+
+1        <input type="submit" value="Login" class="btn btn-primary full-width">
+        <hr>
+        <p class="text-center">Forgot your password <a href="#">Reset Password</a></p>
+        <p class="text-center">Don't have a account? <a href="{%url 'register'%}">Join Now</a></p>
+    </form>
+</div>
+
+{%endblock content%}
+```
+
+Takođe, izmenite `base.html` šablon dodavanjem linka za registraciju u navigaciju i na početnu stranicu:
+
+```html
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <title>Todo List</title>
+    </head>
+
+    <body>
+        <header class="header">
+            <div class="container">
+                <a href="{%url 'home'%}" class="logo">Todo</a>
+                <nav class="nav">
+                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+                    {% if request.user.is_authenticated %}
+                              <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+                              <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+                        <a href="#">Hi {{request.user | title}}</a>
+                            <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
+                    {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+                            <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
+                    {% endif %}
+                 </nav>
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                   {{message}}
+                </div>
+                {% endfor %}
+        {% endif %}
+            
+             {%block content %}
+             {%endblock content%}
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="container">
+                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+            </div>
+        </footer>
+    </body>
+
+</html>
+```
+
+`home.html`
+
+```html
+{%extends 'base.html'%}
+
+{%load static %}
+
+{%block content%}
+    <section class="feature">
+        <div class="feature-content">
+            <h1>Todo</h1>
+            <p>Todo helps you more focus, either work or play.</p>    
+            <a class="btn btn-primary cta" href="{% url 'register' %}">Get Started</a>
+        </div>
+        <img src="{%static 'images/feature.jpg'%}" alt="" class="feature-image">
+    </section>
+{%endblock content%}
+```
+
+Ako otvorite URL adresu za registraciju: <http://127.0.0.1:8000/register/>
+videćete formular za registraciju.
+
+Nakon uspešne registracije, bićete automatski prijavljeni.
+
+Međutim, imamo jedan problem. Jane može da pregleda, ažurira i briše zadatke drugih korisnika.
+
+Da biste ovo popravili, potrebno je da filtrirate zadatke koji pripadaju trenutno prijavljenom korisniku u svim klasama dodavanjem `get_queryset()` metoda u klase `TaskList`, `TaskDetail`, `TaskCreate`, `TaskUpdate`, `TaskDelete`.
+
+```py
+from django.shortcuts import render
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from .models import Task
+
+class TaskList(LoginRequiredMixin, ListView):
+    model = Task
+    context_object_name = 'tasks'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = context['tasks'].filter(user=self.request.user)
+        return context
+    
+class TaskDetail(LoginRequiredMixin, DetailView):
+    model = Task
+    context_object_name = 'task'
+    
+    def get_queryset(self):
+        base_qs = super(TaskDetail, self).get_queryset()
+        return base_qs.filter(user=self.request.user)  
+    
+class TaskUpdate(LoginRequiredMixin, UpdateView):
+    model = Task
+    fields = ['title','description','completed']
+    success_url = reverse_lazy('tasks')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "The task was updated successfully.")
+        return super(TaskUpdate,self).form_valid(form)
+      
+    def get_queryset(self):
+        base_qs = super(TaskUpdate, self).get_queryset()
+        return base_qs.filter(user=self.request.user)
+ 
+class TaskDelete(LoginRequiredMixin, DeleteView):
+    model = Task
+    context_object_name = 'task'
+    success_url = reverse_lazy('tasks')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "The task was deleted successfully.")
+        return super(TaskDelete,self).form_valid(form)
+      
+    def get_queryset(self):
+        base_qs = super(TaskDelete, self).get_queryset()
+        return base_qs.filter(user=self.request.user)
+```
+
+Sada, ako se prijavite kao Jane, videćete praznu listu obaveza.
+
+Ako kreirate novi zadatak, videćete samo taj zadatak na listi obaveza.
+
+Ako pokušate da pristupite Joe zadacima dok ste prijavljeni kao Jane, dobićete grešku 404.
+
+### Rezime RegisterForm
+
+- Koristite `FormView` da biste kreirali prikaz koji prikazuje formu.
+
+[Sadržaj](#sadržaj)
+
+## Resetovanje lozinke
+
+U ovom tutorijalu ćete naučiti kako da implementirate funkciju resetovanja lozinke koja omogućava korisnicima da resetuju svoje lozinke koristeći imejl adrese.
+
+Sledeći dijagram ilustruje tok koji omogućava korisniku da resetuje lozinku koristeći adresu e-pošte:
+
+K orisnik klikne na vezu `Password reset` na obrascu za prijavu.
+
+Django prikazuje obrazac koji omogućava korisniku da unese adresu e-pošte za prijem linka za resetovanje lozinke.
+
+Django koristi `PasswordResetView` prikaz da bi prikazao ovaj obrazac.
+
+Korisnik unosi adresu e-pošte i klikne na dugme `Submit`.
+
+Django šalje imejl na unetu imejl adresu i prikazuje poruku koja upućuje korisnika da proveri prijemno sanduče.
+
+Django koristi `PasswordResetDoneView` klasu za renderovanje ovog obrasca.
+
+Korisnik otvara prijemno sanduče i klikne na vezu za resetovanje lozinke.
+
+Na kraju, korisnik unosi novu lozinku i klikne na dugme `Password reset`.
+
+Django prikazuje poruku potvrde.
+
+Django koristi `PasswordResetCompleteView` za rukovanje ovom stranicom.
+
+### Implementacija resetovanja lozinke za aplikaciju Todo
+
+Izmenite `views.py` aplikacije `users` da biste mapirali URL za resetovanje lozinke sa odgovarajućim prikazima zasnovanim na klasi.
+
+```py
+from django.urls import path
+from .views import MyLoginView, RegisterView
+
+from django.contrib.auth.views import (
+    LogoutView, 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
+
+urlpatterns = [
+    path('login/', MyLoginView.as_view(redirect_authenticated_user=True),name='login'),
+    path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
+    path('register/', RegisterView.as_view(),name='register'),
+    path('password-reset/', PasswordResetView.as_view(template_name='users/password_reset.html'),name='password-reset'),
+    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),name='password_reset_confirm'),
+    path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),name='password_reset_complete'),
+]
+```
+
+### Resetovanje korisničke lozinke
+
+Mapirajte URL adresu za resetovanje lozinke `password-reset/` sa rezultatom metode `as_view()` klase `PasswordResetView`. `PasswordResetView` prikaz zasnovan na klasi koristi `users/password_reset.html` šablon za prikazivanje forme.
+
+Kreirajte `password_reset.html` šablon u `templates/users` direktorijumu:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+
+<div class="center">
+    <form method="post" class="card">
+        {% csrf_token %}
+        <h2 class="text-center">Reset Password</h2>
+        {% for field in form %}
+            {{ field.label_tag }} 
+            {{ field }}
+            {% if field.errors %}
+                <small>{{ field.errors|striptags  }}</small> 
+            {% endif %}
+        {% endfor %}
+        <div class="form-buttons">
+            <input type="submit" value="Send" class="btn btn-primary">
+            <a href="{%url 'login' %}"  class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{%endblock content%}
+```
+
+### Resetovanje lozinke završeno
+
+Mapirajte `password-reset/done/` sa rezultatom metode `as_view()` klase `PasswordResetDoneView`. `PasswordResetDoneView` klasa koristi `password_reset_done.html` šablon za prikazivanje stranice:
+
+```py
+path('password-reset/done/', PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),name='password_reset_done'),
+```
+
+Kreirajte `reset_password_done.html` šablon u `templates/users` direktorijumu:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+
+<div class="center card">
+    <h2>Reset Password</h2>
+    <p>Please check your inbox and follow the instruction to reset your password.</p>
+</div>
+
+{%endblock content%}
+```
+
+### PasswordResetConfirmView
+
+Mapirajte `password-reset-confirm/<uidb64>/<token>/` URL sa rezultatom `as_view()` klase `PasswordResetConfirmView`.
+
+```py
+path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),name='password_reset_confirm'),
+```
+
+Klasa `PasswordResetConfirmView` koristi `password_reset_confirm.html` šablon za prikazivanje stranice. URL adresa za resetovanje lozinke izgleda ovako:
+
+```html
+http://127.0.0.1:8000/password-reset-confirm/OA/bfwk0g-d87966e0a694f519bc6f29daa4616b07/
+```
+
+Kreirajte `password_reset_confirm.html` šablon u `templates/users` direktorijumu:
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+
+<div class="center">
+    <form method="post" class="card">
+        {% csrf_token %}
+        <h2>Password Reset Confirm</h2>
+    
+        {% for field in form %}
+            {{ field.label_tag }} 
+            {{ field }}
+            {% if field.errors %}
+                <small>{{ field.errors|striptags  }}</small> 
+            {% endif %}
+        {% endfor %}
+  
+        <div>
+            <button type="submit" class="btn btn-primary">Reset Password</button>
+        </div>
+    </form>
+</div>
+
+{%endblock content%}
+```
+
+### PasswordResetCompleteView
+
+Mapirajte kompletnu URL adresu za resetovanje lozinke sa `as_view()` metodom klase `PasswordResetCompleteView`.
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+
+<div class="card center">
+    <p>Your password has been changed successfully. Please <a href="{% url 'login' %}">Login</a></p>
+</div>
+
+{%endblock content%}
+```
+
+Kreirajte `password_reset_complete.html` šablon u `templates/users`direktorijumu
+
+```html
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="center">
+    <form method="post" class="card" novalidate>
+        {% csrf_token %}
+        <h2 class="text-center">Log in to your account</h2>
+        {% for field in form %}
+            {{ field.label_tag }} 
+            {{ field }}
+            {% if field.errors %}
+                <small>{{ field.errors|striptags  }}</small> 
+            {% endif %}
+        {% endfor %}
+
+        <input type="submit" value="Login" class="btn btn-primary full-width">
+        <hr>
+        <p class="text-center">Forgot your password <a href="{%url 'password-reset'%}">Reset Password</a></p>
+        <p class="text-center">Don't have a account? <a href="{%url 'register'%}">Join Now</a></p>
+    </form>
+</div>
+
+{%endblock content%}
+```
+
+### Konfigurisanje SMTP-a za slanje imejlova iz Djanga
+
+Da biste slali imejlove u Djangu, potreban vam je lokalni Simple Mail Transfer Protocol ( SMTP ) server ili eksterni SMTP server od dobavljača usluga imejla.
+
+Kada imate SMTPserver, možete dodati njegove informacije u `settings.py` Django projekt<> sa sledećim informacijama:
+
+```py
+EMAIL_HOST: SMTPserver domaćin.
+EMAIL_PORT: SMTP port, podrazumevana vrednost je 25.
+EMAIL_HOST_USER: Korisničko ime za SMTPserver.
+EMAIL_HOST_PASSWORD: lozinka za SMTPserver.
+EMAIL_USE_TLS: da li se koristi bezbedna veza ( TLS ).
+```
+
+Na primer, sledeće pokazuje kako se koriste SMTP podešavanja Google servera:
+
+```py
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PORT = 25
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your_gmail_account@gmail.com'
+EMAIL_HOST_PASSWORD = 'your_gmail_password'
+```
+
+Imajte na umu da treba da zamenite `EMAIL_HOST_USER` i `EMAIL_HOST_PASSWORD` svojim podacima za Gmail.
+
+Ako nemate lokalni SMTPserver, možete koristiti sledeću vrednost u `settings.py` datoteci:
+
+```py
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+```
+
+Korišćenjem ovog podešavanja, Django će ispisati sve imejlove u konzolu (Shell) umesto da ih šalje. Ovo je veoma pogodno za testiranje bez SMTPservera.
+
+Primer izlaza će izgledati ovako:
+
+```shell
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: jane@pythontutorial.net
+Date: <date>
+Message-ID:
+ <167014230656.23040.17412319412157509424@pythontutorial.net>
+
+You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://127.0.0.1:8000/password-reset-confirm/OA/bfwytu-b9f9b789e9a294eb80d707e448dde1d2/
+
+Your username, in case you’ve forgotten: jane
+Thanks for using our site!
+The 127.0.0.1:8000 team
+```
+
+Ako želite da prilagodite imejl za resetovanje lozinke, možete da kreirate `password_reset_email.html` u `templates/users` direktorijumu:
+
+```html
+<p>Hi</p>
+
+<p>You're receiving this email because you requested a password reset for your user account at {{domain}}/</p>
+
+<p>Please click the following link to reset your password:</p>
+
+{{ protocol }}://{{ domain }}{% url "password_reset_confirm" uidb64=uid token=token %}
+
+<p>Thanks</p>
+<p>Todo App Team</p>
+```
+
+I navedite `html_email_template_name` u `as_view()` metodi klase `PasswordResetView`:
+
+```py
+path('password-reset/', 
+     PasswordResetView.as_view(
+        template_name='users/password_reset.html',
+        html_email_template_name='users/password_reset_email.html'
+    ),
+    name='password-reset'
+)
+```
+
+Ako resetujete lozinku, Django će koristiti prilagođeni šablon e-pošte.
+
+```html
+<p>Hi</p>
+
+<p>You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000/</p>
+
+<p>Please click the following link to reset your password:</p>
+
+http://127.0.0.1:8000/password-reset-confirm/OA/bfwzqv-9d6b6777ad40073cfa1d4d4e150fb76f/
+
+<p>Thanks</p>
+<p>Todo App Team</p>
+```
+
+### Rezime resetovanje lozinke
+
+- Koristite klase `PasswordResetView`, `PasswordResetDoneView`, `PasswordResetConfirmView` i `PasswordResetCompleteView` da biste implementirali funkciju resetovanja lozinke za Django aplikaciju.
+
+[Sadržaj](#sadržaj)
+
+## Korisnički profil
+
+U ovom tutorijalu ćete naučiti kako da implementirate korisnički profil u Django aplikacijama.
+
+Korisnički profil se sastoji od podešavanja i informacija povezanih sa korisnikom. U ovom tutorijalu ćete naučiti kako da dozvolite korisnicima da ažuriraju svoje profile u Django aplikacijama.
+
+### Instaliranje paketa pillow
+
+Pošto ćemo se baviti slikama, potrebno je da instaliramo `pillow` paket pomoću sledeće `pip` komande:
+
+```shell
+pip install Pillow
+```
+
+### Konfigurisanje direktorijuma za čuvanje otpremljenih slika
+
+Kreirajte `media` direktorijum u projektu:
+
+```shell
+mkdir media
+```
+
+Drugo, dodajte `MEDIA_ROOT` i `MEDIA_URL` u `settings.py` projekta:
+
+```py
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+```
+
+`MEDIA_ROOT` navodi direktorijum koji čuva otpremljenu sliku. `MEDIA_URL` navodi URL adresu koja služi za preuzimanje datoteka slika iz `MEDIA_ROOT` direktorijuma.
+
+Dodajte URL adresu koja služi medijskim datotekama urls.pyprojekta na sledeći način:
+
+```py
+from django.contrib import admin
+from django.urls import path, include
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('',include('todo.urls')),
+    path('',include('users.urls'))
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+```
+
+Ako DEBUGse nalazi Trueu settings.pydatoteci, Django aplikacija će poslužiti medijske datoteke iz MEDIA_URL.
+
+### Kreiranje modela profila
+
+Izmenite models.py aplikaciju usersi definišite Profilemodel na sledeći način:
+
+```py
+from django.db import models
+from django.contrib.auth.models import User
+from PIL import Image
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    avatar = models.ImageField(
+        default='avatar.jpg', # default avatar
+        upload_to='profile_avatars' # dir to store the image
+    )
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+    def save(self, *args, **kwargs):
+        # save the profile first
+        super().save(*args, **kwargs)
+
+        # resize the image
+        img = Image.open(self.avatar.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            # create a thumbnail
+            img.thumbnail(output_size)
+            # overwrite the larger image
+            img.save(self.avatar.path)
+```
+
+Kako to funkcioniše.
+
+Prvo, definišite Profilemodel koji nasleđuje od Modelklase:
+
+```py
+class Profile(models.Model):
+```
+
+Svaki korisnik ima profil i svaki profil pripada korisniku. Stoga je odnos između Usermodela i Profilemodela jedan-na-jedan.
+
+Da biste definisali odnos jedan-na-jedan , koristite OneToOneField:
+
+```py
+user = models.OneToOneField(User, on_delete=models.CASCADE)
+```
+
+Ako Userse izbriše , Profilepovezano sa se Usertakođe briše. Ovo ukazuje na on_delete=models.CASCADEparametr OneToOneField().
+
+Definišite avatarpolje koje sadrži avatar korisnika:
+
+```py
+avatar = models.ImageField(
+        default='avatar.jpg', # default avatar
+        upload_to='profile_avatars' # dir to store the image
+)
+```
+
+Ako korisnici nisu otpremili avatare, podrazumevana datoteka je avatar.jpgdatoteka. Takođe, navodimo direktorijum ( profile_avatars) koji će čuvati otpremljene avatare.
+
+Imajte na umu da možete dodati još polja modelu Profilekao što su adrese, interesovanja itd., ako je potrebno.
+
+Preuzmite avatar.jpg datoteku i kopirajte je u mediadirektorijum projekta:
+
+Definišite __str__()metod koji vraća string reprezentaciju modela Profile:
+
+```py
+def __str__(self):
+   return f'{self.user.username} Profile'
+```
+
+Šesto, definišite save()metod koji čuva profil u bazi podataka, kreira sličicu avatara i čuva ga u navedenom direktorijumu:
+
+```py
+def save(self, *args, **kwargs):
+    # save the profile first
+    super().save(*args, **kwargs)
+
+    # resize the image
+    img = Image.open(self.avatar.path)
+    if img.height > 150 or img.width > 150:
+        output_size = (150, 150)
+        # create a thumbnail
+        img.thumbnail(output_size)
+        
+        # overwrite the large image
+        img.save(self.avatar.path)
+```
+
+Sedmo, registrujte profil u admin.pykako bismo mogli da upravljamo profilom na administratorskoj stranici:
+
+```py
+from django.contrib import admin
+from .models import Profile
+
+admin.site.register(Profile)
+```
+
+### Primena migracija
+
+Prvo, izvršite migracije pokretanjem makemigrationskomande:
+
+```shell
+python manage.py makemigrations
+
+Migrations for 'users':
+   users\migrations\0001_initial.py
+      - Create model Profile
+```
+
+Drugo, primenite migracije:
+
+```shell
+python manage.py migrate
+
+Operations to perform:
+   Apply all migrations: admin, auth, contenttypes, sessions, todo, users
+Running migrations:  
+   Applying users.0001_initial... OK
+```
+
+Kreiranje prikaza Moj profil
+
+Definišite MyProfileprikaz zasnovan na klasi u views.pydatoteci:
+
+```py
+from django.views import View
+
+# ...
+
+class MyProfile(LoginRequiredMixin, View):
+    def get(self, request):
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+        
+        context = {
+            'user_form': user_form,
+            'profile_form': profile_form
+        }
+        
+        return render(request, 'users/profile.html', context)
+    
+    def post(self,request):
+        user_form = UserUpdateForm(
+            request.POST, 
+            instance=request.user
+        )
+        profile_form = ProfileUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=request.user.profile
+        )
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            
+            messages.success(request,'Your profile has been updated successfully')
+            
+            return redirect('profile')
+        else:
+            context = {
+                'user_form': user_form,
+                'profile_form': profile_form
+            }
+            messages.error(request,'Error updating you profile')
+            
+            return render(request, 'users/profile.html', context)
+```
+
+Prvo, uvezite Viewklasu iz django.views:
+
+```py
+from django.views import View
+```
+
+Drugo, definišite MyViewklasu koja nasleđuje od Viewklase. MyViewKlasa ima metode get()i post()koje odgovaraju HTTP GETi POST.
+
+Korišćenjem Viewklase, ne morate imati if-else grananje unutar funkcije prikaza da biste utvrdili da li je HTTP metod GET ili POST.
+
+U get()metodi klase MyProfile, kreiramo objekte UserUpdateForm`and` ProfileUpdateFormi prosleđujemo ih šablonu profile.html.
+
+U post()metodi takođe kreiramo objekte `UserUpdateFormand` ProfileUpdateForm, ali prosleđujemo dodatne podatke iz request.POST`and` request.FILES.
+
+Kada su oba obrasca validna, čuvamo ih u bazi podataka, kreiramo fleš poruku i preusmeravamo korisnika nazad na stranicu profila.
+
+Ako jedan od obrazaca nije važeći, kreiramo poruku o grešci i preusmeravamo korisnika nazad na stranicu profila, a zatim ponovo prikazujemo šablon.
+Kreiranje šablona
+
+Napravite profile.htmlu templates/usersdirektorijumu koji proširuje base.htmlšablon:
+
+```html
+{% extends 'base.html' %} 
+
+{% block content %}
+
+
+<div class="center">
+    <form method="POST" enctype="multipart/form-data" class="card">
+        {% csrf_token %} 
+
+        {% if user.profile %}
+            <img src="{{user.profile.avatar.url}}" alt="{{ user.username }}" class="avatar"  accept=".jpg,.jpeg,.png"/>
+        {% endif %}
+    
+        <h2 class="text-center">{{ user.username | title }}</h2>
+        <p class="text-center"><a href="mailto:{{user.email}}">{{user.email}}
+        </a></p>
+        <hr>
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" value="{{user.email}}" />
+        
+        <label for="avatar">Avatar:</label>
+        <input type="file" name="avatar" id="avatar">	
+        
+        <button type="submit" class="btn btn-primary full-width">Update Profile
+        </button>
+    </form>
+</div>
+
+{% endblock content %}
+```
+
+### Ručno kreiranje profila
+
+Prvo se prijavite na administratorski sajt koristeći nalog superkorisnika, videćete Profilesispod Usersaplikacije:
+
+Drugo, kliknite na dugme Dodaj profil da biste kreirali novi profil za postojećeg korisnika:
+
+Treće, dodajte novi profil za korisnika Jovan i kliknite na dugme Sačuvaj:
+
+Django će pokazati da je profil za korisnika John uspešno dodat.
+
+Ako se prijavite kao Jovan i otvorite stranicu profila <http://127.0.0.1:8000/profile/>, videćete sledeću stranicu:
+
+Na ovom obrascu možete ažurirati profil promenom adrese e-pošte i otpremanjem novog avatara.
+Uključite URL profila u zaglavlje
+
+Izmenite base.htmlšablon da biste dodali URL profila u zaglavlje:
+
+```html
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+        <title>Todo List</title>
+    </head>
+
+    <body>
+        <header class="header">
+            <div class="container">
+                <a href="{%url 'home'%}" class="logo">Todo</a>
+                <nav class="nav">
+                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+                        <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+                        <a href="{% url 'profile' %}" title="Update my profile">Hi {{request.user | title}}</a>
+                            <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
+                    {% endif %}
+                 </nav>
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{message.tags}}">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {%block content %}
+                {%endblock content%}
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="container">
+                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+            </div>
+        </footer>
+    </body>
+</html>
+```
+
+### Automatsko kreiranje profila
+
+Ako se prijavite kao Janei pristupite stranici profila, dobićete sledeću grešku:
+
+Razlog je taj što nismo kreirali profil za korisnika Jane. Da bismo rešili ovaj problem, trebalo bi da kreiramo profil kada se korisnik uspešno registruje. Da bismo ovo implementirali, koristićemo nešto što se zove signali u Django-u.
+
+Prvo, kreirajte signals.pydatoteku u usersaplikaciji sa sledećim kodom:
+
+```py
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from .models import Profile
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()
+```
+
+U ovoj signals.pydatoteci:
+
+- Funkcija create_profile()kreira novi profil nakon što Userje objekat kreiran.
+- Funkcija save_profile()ažurira profil nakon što Userje objekat sačuvan.
+
+Dekorater @receiverpovezuje post_savedogađaj modela Usersa svakom funkcijom.
+
+Drugo, uvezite signale u apps.pydatoteku usersaplikacije:
+
+```py
+from django.apps import AppConfig
+
+class UsersConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'users'
+    
+    def ready(self):
+        import users.signals
+```
+
+U apps.pyaplikaciji users, uvozimo signals.pymetod ready klase UsersConfig.
+
+Treće, registrujte novog korisnika i proverite profil:
+
+### Rezime korisnički profil
+
+- Koristite Django signal da biste automatski kreirali profil za korisnika.
