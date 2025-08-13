@@ -393,7 +393,7 @@ class TaskList(ListView):
 # ...
 ```
 
-je `TaskList` prikaz zasnovan na klasi koji nasleđuje od `ListView` klase. U `TaskList` klasi definišemo sledeće atribute:
+`TaskList` je prikaz zasnovan na klasi koji nasleđuje od `ListView` klase. U `TaskList` klasi definišemo sledeće atribute:
 
 - `model` određuje model iz koga će objekti biti prikazani.
    U ovom primeru koristimo `Task` model. Interno, Django će praviti upit za sve objekte iz `Task` modela ( `Task.objects.all()` ) i prosleđivati ih šablonu.
@@ -422,31 +422,16 @@ urlpatterns = [
 ]
 ```
 
-> [!Note]
->
-> **Kako ovo funkcioniše?**
->
-> Uvezite `TaskList` klasu iz `views.py` modula.
->
-> ```py
-> from .views import home, TaskList
-> ```
->
-> Definišite task listu i URL adresu koja prikazuje listu zadataka:
->
-> ```py
-> path('tasks/', TaskList.as_view(), name='tasks'),
-> ```
->
-> U ovom kodu, mapiramo URL adresu `tasks/` na rezultat metode `as_view()` klase >`TaskList`.
-> Imajte na umu da možete navesti atribute klase `TaskList` u `as_view()` 
-  metodi. >Na primer, možete proslediti ime šablona `as_view()` metodi na sledeći način:
->
-> ```py
+U ovom kodu, mapiramo URL adresu `tasks/` na rezultat metode `as_view()` klase
+`TaskList`. Imajte na umu da možete navesti atribute klase `TaskList` u
+`as_view()` metodi. >Na primer, možete proslediti ime šablona `as_view()`
+metodi na sledeći način:
+
+```py
 > path('tasks/', TaskList.as_view(template_name='mytodo.html'), name='tasks'),
-> ```
->
-> Metoda `as_view()` ima argumente koji odgovaraju atributima klase `TaskList`.
+```
+
+Metoda `as_view()` ima argumente koji odgovaraju atributima klase `TaskList`.
 
 ### ListView šablon
 
@@ -480,7 +465,7 @@ Definišite `task_list.html` u `templates/todo` direktorijumu aplikacije `Todo`:
 
 Šablon `task_list.html` proširuje `base.html` šablon projekta. U `task_list.html` šablonu, iteriramo kroz `tasks` `QuerySet` i prikazujemo svaki od njih kao stavku na listi.
 
-Takođe, dodajemo `completed` CSS klasu tagu `a` ako je zadatak završen. Ova CSS klasa će dodati liniju stavci.
+Takođe, dodajemo `completed` css klasu tagu `a` ako je zadatak završen. Ova css klasa će dodati liniju stavci.
 
 Ako je `tasks` prazan, prikazuje se poruka da nema zadataka na čekanju.
 
@@ -552,21 +537,14 @@ from .models import Task
 class TaskDetail(DetailView):
   model = Task
   context_object_name = 'task'
-
 #...  
 ```
 
 **Kako ovo funkcioniše?**
 
-Uvezite `DetailView` iz `django.views. generic.detail`:
+U `TaskDetail` klasi definišemo sledeće atribute:
 
-```py
-from django.views.generic.detail import DetailView
-```
-
-Definišite `TaskDetail` klasu koja nasleđuje klasu `DetailView`. U `TaskDetail` klasi definišemo sledeće atribute:
-
-- `modelo` dređuje klasu objekta koji će biti prikazan.
+- `model` određuje klasu objekta koji će biti prikazan.
 
 - `context_object_name` određuje ime objekta u šablonu. Podrazumevano, Django koristi `object` kao ime objekta u šablonu. Da bismo to učinili očiglednijim, umesto toga koristimo `task` kao ime objekta.
 
@@ -574,7 +552,7 @@ Podrazumevano, `TaskDetail` klasa će učitati šablon sa imenom `task_detail.ht
 
 Ako želite da koristite drugačije ime šablona, možete koristiti `template_name` atribut u `TaskDetail` klasi.
 
-### Napravite DetailView šablon
+### DetailView šablon
 
 Napravite `task_detail.html` šablon u `templates/todo` direktorijumu pomoću sledećeg koda:
 
@@ -600,7 +578,7 @@ Napravite `task_detail.html` šablon u `templates/todo` direktorijumu pomoću sl
 
 Šablon `task_detail.html` koristi `task` kao objekat i prikazuje atribute zadatka, uključujući naslov, status (završen ili ne) i opis.
 
-### Definisanje DetailView rute
+### DetailView ruta
 
 Definišite rutu koja mapira URL adresu koja prikazuje zadatak sa rezultatom metode `as_view()` klase `TaskDetail`:
 
@@ -615,9 +593,9 @@ urlpatterns = [
 ]
 ```
 
-URL prihvata ceo broj kao ID (ili primarni ključ, pk) zadatka. `TaskDetail` će uzeti ovaj pkparametar, izabrati zadatak iz baze podataka prema ID-u, konstruisati objekat `Task` i proslediti ga šablonu.
+URL prihvata ceo broj kao ID (ili primarni ključ, pk) zadatka. `TaskDetail` će uzeti ovaj `pk` parametar, izabrati zadatak iz baze podataka prema ID-u, konstruisati objekat `Task` i proslediti ga šablonu.
 
-### Izmena DetailView šablona
+### DetailView šablon - izmene
 
 Izmenite `task_list.html` šablon da biste uključili vezu do svakog zadatka na listi zadataka koristeći `url` oznaku:
 
@@ -647,7 +625,7 @@ Izmenite `task_list.html` šablon da biste uključili vezu do svakog zadatka na 
 {%endblock content%}
 ```
 
-Kada kliknete na vezu svake oznake, bićete preusmereni na stranicu sa detaljima zadatka.
+Kada kliknete na link svake oznake, bićete preusmereni na stranicu sa detaljima zadatka.
 
 ### Pokrenite Django dev server
 
@@ -657,7 +635,7 @@ python manage.py runserver
 
 i otvorite listu zadataka: <http://127.0.0.1:8000/tasks/>.
 
-Ako kliknite na zadatak, npr. Learn Python, bićete preusmereni na stranicu sa detaljima zadatka.
+Ako kliknite na zadatak, npr. Learn Python, bićete preusmereni na stranicu sa detaljima zadatka "Learn Python".
 
 ### Rezime DetailView
 
@@ -669,7 +647,7 @@ Ako kliknite na zadatak, npr. Learn Python, bićete preusmereni na stranicu sa d
 
 U ovom tutorijalu ćete naučiti kako da koristite `CreateView` klasu za definisanje prikaza zasnovanog na klasi koji kreira zadatak za aplikaciju `Todo`.
 
-### Definisanje klase
+### CreateView prikaz
 
 Klasa `CreateView` vam omogućava da kreirate prikaz zasnovan na klasi koji prikazuje obrazac za kreiranje objekta, ponovno prikazivanje obrasca sa greškama u validaciji i čuvanje objekta u bazi podataka.
 
@@ -690,22 +668,18 @@ class TaskCreate(CreateView):
   success_url = reverse_lazy('tasks')
   
   def form_valid(self, form):
-  form.instance.user = self.request.user
-  messages.success(self.request, "The task was created successfully.")
-  return super(TaskCreate,self).form_valid(form)
+    form.instance.user = self.request.user
+    messages.success(self.request, "The task was created successfully.")
+    return super(TaskCreate,self).form_valid(form)
 
 # other classes & functions
 ```
 
-Kako ovo funkcioniše?
-
-Uvezite `CreateView` klasu, `reverse_lazy()` funkciju i `messages` modul.
-
-Definišite `TaskCreate` klasu koja nasleđuje od `CreateView` klase. U `CreateView` klasi definišemo sledeće atribute i metode:
+U `TaskCreate` klasi definišemo sledeće atribute i metode:
 
 - `model` određuje klasu objekta koji treba kreirati ( `Task` ).
 
-- `fields` je lista polja koja se prikazuju na obrascu. U ovom primeru, obrazac će prikazivati naslov, opis i popunjene atribute modela `Task`.
+- `fields` je lista polja koja se prikazuju na obrascu. U ovom primeru, obrazac će prikazivati `title`, `description` i `completed` atribute modela `Task`.
 
 - `success_url` je ciljni URL na koji će Django preusmeriti nakon što se zadatak uspešno kreira. U ovom primeru, preusmeravamo na listu zadataka koristeći `reverse_lazy()` funkciju. `reverse_lazy()` prihvata ime prikaza i vraća URL.
 
@@ -714,12 +688,12 @@ Definišite `TaskCreate` klasu koja nasleđuje od `CreateView` klase. U `CreateV
 Podrazumevano, `CreateView` klasa koristi `task_form.html` šablon iz `templates/todo` sa sledećom konvencijom imenovanja:
 
 ```py
-model_form.html
+modelname_form.html
 ```
 
 Ako želite da koristite drugi šablon, možete da zamenite podrazumevani šablon koristeći `template_name` atribut u `TaskCreate` klasi.
 
-### Kreiranje CreateView šablona
+### CreateView šablon
 
 Kreirajte `task_form.html` u `templates/todo` direktorijumu pomoću sledećeg koda:
 
@@ -769,7 +743,7 @@ U `task_form.html`, polja obrasca prikazujemo ručno. Ako želite da automatski 
 {{ form.as_ul }}  # redner the form as <ul>
 ```
 
-### Definisanje CreateView rute
+### CreateView ruta
 
 Dodajte rutu u `urls.py` aplikacije `todo` mapiranjem URL-a sa rezultatom metode `as_view()` klase `TaskCreate`:
 
@@ -785,7 +759,7 @@ urlpatterns = [
 ]
 ```
 
-### Prikazivanje fleš poruka i dodavanje CreateView linka
+### Fleš poruka i dodavanje CreateView linka
 
 Izmenite `base.html` šablon projekta na:
 
@@ -825,9 +799,9 @@ Izmenite `base.html` šablon projekta na:
             </div>
           {% endfor %}
         {% endif %}
-      {%block content %}
-      
-      {%endblock content%}
+
+        {%block content %}
+        {%endblock content%}
       </div>
     </main>
     <footer class="footer">
@@ -852,13 +826,13 @@ Unesite naslov i opis i kliknite na dugme "Save", bićete preusmereni na stranic
 
 U ovom tutorijalu ćete naučiti kako da koristite `UpdateView` klasu za kreiranje prikaza zasnovanog na klasi koji uređuje postojeći objekat.
 
-### Definisanje klase UpdateView
+### UpdateView prikaz
 
 Klasa `UpdateView` vam omogućava da kreirate prikaz zasnovan na klasi koji:
 
-- Prikažite formu za uređivanje postojećeg objekta.
-- Ponovo prikažite formu  ako sadrži greške u validaciji.
-- Sačuvajte izmene objekta u bazi podataka.
+- Prikazuje formu za uređivanje postojećeg objekta.
+- Ponovo prikazuje formu ako sadrži greške u validaciji.
+- Čuva izmene objekta u bazi podataka.
 
 Forma se generiše automatski iz modela objekta, osim ako eksplicitno ne navedete klasu forme.
 
@@ -884,26 +858,18 @@ class TaskUpdate(UpdateView):
 # ...
 ```
 
-Kako ovo funkcioniše?
-
-Uvezite `UpdateView` iz `django.views.generic.edit`:
-
-```py
-from django.views.generic.edit import CreateView, UpdateView
-```
-
-Definišite `TaskUpdate` klasu koja nasleđuje `UpdateView` klasu. U `TaskUpdate` klasi definišite sledeće atribute i metode:
+U `TaskUpdate` klasi definišite sledeće atribute i metode:
 
 - `model` određuje klasu objekta koji treba uređivati. Zato u ovom primeru određujemo Task kao model.
 - `fields` je lista koja određuje polja forme. U ovom primeru koristimo polja za naslov, opis i popunjena polja.
 - `success_url` je ciljni URL (lista zadataka) na koji će Django preusmeriti nakon što se zadatak uspešno ažurira.
-- form_valid() metoda se poziva nakon uspešnog slanja forme. U ovom primeru, kreiramo fleš poruku i vraćamo rezultat metode `form_valid()` nadklase.
+- `form_valid()` metod se poziva nakon uspešnog slanja forme. U ovom primeru, kreiramo fleš poruku i vraćamo rezultat metode `form_valid()` nadklase.
 
 Podrazumevano, `TaskUpdate` klasa koristi `task_form.html` šablon iz `templates/todo` direktorijuma. Imajte na umu da klase `CreateView` i `UpdateView` dele isto ime šablona.
 
 Ako želite da koristite drugačije ime šablona, možete ga navesti pomoću `template_name` atributa.
 
-### Kreiranje UpdateList šablona
+### UpdateList šablon
 
 Izmenite `task_form.html` šablon koji prikazuje `UpdateTask` naslov ako je promenljiva zadatka dostupna u šablonu ( režim uređivanja ) ili `CreateTask` ako nije (režim kreiranja).
 
@@ -944,7 +910,7 @@ Izmenite `task_form.html` šablon koji prikazuje `UpdateTask` naslov ako je prom
 {%endblock content%}
 ```
 
-### Definisanje UpdateList rute
+### UpdateList ruta
 
 Definišite rutu u `urls.py` aplikaciji `todo` koja mapira URL adresu sa rezultatom metode `as_view()` klase `TaskUpdate`:
 
@@ -967,9 +933,9 @@ urlpatterns = [
 ]
 ```
 
-### Uključi UpdateList link za izmene
+### UpdateList link
 
-Izmenite `task_list.html` šablon da biste uključili vezu za uređivanje za svaki zadatak na listi zadataka:
+Izmenite `task_list.html` šablon da biste uključili link za uređivanje za svaki zadatak na listi zadataka:
 
 ```html
 {%extends 'base.html'%}
@@ -1001,7 +967,7 @@ Ako uredite zadatak sa liste obaveza dodavanjem tri zvezdice ( *** ) naslovu i o
 
 Kliknite na dugme "Save" i videćete da su naslov i status zadatka ažurirani:
 
-### Rezime UpdateView LInk
+### Rezime UpdateView
 
 - Definišite novu klasu koja nasleđuje `UpdateView` klasu da biste kreirali prikaz zasnovan na klasi koji uređuje postojeći objekat.
 
@@ -1041,7 +1007,7 @@ class TaskDelete(DeleteView):
 #...
 ```
 
-U ovom primeru definišemo TaskDeleteklasu koja je podklasa klase DeleteView. TaskDeleteKlasa ima sledeće atribute:
+`TaskDelete` klasa ima sledeće atribute:
 
 - `model` određuje klasu modela ( `Task` ) koja će biti obrisana.
 - `context_object_name` određuje ime objekta koje će biti prosleđeno šablonu. Podrazumevano, `DeleteView` klasa koristi object kao ime. Međutim, možete zameniti ime pomoću `context_object_name` atributa.
@@ -1050,7 +1016,7 @@ U ovom primeru definišemo TaskDeleteklasu koja je podklasa klase DeleteView. Ta
 
 Podrazumevano, `DeleteView` klasa koristi `task_confirmation_delete.html` šablon ako ga eksplicitno ne navedete.
 
-### Kreiranje DeleteView šablona
+### DeleteView šablon
 
 Napravite novi `task_confirm_delete.html` šablon datoteke u `templates/todo` aplikaciji pomoću sledećeg koda:
 
@@ -1075,7 +1041,7 @@ Napravite novi `task_confirm_delete.html` šablon datoteke u `templates/todo` ap
 
 Ovaj kod proširuje `task_confirm_delete.html` šablon `base.html` i sadrži obrazac koji briše zadatak.
 
-### Definisanje DeleteView rute
+### DeleteView ruta
 
 Definišite novu rutu u `urls.py` koja mapira URL adresu koja briše zadatak sa rezultatom metode `as_view()` klase `TaskDelete` prikaza:
 
@@ -1100,7 +1066,7 @@ urlpatterns = [
 ]
 ```
 
-### Uključite DeleteView link za brisanje zadatka
+### DeleteView link
 
 Izmenite `task_list.html` šablon da biste dodali vezu koja briše zadatak svakom zadatku na listi zadataka:
 
@@ -1134,8 +1100,6 @@ Ako kliknete na dugme za brisanje da biste obrisali zadatak sa liste, dobićete 
 
 Klikom na dugme "Delete" obrisaćete zadatak iz baze podataka i vratiti ga na listu zadataka.
 
-Konačni kod za ovaj `DeleteView` tutorijal možete preuzeti ovde.
-
 ### Rezime DeleteView
 
 Koristite `DeleteView` klasu da definišete prikaz zasnovan na klasi koji briše postojeći objekat.
@@ -1148,7 +1112,7 @@ U ovom tutorijalu ćete naučiti kako da koristite `LoginView` za kreiranje stra
 
 `LoginView` vam omogućava da prikažete formu za prijavu i obradite akciju prijave. Koristićemo LoginView klasu da kreiramo stranicu za prijavu za `Todo` aplikaciju.
 
-### Kreiranje i konfigurisanje users aplikacije za Task projekat
+### Users aplikacije
 
 Aplikacija `users` će imati sledeće funkcionalnosti:
 
@@ -1196,7 +1160,7 @@ urlpatterns = [
 
 Konačno, kreirajte `templates` direktorijum i `users` direktorijum unutar `templates` direktorijuma u `users` aplikaciji za čuvanje šablona.
 
-### Kreiranje LoginView stranice
+### LoginView strana
 
 Sledeći kod definiše klasu koja nasleđuje od klase `LoginView` u datoteci `views.py`.
 
@@ -1216,17 +1180,7 @@ class MyLoginView(LoginView):
     return self.render_to_response(self.get_context_data(form=form))
 ```
 
-Kako ovo funkcioniše?
-
-Uvezite `LoginView` iz `django.contrib.auth.views`, `reverse_lazy` iz `django.urls` i messages iz `django.contrib`.
-
-```py
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
-from django.contrib import messages
-```
-
-Definišite klasu `MyLoginView` koja nasleđuje od klase `LoginView`. Ona ima sledeće atribute i metode:
+Klasa `MyLoginView` ima sledeće atribute i metode:
 
 - `redirect_authenticated_user` je podešeno na `True` da bi naložilo Django-u da preusmeri korisnike nakon što se uspešno prijave. Podrazumevano, `redirect_authenticated_user` je `False`, što isključuje preusmeravanje.
 
@@ -1234,7 +1188,7 @@ Definišite klasu `MyLoginView` koja nasleđuje od klase `LoginView`. Ona ima sl
 
 - `form_invalid()` se poziva kada prijava ne uspe. U `form_invalid()`, kreiramo fleš poruku i ponovo prikazujemo obrazac za prijavu.
 
-### Definisanje LoginView rute
+### LoginView ruta
 
 Izmenite `views.py` datoteku da biste definisali rutu za `LoginView` stranicu:
 
@@ -1247,23 +1201,7 @@ urlpatterns = [
 ]
 ```
 
-Kako ovo funkcioniše?
-
-Uvezite `MyLoginView` klasu iz `views.py`:
-
-```py
-from .views import MyLoginView
-```
-
-Mapirajte login rutu do rezultata `as_view()` metode klase `MyLoginView`.
-
-```py
-urlpatterns = [
-  path('login/', MyLoginView.as_view(),name='login'),
-]
-```
-
-### Kreiranje LoginView šablona
+### LoginView šablon
 
 Kreirajte `login.html` šablon u `templates/users` direktorijumu pomoću sledećeg koda:
 
@@ -1306,9 +1244,9 @@ LOGIN_URL = 'login'
 
 Ako pokušate da pristupite stranici koja zahteva prijavu, Django će koristiti `LOGIN_URL` za preusmeravanje. Ako ne dodate `LOGIN_URL` u `settings.py`, Django će koristiti podrazumevani URL za prijavu, koji je `accounts/login/`.
 
-### Kreiranje URL-a za odjavu
+### Logout url
 
-`LogoutView` odjavljuje korisnika i prikazuje poruku. Koristićemo `LogoutView`da kreiramo link za odjavu.
+`LogoutView` odjavljuje korisnika i prikazuje poruku. Koristićemo `LogoutView` da kreiramo link za odjavu.
 
 Za razliku od `LoginView` klase, možete koristiti `LogoutView` klasu direktno u `urls.py`. Na primer, možete izmeniti `views.py` da biste kreirali rutu za URL adresu za odjavu:
 
@@ -1323,20 +1261,7 @@ urlpatterns = [
 ]
 ```
 
-**Kako ovo funkcioniše?**
-
-Uvezite `LogoutView` iz `django.contrib.auth.views`:
-
-```py
-from django.contrib.auth.views import LogoutView
-```
-
-Mapirajte URL adresu `logout/` sa rezultatom metode `as_view()`klase `LogoutView`. `next_page` argument određuje URL adresu na koju će korisnici biti preusmereni nakon što se uspešno odjave.
-
-path('logout/', LogoutView.as_view(next_page='login'),name='logout')
-Kodni jezik:  Pajton  ( python )
-
-Dodavanje linkova za prijavu/odjavu u zaglavlje
+### Login / Logout linkovi
 
 Ako se korisnik prijavi, zaglavlje prikazuje početnu stranicu, moje zadatke, novi zadatak i vezu za odjavu. Kada se korisnik odjavi, zaglavlje prikazuje veze početna stranica, prijava i pridruži se sada.
 
@@ -1393,16 +1318,11 @@ Da biste to postigli, izmenite base.htmlšablon projekta na sledeći način.
 </html>
 ```
 
-Imajte na umu da ako se korisnik prijavi, request.user.is_authenticatedvraća True. Stoga, možete koristiti ovo svojstvo da proverite da li je korisnik prijavljen ili ne.
+Imajte na umu da ako se korisnik prijavi, `request.user.is_authenticated` vraća `True`. Stoga, možete koristiti ovo svojstvo da proverite da li je korisnik prijavljen ili ne.
 
-Ako niste prijavljeni, videćete sledeće linkove u navigaciji:
+Iako niste prijavljeni, i dalje možete upravljati listom zadataka, kao što je pregled, dodavanje, uređivanje i brisanje zadataka. Da biste zaštitili ove stranice, koristićete `LoginRequiredMixin` klasu.
 
-Međutim, ako se prijavite, videćete sledeće linkove za navigaciju:
-Prijava je obavezna
-
-Iako niste prijavljeni, i dalje možete upravljati listom zadataka, kao što je pregled, dodavanje, uređivanje i brisanje zadataka. Da biste zaštitili ove stranice, koristićete LoginRequiredMixinklasu.
-
-Da biste to uradili, modifikujete views.pyaplikaciju todo i koristite LoginRequiredMixinklasu na sledeći način:
+Da biste to uradili, modifikujete `views.py` aplikaciju `todo` i koristite `LoginRequiredMixin` klasu na sledeći način:
 
 ```py
 from django.shortcuts import render
@@ -1455,19 +1375,10 @@ def home(request):
   return render(request,'home.html')
 ```
 
-Ako se niste prijavili i pokušali ste da pristupite zaštićenoj stranici, Django će vas preusmeriti na stranicu za prijavu. Na primer:
+Ako se niste prijavili i pokušali ste da pristupite zaštićenoj stranici, Django će vas preusmeriti na stranicu za prijavu. Na primer: <http://127.0.0.1:8000/task/create> Django će vas preusmeriti na stranicu za prijavu koristeći LOGIN_URL konfigurisano u `settings.py`:
+<http://127.0.0.1:8000/login/?next=/task/create/>.
 
-```html
-http://127.0.0.1:8000/task/create
-```
-
-Django će vas preusmeriti na stranicu za prijavu koristeći LOGIN_URLkonfigurisano u `settings.py`:
-
-```html
-http://127.0.0.1:8000/login/?next=/task/create/
-```
-
-### Rezime
+### Rezime LoginView
 
 - Koristite `LoginView` klasu da biste kreirali stranicu za prijavu.
 - Koristite `LogoutView` klasu da odjavite korisnika.
@@ -1477,9 +1388,7 @@ http://127.0.0.1:8000/login/?next=/task/create/
 
 ## FormView
 
-U ovom tutorijalu ćete naučiti kako da koristite `FormView` klasu za kreiranje registracionog formulara za aplikaciju Todo.
-
-Klasa `FormView` vam omogućava da kreirate prikaz fotmr. Koristićemo `FormView` klasu za kreiranje forme za registraciju za `Todo` aplikaciju.
+U ovom tutorijalu ćete naučiti kako da koristite `FormView` klasu za kreiranje registracionog formulara za aplikaciju `Todo`.
 
 ### Kreiranje forme za prijavu
 
@@ -1500,7 +1409,7 @@ class RegisterForm(UserCreationForm):
 
 RegisterForm koristi model `User` i prikazuje polja korisničko `username`, `email`, `password1` i `password2`.
 
-### Definisanje FormView klase
+### FormView klasa
 
 Definišite `RegisterView` klasu u `views.py` aplikacije `users.py`:
 
@@ -1529,12 +1438,16 @@ class RegisterView(FormView):
 Klasa `RegisterView` nasleđuje klasu `FormView` i ima sledeće atribute i metode:
 
 - `template_name` određuje ime šablona za prikazivanje forme za prijavu.
+
 - `form_class` određuje formu ( RegisterForm ) koji se koristi u šablonu.
+
 - `redirect_authenticated_user` je postavljeno na `True` da bi se korisnik preusmerio nakon autentifikacije.
+
 - `success_url` određuje URL adresu za preusmeravanje nakon što se korisnik uspešno registruje. U ovom primeru, preusmerava korisnika na Task listu.
+
 - `form_valid()` metoda se poziva nakon uspešnog slanja formulara. U ovom primeru, čuvamo `User` model i automatski prijavljujemo korisnika.
 
-### Definisanje RegisterView rute
+### RegisterView ruta
 
 Definišite rutu koja mapira URL adresu za registraciju `register/` sa rezultatom metode `as_view()` klase `RegisterView` u `urls.py` aplikacije `users`:
 
@@ -1550,7 +1463,7 @@ urlpatterns = [
 ]
 ```
 
-### Šablon RegisterView
+### RegisterView šablon
 
 Napravite datoteku `register.html` u `templates/users` direktorijumu aplikacije `users` sa sledećim kodom:
 
@@ -1765,29 +1678,25 @@ Ako pokušate da pristupite Joe zadacima dok ste prijavljeni kao Jane, dobićete
 
 U ovom tutorijalu ćete naučiti kako da implementirate funkciju resetovanja lozinke koja omogućava korisnicima da resetuju svoje lozinke koristeći imejl adrese.
 
-Sledeći dijagram ilustruje tok koji omogućava korisniku da resetuje lozinku koristeći adresu e-pošte:
+- Ako korisnik klikne na vezu `Password reset` na obrascu za prijavu, Django prikazuje obrazac koji omogućava korisniku da unese adresu e-pošte za prijem linka za resetovanje lozinke.
 
-K orisnik klikne na vezu `Password reset` na obrascu za prijavu.
+- Django koristi `PasswordResetView` prikaz da bi prikazao ovaj obrazac.
 
-Django prikazuje obrazac koji omogućava korisniku da unese adresu e-pošte za prijem linka za resetovanje lozinke.
+- Korisnik unosi adresu e-pošte i klikne na dugme `Submit`.
 
-Django koristi `PasswordResetView` prikaz da bi prikazao ovaj obrazac.
+- Django šalje imejl na unetu imejl adresu i prikazuje poruku koja upućuje korisnika da proveri prijemno sanduče.
 
-Korisnik unosi adresu e-pošte i klikne na dugme `Submit`.
+- Django koristi `PasswordResetDoneView` klasu za renderovanje ovog obrasca.
 
-Django šalje imejl na unetu imejl adresu i prikazuje poruku koja upućuje korisnika da proveri prijemno sanduče.
+- Korisnik otvara prijemno sanduče i klikne na vezu za resetovanje lozinke.
 
-Django koristi `PasswordResetDoneView` klasu za renderovanje ovog obrasca.
+- Na kraju, korisnik unosi novu lozinku i klikne na dugme `Password reset`.
 
-Korisnik otvara prijemno sanduče i klikne na vezu za resetovanje lozinke.
+- Django prikazuje poruku potvrde.
 
-Na kraju, korisnik unosi novu lozinku i klikne na dugme `Password reset`.
+- Django koristi `PasswordResetCompleteView` za rukovanje ovom stranicom.
 
-Django prikazuje poruku potvrde.
-
-Django koristi `PasswordResetCompleteView` za rukovanje ovom stranicom.
-
-### Implementacija resetovanja lozinke za aplikaciju Todo
+### Implementacija resetovanja korisničke lozinke za aplikaciju Todo
 
 Izmenite `views.py` aplikacije `users` da biste mapirali URL za resetovanje lozinke sa odgovarajućim prikazima zasnovanim na klasi.
 
@@ -1846,7 +1755,7 @@ Kreirajte `password_reset.html` šablon u `templates/users` direktorijumu:
 {%endblock content%}
 ```
 
-### Resetovanje lozinke završeno
+### Resetovanje korisničke lozinke završeno
 
 Mapirajte `password-reset/done/` sa rezultatom metode `as_view()` klase `PasswordResetDoneView`. `PasswordResetDoneView` klasa koristi `password_reset_done.html` šablon za prikazivanje stranice:
 
@@ -1962,7 +1871,7 @@ Da biste slali imejlove u Djangu, potreban vam je lokalni Simple Mail Transfer P
 
 Kada imate SMTPserver, možete dodati njegove informacije u `settings.py` Django projekt<> sa sledećim informacijama:
 
-```py
+```shell
 EMAIL_HOST: SMTPserver domaćin.
 EMAIL_PORT: SMTP port, podrazumevana vrednost je 25.
 EMAIL_HOST_USER: Korisničko ime za SMTPserver.
@@ -1972,7 +1881,7 @@ EMAIL_USE_TLS: da li se koristi bezbedna veza ( TLS ).
 
 Na primer, sledeće pokazuje kako se koriste SMTP podešavanja Google servera:
 
-```py
+```shell
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_PORT = 25
 EMAIL_USE_TLS = True
@@ -2056,7 +1965,7 @@ http://127.0.0.1:8000/password-reset-confirm/OA/bfwzqv-9d6b6777ad40073cfa1d4d4e1
 <p>Todo App Team</p>
 ```
 
-### Rezime resetovanje lozinke
+### Rezime resetovanja korisničke lozinke
 
 - Koristite klase `PasswordResetView`, `PasswordResetDoneView`, `PasswordResetConfirmView` i `PasswordResetCompleteView` da biste implementirali funkciju resetovanja lozinke za Django aplikaciju.
 
@@ -2084,7 +1993,7 @@ Kreirajte `media` direktorijum u projektu:
 mkdir media
 ```
 
-Drugo, dodajte `MEDIA_ROOT` i `MEDIA_URL` u `settings.py` projekta:
+Dodajte `MEDIA_ROOT` i `MEDIA_URL` u `settings.py` projekta:
 
 ```py
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -2149,25 +2058,17 @@ class Profile(models.Model):
       img.save(self.avatar.path)
 ```
 
-**Kako ovo funkcioniše?**
+Svaki korisnik ima profil i svaki profil pripada korisniku. Stoga je odnos između `User` modela i `Profile` modela `jedan na jedan`.
 
-Prvo, definišite Profilemodel koji nasleđuje od Modelklase:
-
-```py
-class Profile(models.Model):
-```
-
-Svaki korisnik ima profil i svaki profil pripada korisniku. Stoga je odnos između Usermodela i Profilemodela jedan-na-jedan.
-
-Da biste definisali odnos jedan-na-jedan , koristite OneToOneField:
+Da biste definisali odnos `jedan na jedan`, koristite OneToOneField:
 
 ```py
 user = models.OneToOneField(User, on_delete=models.CASCADE)
 ```
 
-Ako Userse izbriše , Profilepovezano sa se Usertakođe briše. Ovo ukazuje na on_delete=models.CASCADEparametr OneToOneField().
+Ako `User` bude obrisan, `Profile` povezano sa `User` se takođe briše. Na ovo ukazuje `on_delete=models.CASCADE` parametr `OneToOneField()`.
 
-Definišite avatarpolje koje sadrži avatar korisnika:
+Definišite `avatar` polje koje sadrži avatar korisnika:
 
 ```py
 avatar = models.ImageField(
@@ -2176,20 +2077,20 @@ avatar = models.ImageField(
 )
 ```
 
-Ako korisnici nisu otpremili avatare, podrazumevana datoteka je avatar.jpgdatoteka. Takođe, navodimo direktorijum ( profile_avatars) koji će čuvati otpremljene avatare.
+Ako korisnici nisu otpremili avatare, podrazumevana datoteka je `avatar.jpg` datoteka. Takođe, navodimo direktorijum `profile_avatars` koji će čuvati otpremljene avatare.
 
-Imajte na umu da možete dodati još polja modelu Profilekao što su adrese, interesovanja itd., ako je potrebno.
+Imajte na umu da možete dodati još polja modelu `Profile` kao što su adrese, interesovanja itd., ako je potrebno.
 
-Preuzmite avatar.jpg datoteku i kopirajte je u mediadirektorijum projekta:
+Preuzmite `avatar.jpg` datoteku i kopirajte je u `media` direktorijum projekta.
 
-Definišite `__str__()` metod koji vraća string reprezentaciju modela Profile:
+Definišite `__str__()` metod koji vraća string reprezentaciju modela `Profile`:
 
 ```py
 def __str__(self):
    return f'{self.user.username} Profile'
 ```
 
-Šesto, definišite save() metod koji čuva profil u bazi podataka, kreira sličicu avatara i čuva ga u navedenom direktorijumu:
+Definišite `save()` metod koji čuva profil u bazi podataka, kreira sličicu avatara i čuva ga u navedenom direktorijumu:
 
 ```py
 def save(self, *args, **kwargs):
@@ -2207,7 +2108,7 @@ def save(self, *args, **kwargs):
     img.save(self.avatar.path)
 ```
 
-Sedmo, registrujte profil u admin.pykako bismo mogli da upravljamo profilom na administratorskoj stranici:
+Registrujte profil u `admin.py` kako bismo mogli da upravljamo profilom na administratorskoj stranici:
 
 ```py
 from django.contrib import admin
@@ -2218,7 +2119,7 @@ admin.site.register(Profile)
 
 ### Primena migracija
 
-Prvo, izvršite migracije pokretanjem makemigrationskomande:
+Izvršite migracije pokretanjem `makemigrations` komande:
 
 ```shell
 python manage.py makemigrations
@@ -2239,13 +2140,12 @@ Running migrations:
    Applying users.0001_initial... OK
 ```
 
-Kreiranje prikaza Moj profil
+### MyProfile prikaza
 
-Definišite MyProfileprikaz zasnovan na klasi u views.pydatoteci:
+Definišite `MyProfile` prikaz zasnovan na klasi u `views.py` datoteci:
 
 ```py
 from django.views import View
-
 # ...
 
 class MyProfile(LoginRequiredMixin, View):
@@ -2288,26 +2188,21 @@ class MyProfile(LoginRequiredMixin, View):
       return render(request, 'users/profile.html', context)
 ```
 
-Prvo, uvezite Viewklasu iz django.views:
+Definišite `MyView` klasu koja nasleđuje od `View` klase. `MyView` klasa ima metode `get()` i `post()` koje odgovaraju HTTP GET i POST.
 
-```py
-from django.views import View
-```
+Korišćenjem View klase, ne morate imati if-else grananje unutar funkcije prikaza da biste utvrdili da li je HTTP metod GET ili POST.
 
-Drugo, definišite MyViewklasu koja nasleđuje od Viewklase. MyViewKlasa ima metode get()i post()koje odgovaraju HTTP GETi POST.
+U `get()` metodi klase `MyProfile`, kreiramo objekte `UserUpdateForm` and `ProfileUpdateForm` i prosleđujemo ih šablonu `profile.html`.
 
-Korišćenjem Viewklase, ne morate imati if-else grananje unutar funkcije prikaza da biste utvrdili da li je HTTP metod GET ili POST.
+U `post()` metodi takođe kreiramo objekte `UserUpdateForm` and `ProfileUpdateForm` , ali prosleđujemo dodatne podatke iz `request.POST` and `request.FILES`.
 
-U get()metodi klase MyProfile, kreiramo objekte UserUpdateForm`and` ProfileUpdateFormi prosleđujemo ih šablonu profile.html.
-
-U post()metodi takođe kreiramo objekte `UserUpdateFormand` ProfileUpdateForm, ali prosleđujemo dodatne podatke iz request.POST`and` request.FILES.
-
-Kada su oba obrasca validna, čuvamo ih u bazi podataka, kreiramo fleš poruku i preusmeravamo korisnika nazad na stranicu profila.
+Kada su obe forme validne, čuvamo ih u bazi podataka, kreiramo fleš poruku i preusmeravamo korisnika nazad na stranicu profila.
 
 Ako jedan od obrazaca nije važeći, kreiramo poruku o grešci i preusmeravamo korisnika nazad na stranicu profila, a zatim ponovo prikazujemo šablon.
-Kreiranje šablona
 
-Napravite profile.htmlu templates/usersdirektorijumu koji proširuje base.htmlšablon:
+### Profile šablona
+
+Napravite `profile.html` u `templates/users` direktorijumu koji proširuje `base.html` šablon:
 
 ```html
 {% extends 'base.html' %} 
@@ -2343,20 +2238,21 @@ Napravite profile.htmlu templates/usersdirektorijumu koji proširuje base.htmlš
 
 ### Ručno kreiranje profila
 
-Prvo se prijavite na administratorski sajt koristeći nalog superkorisnika, videćete Profilesispod Usersaplikacije:
+Prijavite se na administratorski sajt koristeći nalog superkorisnika, videćete `Profiles` ispod `Users` aplikacije.
 
-Drugo, kliknite na dugme Dodaj profil da biste kreirali novi profil za postojećeg korisnika:
+Kliknite na dugme `Dodaj profil` da biste kreirali novi profil za postojećeg korisnika.
 
-Treće, dodajte novi profil za korisnika Jovan i kliknite na dugme Sačuvaj:
+Dodajte novi profil za korisnika "John" i kliknite na dugme "Save".
 
-Django će pokazati da je profil za korisnika John uspešno dodat.
+Django će pokazati da je profil za korisnika "John" uspešno dodat.
 
-Ako se prijavite kao Jovan i otvorite stranicu profila <http://127.0.0.1:8000/profile/>, videćete sledeću stranicu:
+Ako se prijavite kao "John" i otvorite stranicu profila <http://127.0.0.1:8000/profile/>, videćete sledeću stranicu:
 
 Na ovom obrascu možete ažurirati profil promenom adrese e-pošte i otpremanjem novog avatara.
-Uključite URL profila u zaglavlje
 
-Izmenite base.htmlšablon da biste dodali URL profila u zaglavlje:
+### Profila link
+
+Izmenite `base.html` šablon da biste dodali URL profila u zaglavlje:
 
 ```html
 {%load static %}
@@ -2413,11 +2309,11 @@ Izmenite base.htmlšablon da biste dodali URL profila u zaglavlje:
 
 ### Automatsko kreiranje profila
 
-Ako se prijavite kao Janei pristupite stranici profila, dobićete sledeću grešku:
+Ako se prijavite kao "Jane" i pristupite stranici profila, dobićete sledeću grešku.
 
-Razlog je taj što nismo kreirali profil za korisnika Jane. Da bismo rešili ovaj problem, trebalo bi da kreiramo profil kada se korisnik uspešno registruje. Da bismo ovo implementirali, koristićemo nešto što se zove signali u Django-u.
+Razlog je taj što nismo kreirali profil za korisnika "Jane". Da bismo rešili ovaj problem, trebalo bi da kreiramo profil kada se korisnik uspešno registruje. Da bismo ovo implementirali, koristićemo nešto što se zove signali u Django-u.
 
-Prvo, kreirajte signals.pydatoteku u usersaplikaciji sa sledećim kodom:
+Prvo, kreirajte `signals.py` datoteku u `users` aplikaciji sa sledećim kodom:
 
 ```py
 from django.db.models.signals import post_save
@@ -2435,14 +2331,14 @@ def save_profile(sender, instance, **kwargs):
   instance.profile.save()
 ```
 
-U ovoj signals.pydatoteci:
+U ovoj `signals.py` datoteci:
 
-- Funkcija create_profile()kreira novi profil nakon što Userje objekat kreiran.
-- Funkcija save_profile()ažurira profil nakon što Userje objekat sačuvan.
+- Funkcija `create_profile()` kreira novi profil nakon što je `User` objekat kreiran.
+- Funkcija `save_profile()` ažurira profil nakon što je `User` objekat sačuvan.
 
-Dekorater @receiverpovezuje post_savedogađaj modela Usersa svakom funkcijom.
+Dekorater `@receiver` povezuje `post_save` događaj modela `User` sa svakom funkcijom.
 
-Drugo, uvezite signale u apps.pydatoteku usersaplikacije:
+Uvezite signale u `apps.py` datoteku `users` aplikacije:
 
 ```py
 from django.apps import AppConfig
@@ -2455,12 +2351,12 @@ class UsersConfig(AppConfig):
     import users.signals
 ```
 
-U apps.pyaplikaciji users, uvozimo signals.pymetod ready klase UsersConfig.
+U `apps.py` aplikaciji `users`, uvozimo `signals.py` metod klase `UsersConfig`.
 
-Treće, registrujte novog korisnika i proverite profil:
+Registrujte novog korisnika i proverite profil.
 
 ### Rezime korisnički profil
 
-- Koristite Django signal da biste automatski kreirali profil za korisnika.
+- Koristite Django `signal` da biste automatski kreirali profil za korisnika.
 
 [Sadržaj](#sadržaj)
