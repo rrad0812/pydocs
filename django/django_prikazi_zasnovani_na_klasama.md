@@ -439,8 +439,8 @@ urlpatterns = [
 > ```
 >
 > U ovom kodu, mapiramo URL adresu `tasks/` na rezultat metode `as_view()` klase >`TaskList`.
-> Imajte na umu da možete navesti atribute klase `TaskList` u `as_view()` metodi. >Na primer,  
-> možete proslediti ime šablona `as_view()` metodi na sledeći način:
+> Imajte na umu da možete navesti atribute klase `TaskList` u `as_view()` 
+  metodi. >Na primer, možete proslediti ime šablona `as_view()` metodi na sledeći način:
 >
 > ```py
 > path('tasks/', TaskList.as_view(template_name='mytodo.html'), name='tasks'),
