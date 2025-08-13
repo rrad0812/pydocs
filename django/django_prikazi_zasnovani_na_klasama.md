@@ -29,10 +29,10 @@ U ovom odeljku ćete naučiti prikaze zasnovane na klasama tako što ćete napra
 - [FormView](#formview)  
   Kako da koristite FormView za kreiranje stranice za registraciju.
 
-- Resetovanje lozinke  
+- [Resetovanje lozinke](#resetovanje-lozinke)  
   Kako da implementirate funkciju resetovanja lozinke za aplikaciju.
 
-- Korisnički profil  
+- [Korisnički profil](#korisnički-profil)  
   Kako da implementirate funkcije korisničkog profila za aplikaciju Todo.
 
 ## Todo aplikacija
@@ -69,7 +69,7 @@ Pošto je Django paket treće strane, potrebno ga je instalirati pomoću sledeć
 pip install django
 ```
 
-### Kreiranje novog projekta
+### Kreiranje novog Todo_list projekta
 
 Da biste kreirali novi projekat `todo_list`, koristite `startproject` komandu:
 
@@ -77,7 +77,7 @@ Da biste kreirali novi projekat `todo_list`, koristite `startproject` komandu:
 django-admin startproject todo_list
 ```
 
-### Dodavanje statičkih datoteka
+### Dodavanje static direktorijuma projektu
 
 Kreirajte `static` direktorijum unutar direktorijuma projekta:
 
@@ -110,7 +110,7 @@ Direktorijum `static` će izgledati ovako:
 
 Na kraju, kopirajte `style.css` datoteku i `feature.jpg` sliku iz datoteke za preuzimanje u `css` i  `images` direktorijume.
 
-### Podešavanje šablona
+### Podešavanje šablona projekta
 
 Kreirajte `templates` direktorijum unutar direktorijuma projekta:
 
@@ -126,28 +126,28 @@ Kreirajte `base.html` šablon unutar `templates` direktorijuma sa sledećim sadr
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>Todo List</title>
-    </head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Todo List</title>
+  </head>
 
-    <body>
-        <header class="header">
-            <div class="container">
-            </div>
-        </header>
-        <main>
-            <div class="container">
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="container">
-                <p>&copy; Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
-            </div>
-        </footer>
-    </body>
+  <body>
+    <header class="header">
+      <div class="container">
+      </div>
+    </header>
+    <main>
+      <div class="container">
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+      </div>
+    </footer>
+  </body>
 
 </html>
 ```
@@ -158,19 +158,19 @@ Konfigurišite direktorijum `TEMPLATES` u datoteci `settings.py` na `templates` 
 
 ```py
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates' ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+  {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [BASE_DIR / 'templates' ],
+    'APP_DIRS': True,
+    'OPTIONS': {
+      'context_processors': [
+        'django.template.context_processors.debug',
+        'django.template.context_processors.request',
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
+      ],
     },
+  },
 ]
 ```
 
@@ -183,19 +183,19 @@ Kreirajte `home.html` šablon unutar `templates` direktorijuma:
 
 {%block content%}
 
-    <section class="feature">
-        <div class="feature-content">
-            <h1>Todo</h1>
-            <p>Todo helps you more focus, either work or play.</p>
-            <a class="btn btn-primary cta" href="#">Get Started</a>
-        </div>
-        <img src="{%static 'images/feature.jpg'%}" alt="" class="feature-image">
-    </section>
+  <section class="feature">
+    <div class="feature-content">
+      <h1>Todo</h1>
+      <p>Todo helps you more focus, either work or play.</p>
+      <a class="btn btn-primary cta" href="#">Get Started</a>
+    </div>
+    <img src="{%static 'images/feature.jpg'%}" alt="" class="feature-image">
+  </section>
 
 {%endblock content%}
 ```
 
-### Kreiranje aplikacije sa zadacima
+### Kreiranje Todo aplikacije
 
 Kreirajte `todo` aplikaciju u `todo_list` projektu koristeći `startapp` komandu:
 
@@ -207,13 +207,13 @@ Registrujte `todo` aplikaciju u `settings.py` projekta `todo_list` tako što će
 
 ```py
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'todo',
+  'django.contrib.admin',
+  'django.contrib.auth',
+  'django.contrib.contenttypes',
+  'django.contrib.sessions',
+  'django.contrib.messages',
+  'django.contrib.staticfiles',
+  'todo',
 ]
 ```
 
@@ -233,12 +233,12 @@ mkdir todo
 
 Definišite `home()` funkciju prikaza unutar `views.py` aplikacije zadataka koja prikazuje `home.html` šablon:
 
-```py
-from django.shortcuts import render
+  ```py
+  from django.shortcuts import render
 
-def home(request):
+  def home(request):
     return render(request,'home.html')
-```
+  ```
 
 Kreirajte `urls.py` datoteku u `todo` aplikaciji i definišite rutu koja mapira na početnu URL adresu `views.home()` funkciju prikaza:
 
@@ -247,7 +247,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+  path('', views.home, name='home'),
 ]
 ```
 
@@ -258,8 +258,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('todo.urls'))
+  path('admin/', admin.site.urls),
+  path('', include('todo.urls'))
 ]
 ```
 
@@ -271,7 +271,7 @@ python manage.py runserver
 
 Konačno, otvorite <http://127.0.0.1:8000/> u veb pregledaču, videćete Home stranicu Todo aplikacije.
 
-### Kreirajte model zadatka
+### Kreiranje Task modela
 
 Definišite `Task` model u `models.py` aplikacije `todo`:
 
@@ -280,17 +280,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Task(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    completed = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    
-    def __str__(self):
-        return self.title
-    
-    class Meta:
-        ordering = ['completed']
+  title = models.CharField(max_length=255)
+  description = models.TextField(null=True, blank=True)
+  completed = models.BooleanField(default=False)
+  created_at = models.DateTimeField(auto_now_add=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+  
+  def __str__(self):
+    return self.title
+  
+  class Meta:
+    ordering = ['completed']
 ```
 
 Registrujte `Task` model u `admin.py` aplikaciji `todo` kako biste mogli da ga upravljate modelom na administratorskoj stranici.
@@ -309,7 +309,7 @@ python manage.py makemigrations
 
 Migrations for 'todo':
   todo\migrations\0001_initial.py
-    - Create model Task
+  - Create model Task
 ```
 
 Primenite migracije na bazu podataka:
@@ -365,7 +365,7 @@ Prijavite se na administratorsku stranicu i kreirajte tri zadatka.
 
 ## ListView
 
-U ovom tutorijalu ćete naučiti kako da koristite Django `ListView` klasu za prikazivanje liste zadataka za aplikaciju `Todo`.
+U ovom tutorijalu ćete naučiti kako da koristite `ListView` klasu za prikazivanje `Todo` liste aplikacije `Todo`.
 
 U prethodnim tutorijalima ste naučili kako da napravite aplikaciju koristeći prikaze zasnovane na funkcijama.
 
@@ -373,12 +373,12 @@ Prikazi zasnovani na funkcijama su jednostavni i fleksibilni. U ranijim verzijam
 
 Prikazi zasnovani na klasama su alternativni način implementacije prikaza. Oni ne zamenjuju prikaze zasnovane na funkcijama. Međutim, imaju neke prednosti u poređenju sa prikazima zasnovanim na funkcijama:
 
-- Organizujte kod povezan sa HTTP metodama kao što su GET i POST koristeći odvojene metode, umesto uslovnog grananja u istoj funkciji.
-- Iskoristite višestruko nasleđivanje da biste kreirali klase prikaza koje se mogu ponovo koristiti.
+- Organizuju kod povezan sa HTTP metodama kao što su GET i POST koristeći odvojene metode, umesto uslovnog grananja u istoj funkciji.
+- Iskorišćavaju višestruko nasleđivanje da bi kreirali klase prikaza koje se mogu ponovo koristiti.
 
 Koristićemo prikaze zasnovane na klasama da bismo izgradili `Todo` aplikaciju.
 
-### Prikazi zasnovani na klasi
+### ListView prikaz
 
 Da biste prikazali listu objekata, definišete klasu koja nasleđuje `ListView` klasu. Na primer, sledeće definiše `TaskList` klasu u `views.py` aplikaciji `todo`:
 
@@ -388,8 +388,8 @@ from django.views.generic.list import ListView
 from .models import Task
 
 class TaskList(ListView):
-    model = Task
-    context_object_name = 'tasks'
+  model = Task
+  context_object_name = 'tasks'
 # ...
 ```
 
@@ -403,12 +403,12 @@ je `TaskList` prikaz zasnovan na klasi koji nasleđuje od `ListView` klase. U `T
 Po konvenciji, `TaskList` klasa će učitati `todo/task_list.html` šablon. Ime šablona prati ovu konvenciju:
 
 ```shell
-app/model_list.html
+appname/modelname_list.html
 ```
 
 Ako želite da podesite drugačije ime, možete koristiti `template_name` atribut. U ovom tutorijalu ćemo koristiti podrazumevano ime šablona, koje je `task_list.html`.
 
-### Definišite ListView rutu
+### ListView ruta
 
 Promenite `ListView` rutu u `urls.py` aplikacije `todo` na sledeći način:
 
@@ -417,36 +417,38 @@ from django.urls import path
 from .views import home, TaskList
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('tasks/', TaskList.as_view(), name='tasks'),
+  path('', home, name='home'),
+  path('tasks/', TaskList.as_view(), name='tasks'),
 ]
 ```
 
-Kako ovo funkcioniše?
+> [!Note]
+>
+> **Kako ovo funkcioniše?**
+>
+> Uvezite `TaskList` klasu iz `views.py` modula.
+>
+> ```py
+> from .views import home, TaskList
+> ```
+>
+> Definišite task listu i URL adresu koja prikazuje listu zadataka:
+>
+> ```py
+> path('tasks/', TaskList.as_view(), name='tasks'),
+> ```
+>
+> U ovom kodu, mapiramo URL adresu `tasks/` na rezultat metode `as_view()` klase >`TaskList`.
+> Imajte na umu da možete navesti atribute klase `TaskList` u `as_view()` metodi. >Na primer,  
+> možete proslediti ime šablona `as_view()` metodi na sledeći način:
+>
+> ```py
+> path('tasks/', TaskList.as_view(template_name='mytodo.html'), name='tasks'),
+> ```
+>
+> Metoda `as_view()` ima argumente koji odgovaraju atributima klase `TaskList`.
 
-Uvezite `TaskList` klasu iz `views.py` modula.
-
-```py
-from .views import home, TaskList
-```
-
-Definišite task listu i URL adresu koja prikazuje listu zadataka:
-
-```py
-path('tasks/', TaskList.as_view(), name='tasks'),
-```
-
-U ovom kodu, mapiramo URL adresu `tasks/` na rezultat metode `as_view()` klase `TaskList`.
-
-Imajte na umu da možete navesti atribute klase `TaskList` u `as_view()` metodi. Na primer, možete proslediti ime šablona `as_view()` metodi na sledeći način:
-
-```py
-path('tasks/', TaskList.as_view(template_name='mytodo.html'), name='tasks'),
-```
-
-Metoda `as_view()` ima argumente koji odgovaraju atributima klase `TaskList`.
-
-### Kreiranje ListView šablona
+### ListView šablon
 
 Definišite `task_list.html` u `templates/todo` direktorijumu aplikacije `Todo`:
 
@@ -456,21 +458,21 @@ Definišite `task_list.html` u `templates/todo` direktorijumu aplikacije `Todo`:
 {%block content%}
 
 <div class="center">
-    <h2>My Todo List</h2>
-    {% if tasks %}
-    <ul class="tasks">
-        {% for task in tasks %}
-            <li><a href="#" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
-                <div  class="task-controls">
-                    <a href="#"><i class="bi bi-trash"></i> </a>
-                    <a href="#"><i class="bi bi-pencil-square"></i></a>
-                </div>
-            </li>
-        {% endfor %}
-    {% else %}
-        <p>🎉 Yay, you have no pending tasks!</p>
-    {% endif %}
-    </ul>
+  <h2>My Todo List</h2>
+  {% if tasks %}
+  <ul class="tasks">
+    {% for task in tasks %}
+      <li><a href="#" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
+        <div  class="task-controls">
+          <a href="#"><i class="bi bi-trash"></i> </a>
+          <a href="#"><i class="bi bi-pencil-square"></i></a>
+        </div>
+      </li>
+    {% endfor %}
+  {% else %}
+    <p>🎉 Yay, you have no pending tasks!</p>
+  {% endif %}
+  </ul>
 </div>
 
 {%endblock content%}
@@ -478,11 +480,11 @@ Definišite `task_list.html` u `templates/todo` direktorijumu aplikacije `Todo`:
 
 Šablon `task_list.html` proširuje `base.html` šablon projekta. U `task_list.html` šablonu, iteriramo kroz `tasks` `QuerySet` i prikazujemo svaki od njih kao stavku na listi.
 
-Takođe, dodajemo `completed` CSS klasu oznaci `a` ako je zadatak završen. Ova CSS klasa će dodati liniju kroz stavku.
+Takođe, dodajemo `completed` CSS klasu tagu `a` ako je zadatak završen. Ova CSS klasa će dodati liniju stavci.
 
 Ako je `tasks` prazan, prikazuje se poruka da nema zadataka na čekanju.
 
-### Uključivanje ListView linka u osnovni šablon
+### ListView link
 
 Izmenite `base.html` šablon da biste uključili `My Tasks` vezu u navigaciju:
 
@@ -491,41 +493,39 @@ Izmenite `base.html` šablon da biste uključili `My Tasks` vezu u navigaciju:
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Todo List</title>
+  </head>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>Todo List</title>
-    </head>
-
-    <body>
-        <header class="header">
-            <div class="container">
-                <a href="{%url 'home'%}" class="logo">Todo</a>
-                <nav class="nav">
-                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
-                    <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
-                </nav>
-            </div>
-        </header>
-        <main>
-            <div class="container">
-             {%block content %}
-             {%endblock content%}
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="container">
-               <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
-            </div>
-        </footer>
-    </body>
-
+  <body>
+    <header class="header">
+    <div class="container">
+      <a href="{%url 'home'%}" class="logo">Todo</a>
+      <nav class="nav">
+        <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+        <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+      </nav>
+    </div>
+    </header>
+    <main>
+    <div class="container">
+     {%block content %}
+     {%endblock content%}
+    </div>
+    </main>
+    <footer class="footer">
+    <div class="container">
+       <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+    </div>
+    </footer>
+  </body>
 </html>
 ```
 
-Ako otvorite URL adresu: `html<http://128.0.0.1:8000/tasks/>` videćete listu zadataka.
+Ako otvorite URL adresu: <http://128.0.0.1:8000/tasks/> videćete listu zadataka.
 
 ### Rezime ListView
 
@@ -535,13 +535,13 @@ Ako otvorite URL adresu: `html<http://128.0.0.1:8000/tasks/>` videćete listu za
 
 ## DetailView
 
-U ovom tutorijalu ćete naučiti kako da koristite `DetailView` klasu za prikazivanje objekta.
+U ovom tutorijalu ćete naučiti kako da koristite `DetailView` klasu za prikazivanje detalja objekta.
 
-### Definisanje detaljnog prikaza
+### DetailView prikaz
 
-Django `DetailView` vam omogućava da definišete prikaz zasnovan na klasi koji prikazuje detalje objekta. Da biste koristili `DetailView` klasu, definišete klasu koja nasleđuje tDetailView` klasu.
+`DetailView` vam omogućava da definišete prikaz zasnovan na klasi koji prikazuje detalje objekta. Da biste koristili `DetailView` klasu, definišete klasu koja nasleđuje `DetailView` klasu.
 
-Na primer, sledeće definiše `TaskDetail` prikaz zasnovan na klasi koji prikazuje detalje zadatka aplikacije `Todo`:
+Na primer, sledeće definiše `TaskDetail` prikaz zasnovan na klasi koji prikazuje detalje `Todo` aplikacije:
 
 ```py
 from django.shortcuts import render
@@ -550,13 +550,13 @@ from django.views.generic.detail import DetailView
 from .models import Task
 
 class TaskDetail(DetailView):
-    model = Task
-    context_object_name = 'task'
-    
+  model = Task
+  context_object_name = 'task'
+
 #...  
 ```
 
-Kako to funkcioniše?
+**Kako ovo funkcioniše?**
 
 Uvezite `DetailView` iz `django.views. generic.detail`:
 
@@ -583,14 +583,14 @@ Napravite `task_detail.html` šablon u `templates/todo` direktorijumu pomoću sl
 
 {%block content%}
 
- <article class="task">
-    <header>
-        <h2>{{ task.title }}</h2>
-        <span class="badge {% if task.completed %}badge-completed{% else %}badge-pending{%endif%}">
-            {% if task.completed %} Completed {%else%} Pending {%endif%}
-        </span>
-    </header>
-    <p>{{task.description}}</p>
+<article class="task">
+  <header>
+    <h2>{{ task.title }}</h2>
+    <span class="badge {% if task.completed %}badge-completed{% else %}badge-pending{%endif%}">
+    {% if task.completed %} Completed {%else%} Pending {%endif%}
+    </span>
+  </header>
+  <p>{{task.description}}</p>
 </article>
 
 {%endblock content%}
@@ -609,9 +609,9 @@ from django.urls import path
 from .views import home, TaskList, TaskDetail
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('tasks/', TaskList.as_view(),name='tasks'),
-    path('task/<int:pk>/',TaskDetail.as_view(),name='task'),
+  path('', home, name='home'),
+  path('tasks/', TaskList.as_view(),name='tasks'),
+  path('task/<int:pk>/',TaskDetail.as_view(),name='task'),
 ]
 ```
 
@@ -627,21 +627,21 @@ Izmenite `task_list.html` šablon da biste uključili vezu do svakog zadatka na 
 {%block content%}
 
 <div class="center">
-    <h2>My Todo List</h2>
-    {% if tasks %}
-    <ul class="tasks">
-        {% for task in tasks %}
-            <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
-                <div  class="task-controls">
-                    <a href="#"><i class="bi bi-trash"></i> </a>
-                    <a href="#"><i class="bi bi-pencil-square"></i></a>
-                </div>
-            </li>   
-        {% endfor %}
-    {% else %}
-        <p>🎉 Yay, you have no pending tasks!</p>
-    {% endif %}
-    </ul>
+  <h2>My Todo List</h2>
+  {% if tasks %}
+  <ul class="tasks">
+    {% for task in tasks %}
+      <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
+        <div  class="task-controls">
+          <a href="#"><i class="bi bi-trash"></i> </a>
+          <a href="#"><i class="bi bi-pencil-square"></i></a>
+        </div>
+      </li>   
+    {% endfor %}
+  {% else %}
+    <p>🎉 Yay, you have no pending tasks!</p>
+  {% endif %}
+  </ul>
 </div>
 
 {%endblock content%}
@@ -688,11 +688,11 @@ class TaskCreate(CreateView):
   model = Task
   fields = ['title','description','completed']
   success_url = reverse_lazy('tasks')
-    
+  
   def form_valid(self, form):
-    form.instance.user = self.request.user
-    messages.success(self.request, "The task was created successfully.")
-    return super(TaskCreate,self).form_valid(form)
+  form.instance.user = self.request.user
+  messages.success(self.request, "The task was created successfully.")
+  return super(TaskCreate,self).form_valid(form)
 
 # other classes & functions
 ```
@@ -729,33 +729,33 @@ Kreirajte `task_form.html` u `templates/todo` direktorijumu pomoću sledećeg ko
 {%block content%}
 
 <div class="center">
-    <form method="post" novalidate class="card">
-         {%csrf_token %}
-         
-         <h2>Create Task</h2>
-        {% for field in form %}
-            {% if field.name == 'completed' %}
-                <p>
-                    {{ field.label_tag }}
-                    {{ field }}
-                </p>
-                {% if field.errors %}
-                    <small class="error">{{ field.errors|striptags  }}</small> 
-                {% endif %}
-            {% else %}
-                {{ field.label_tag }} 
-                {{ field }}
-                {% if field.errors %}
-                    <small class="error">{{ field.errors|striptags  }}</small> 
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-        
-        <div class="form-buttons">
-            <input type="submit" value="Save" class="btn btn-primary"/>
-            <a href="{%url 'tasks'%}" class="btn btn-outline">Cancel</a>
-        </div>
-    </form>
+  <form method="post" novalidate class="card">
+     {%csrf_token %}
+     
+     <h2>Create Task</h2>
+    {% for field in form %}
+      {% if field.name == 'completed' %}
+        <p>
+          {{ field.label_tag }}
+          {{ field }}
+        </p>
+        {% if field.errors %}
+          <small class="error">{{ field.errors|striptags  }}</small> 
+        {% endif %}
+      {% else %}
+        {{ field.label_tag }} 
+        {{ field }}
+        {% if field.errors %}
+          <small class="error">{{ field.errors|striptags  }}</small> 
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    
+    <div class="form-buttons">
+      <input type="submit" value="Save" class="btn btn-primary"/>
+      <a href="{%url 'tasks'%}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
 </div>
 
 {%endblock content%}
@@ -778,10 +778,10 @@ from django.urls import path
 from .views import home, TaskList, TaskDetail, TaskCreate
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('tasks/', TaskList.as_view(),name='tasks'),
-    path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
-    path('task/create/', TaskCreate.as_view(),name='task-create'),
+  path('', home, name='home'),
+  path('tasks/', TaskList.as_view(),name='tasks'),
+  path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
+  path('task/create/', TaskCreate.as_view(),name='task-create'),
 ]
 ```
 
@@ -798,44 +798,44 @@ Izmenite `base.html` šablon projekta na:
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>Todo List</title>
-    </head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Todo List</title>
+  </head>
 
-    <body>
-        <header class="header">
-            <div class="container">
-                <a href="{%url 'home'%}" class="logo">Todo</a>
-                <nav class="nav">
-                    <a href="{% url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
-                    <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
-                    <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
-                </nav>
+  <body>
+    <header class="header">
+      <div class="container">
+        <a href="{%url 'home'%}" class="logo">Todo</a>
+        <nav class="nav">
+          <a href="{% url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+          <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+          <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+              {{message}}
             </div>
-        </header>
-        <main>
-            <div class="container">
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{message.tags}}">
-                            {{message}}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {%block content %}
-            
-            {%endblock content%}
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="container">
-                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
-            </div>
-        </footer>
-    </body>
+          {% endfor %}
+        {% endif %}
+      {%block content %}
+      
+      {%endblock content%}
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+      </div>
+    </footer>
+  </body>
 
 </html>
 ```
@@ -874,13 +874,13 @@ from django.urls import reverse_lazy
 from .models import Task
 
 class TaskUpdate(UpdateView):
-    model = Task
-    fields = ['title','description','completed']
-    success_url = reverse_lazy('tasks')
-    
-    def form_valid(self, form):
-        messages.success(self.request, "The task was updated successfully.")
-        return super(TaskUpdate,self).form_valid(form)
+  model = Task
+  fields = ['title','description','completed']
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    messages.success(self.request, "The task was updated successfully.")
+    return super(TaskUpdate,self).form_valid(form)
 # ...
 ```
 
@@ -914,30 +914,30 @@ Izmenite `task_form.html` šablon koji prikazuje `UpdateTask` naslov ako je prom
 
 <div class="center">
 <form method="post" novalidate class="card">
-    {%csrf_token %}
-    <h2>{% if task %} Update {%else %} Create {%endif%} Task</h2>
-    {% for field in form %}
-        {% if field.name == 'completed' %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-            </p>
-            {% if field.errors %}
-                <small class="error">{{ field.errors|striptags  }}</small> 
-            {% endif %}
-        {% else %}
-            {{ field.label_tag }} 
-            {{ field }}
-            {% if field.errors %}
-                <small class="error">{{ field.errors|striptags  }}</small> 
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+  {%csrf_token %}
+  <h2>{% if task %} Update {%else %} Create {%endif%} Task</h2>
+  {% for field in form %}
+    {% if field.name == 'completed' %}
+      <p>
+        {{ field.label_tag }}
+        {{ field }}
+      </p>
+      {% if field.errors %}
+        <small class="error">{{ field.errors|striptags  }}</small> 
+      {% endif %}
+    {% else %}
+      {{ field.label_tag }} 
+      {{ field }}
+      {% if field.errors %}
+        <small class="error">{{ field.errors|striptags  }}</small> 
+      {% endif %}
+    {% endif %}
+  {% endfor %}
 
-    <div class="form-buttons">
-        <input type="submit" value="Save" class="btn btn-primary"/>
-        <a href="{%url 'tasks'%}" class="btn btn-outline">Cancel</a>
-    </div>
+  <div class="form-buttons">
+    <input type="submit" value="Save" class="btn btn-primary"/>
+    <a href="{%url 'tasks'%}" class="btn btn-outline">Cancel</a>
+  </div>
 </form>
 </div>
 
@@ -951,19 +951,19 @@ Definišite rutu u `urls.py` aplikaciji `todo` koja mapira URL adresu sa rezulta
 ```py
 from django.urls import path
 from .views import (
-    home, 
-    TaskList, 
-    TaskDetail, 
-    TaskCreate, 
-    TaskUpdate
+  home, 
+  TaskList, 
+  TaskDetail, 
+  TaskCreate, 
+  TaskUpdate
 )
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('tasks/', TaskList.as_view(),name='tasks'),
-    path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
-    path('task/create/', TaskCreate.as_view(),name='task-create'),
-    path('task/update/<int:pk>/', TaskUpdate.as_view(),name='task-update'),
+  path('', home, name='home'),
+  path('tasks/', TaskList.as_view(),name='tasks'),
+  path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
+  path('task/create/', TaskCreate.as_view(),name='task-create'),
+  path('task/update/<int:pk>/', TaskUpdate.as_view(),name='task-update'),
 ]
 ```
 
@@ -977,21 +977,21 @@ Izmenite `task_list.html` šablon da biste uključili vezu za uređivanje za sva
 {%block content%}
 
 <div class="center">
-    <h2>My Todo List</h2>
-    {% if tasks %}
-    <ul class="tasks">
-        {% for task in tasks %}
-            <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
-                <div  class="task-controls">
-                    <a href="#"><i class="bi bi-trash"></i> </a>
-                    <a href="{%url 'task-update' task.id %}"><i class="bi bi-pencil-square"></i></a>
-                </div>
-            </li>
-        {% endfor %}
-    {% else %}
-        <p>🎉 Yay, you have no pending tasks! <a href="{%url 'task-create'%}">Create Task</a></p>
-    {% endif %}
-    </ul>
+  <h2>My Todo List</h2>
+  {% if tasks %}
+  <ul class="tasks">
+    {% for task in tasks %}
+      <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
+        <div  class="task-controls">
+          <a href="#"><i class="bi bi-trash"></i> </a>
+          <a href="{%url 'task-update' task.id %}"><i class="bi bi-pencil-square"></i></a>
+        </div>
+      </li>
+    {% endfor %}
+  {% else %}
+    <p>🎉 Yay, you have no pending tasks! <a href="{%url 'task-create'%}">Create Task</a></p>
+  {% endif %}
+  </ul>
 </div>
 
 {%endblock content%}
@@ -1030,13 +1030,13 @@ from django.urls import reverse_lazy
 from .models import Task
 
 class TaskDelete(DeleteView):
-    model = Task
-    context_object_name = 'task'
-    success_url = reverse_lazy('tasks')
-    
-    def form_valid(self, form):
-        messages.success(self.request, "The task was deleted successfully.")
-        return super(TaskDelete,self).form_valid(form)
+  model = Task
+  context_object_name = 'task'
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    messages.success(self.request, "The task was deleted successfully.")
+    return super(TaskDelete,self).form_valid(form)
 
 #...
 ```
@@ -1059,15 +1059,15 @@ Napravite novi `task_confirm_delete.html` šablon datoteke u `templates/todo` ap
 
 {%block content%}
 <div class="center">
-    <form method="post" class="card">
-        {% csrf_token %}
-        <h2>Delete Task</h2>
-        <p>Are you sure that you want to delete "{{task}}"?</p>
-        <p class="form-buttons">
-            <input type="submit" class="btn btn-primary" value="Delete">
-            <a href="{% url 'tasks'%}" class="btn btn-outline">Cancel</a>
-        </p>
-    </form>
+  <form method="post" class="card">
+    {% csrf_token %}
+    <h2>Delete Task</h2>
+    <p>Are you sure that you want to delete "{{task}}"?</p>
+    <p class="form-buttons">
+      <input type="submit" class="btn btn-primary" value="Delete">
+      <a href="{% url 'tasks'%}" class="btn btn-outline">Cancel</a>
+    </p>
+  </form>
 </div>
 
 {%endblock content%}
@@ -1082,21 +1082,21 @@ Definišite novu rutu u `urls.py` koja mapira URL adresu koja briše zadatak sa 
 ```py
 from django.urls import path
 from .views import (
-    home, 
-    TaskList, 
-    TaskDetail, 
-    TaskCreate, 
-    TaskUpdate,
-    TaskDelete
+  home, 
+  TaskList, 
+  TaskDetail, 
+  TaskCreate, 
+  TaskUpdate,
+  TaskDelete
 )
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('tasks/', TaskList.as_view(),name='tasks'),
-    path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
-    path('task/create/', TaskCreate.as_view(),name='task-create'),
-    path('task/update/<int:pk>/', TaskUpdate.as_view(),name='task-update'),
-    path('task/delete/<int:pk>/', TaskDelete.as_view(),name='task-delete'),
+  path('', home, name='home'),
+  path('tasks/', TaskList.as_view(),name='tasks'),
+  path('task/<int:pk>/', TaskDetail.as_view(),name='task'),
+  path('task/create/', TaskCreate.as_view(),name='task-create'),
+  path('task/update/<int:pk>/', TaskUpdate.as_view(),name='task-update'),
+  path('task/delete/<int:pk>/', TaskDelete.as_view(),name='task-delete'),
 ]
 ```
 
@@ -1110,21 +1110,21 @@ Izmenite `task_list.html` šablon da biste dodali vezu koja briše zadatak svako
 {%block content%}
 
 <div class="center">
-    <h2>My Todo List</h2>
-    {% if tasks %}
-    <ul class="tasks">
-        {% for task in tasks %}
-            <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
-                <div  class="task-controls">
-                    <a href="{%url 'task-delete' task.id %}"><i class="bi bi-trash"></i> </a>
-                    <a href="{%url 'task-update' task.id %}"><i class="bi bi-pencil-square"></i></a>
-                </div>
-            </li>
-        {% endfor %}
-    {% else %}
-        <p>🎉 Yay, you have no pending tasks! <a href="{%url 'task-create'%}">Create Task</a></p>
-    {% endif %}
-    </ul>
+  <h2>My Todo List</h2>
+  {% if tasks %}
+  <ul class="tasks">
+    {% for task in tasks %}
+      <li><a href="{% url 'task' task.id %}" class="{% if task.completed%}completed{%endif%}">{{ task.title }}</a> 
+        <div  class="task-controls">
+          <a href="{%url 'task-delete' task.id %}"><i class="bi bi-trash"></i> </a>
+          <a href="{%url 'task-update' task.id %}"><i class="bi bi-pencil-square"></i></a>
+        </div>
+      </li>
+    {% endfor %}
+  {% else %}
+    <p>🎉 Yay, you have no pending tasks! <a href="{%url 'task-create'%}">Create Task</a></p>
+  {% endif %}
+  </ul>
 </div>
 
 {%endblock content%}
@@ -1168,8 +1168,8 @@ Zatim, registrujte `users` aplikaciju u `settings.py` projektu:
 
 ```py
 INSTALLED_APPS = [
-    #...
-    'users'
+  #...
+  'users'
 ]
 ```
 
@@ -1188,9 +1188,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('todo.urls')),
-    path('',include('users.urls'))
+  path('admin/', admin.site.urls),
+  path('',include('todo.urls')),
+  path('',include('users.urls'))
 ]
 ```
 
@@ -1206,14 +1206,14 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 
 class MyLoginView(LoginView):
-    redirect_authenticated_user = True
-    
-    def get_success_url(self):
-        return reverse_lazy('tasks') 
-    
-    def form_invalid(self, form):
-        messages.error(self.request,'Invalid username or password')
-        return self.render_to_response(self.get_context_data(form=form))
+  redirect_authenticated_user = True
+  
+  def get_success_url(self):
+    return reverse_lazy('tasks') 
+  
+  def form_invalid(self, form):
+    messages.error(self.request,'Invalid username or password')
+    return self.render_to_response(self.get_context_data(form=form))
 ```
 
 Kako ovo funkcioniše?
@@ -1243,7 +1243,7 @@ from django.urls import path
 from .views import MyLoginView
 
 urlpatterns = [
-    path('login/', MyLoginView.as_view(),name='login'),
+  path('login/', MyLoginView.as_view(),name='login'),
 ]
 ```
 
@@ -1259,7 +1259,7 @@ Mapirajte login rutu do rezultata `as_view()` metode klase `MyLoginView`.
 
 ```py
 urlpatterns = [
-    path('login/', MyLoginView.as_view(),name='login'),
+  path('login/', MyLoginView.as_view(),name='login'),
 ]
 ```
 
@@ -1273,22 +1273,22 @@ Kreirajte `login.html` šablon u `templates/users` direktorijumu pomoću sledeć
 {%block content%}
 
 <div class="center">
-    <form method="post" class="card" novalidate>
-        {% csrf_token %}
-        <h2 class="text-center">Log in to your account</h2>
-        {% for field in form %}
-            {{ field.label_tag }} 
-            {{ field }}
-            {% if field.errors %}
-                <small>{{ field.errors|striptags }}</small> 
-            {% endif %}
-        {% endfor %}
+  <form method="post" class="card" novalidate>
+    {% csrf_token %}
+    <h2 class="text-center">Log in to your account</h2>
+    {% for field in form %}
+      {{ field.label_tag }} 
+      {{ field }}
+      {% if field.errors %}
+        <small>{{ field.errors|striptags }}</small> 
+      {% endif %}
+    {% endfor %}
 
-        <input type="submit" value="Login" class="btn btn-primary full-width">
-        <hr>
-        <p class="text-center">Forgot your password <a href="#">Reset Password</a></p>
-        <p class="text-center">Don't have a account? <a href="#">Join Now</a></p>
-    </form>
+    <input type="submit" value="Login" class="btn btn-primary full-width">
+    <hr>
+    <p class="text-center">Forgot your password <a href="#">Reset Password</a></p>
+    <p class="text-center">Don't have a account? <a href="#">Join Now</a></p>
+  </form>
 </div>
 
 {%endblock content%}
@@ -1318,12 +1318,12 @@ from .views import MyLoginView
 from django.contrib.auth.views import LogoutView 
 
 urlpatterns = [
-    path('login/', MyLoginView.as_view(),name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
+  path('login/', MyLoginView.as_view(),name='login'),
+  path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
 ]
 ```
 
-Kako to funkcioniše?
+**Kako ovo funkcioniše?**
 
 Uvezite `LogoutView` iz `django.contrib.auth.views`:
 
@@ -1346,50 +1346,50 @@ Da biste to postigli, izmenite base.htmlšablon projekta na sledeći način.
 {%load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>Todo List</title>
-    </head>
-    <body>
-        <header class="header">
-            <div class="container">
-                <a href="{%url 'home'%}" class="logo">Todo</a>
-                <nav class="nav">
-                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
-                    {% if request.user.is_authenticated %}
-                            <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
-                            <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
-                            <a href="#">Hi {{request.user | title}}</a>
-                            <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-                        <a href="#" class="btn btn-primary">Join Now</a>
-                    {% endif %}
-                  </nav>
-            </div>
-        </header>
-        <main>
-            <div class="container">
-                {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{message.tags}}">
-                           {{message}}
-                         </div>
-                       {% endfor %}
-                {% endif %}
-            
-             {%block content %}
-             {%endblock content%}
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="container">
-                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
-            </div>
-        </footer>
-    </body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Todo List</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <a href="{%url 'home'%}" class="logo">Todo</a>
+        <nav class="nav">
+          <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+          {% if request.user.is_authenticated %}
+              <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+              <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+              <a href="#">Hi {{request.user | title}}</a>
+              <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+            <a href="#" class="btn btn-primary">Join Now</a>
+          {% endif %}
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{message.tags}}">
+               {{message}}
+             </div>
+             {% endfor %}
+        {% endif %}
+      
+       {%block content %}
+       {%endblock content%}
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+      </div>
+    </footer>
+  </body>
 </html>
 ```
 
@@ -1416,43 +1416,43 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Task
 
 class TaskDelete(LoginRequiredMixin, DeleteView):
-    model = Task
-    context_object_name = 'task'
-    success_url = reverse_lazy('tasks')
-    
-    def form_valid(self, form):
-        messages.success(self.request, "The task was deleted successfully.")
-        return super(TaskDelete,self).form_valid(form)
+  model = Task
+  context_object_name = 'task'
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    messages.success(self.request, "The task was deleted successfully.")
+    return super(TaskDelete,self).form_valid(form)
 
 class TaskUpdate(LoginRequiredMixin, UpdateView):
-    model = Task
-    fields = ['title','description','completed']
-    success_url = reverse_lazy('tasks')
-    
-    def form_valid(self, form):
-        messages.success(self.request, "The task was updated successfully.")
-        return super(TaskUpdate,self).form_valid(form)
-    
+  model = Task
+  fields = ['title','description','completed']
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    messages.success(self.request, "The task was updated successfully.")
+    return super(TaskUpdate,self).form_valid(form)
+  
 class TaskCreate(LoginRequiredMixin, CreateView):
-    model = Task
-    fields = ['title','description','completed']
-    success_url = reverse_lazy('tasks')
+  model = Task
+  fields = ['title','description','completed']
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    messages.success(self.request, "The task was created successfully.")
+    return super(TaskCreate,self).form_valid(form)
     
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        messages.success(self.request, "The task was created successfully.")
-        return super(TaskCreate,self).form_valid(form)
-        
 class TaskDetail(LoginRequiredMixin, DetailView):
-    model = Task
-    context_object_name = 'task'
-    
+  model = Task
+  context_object_name = 'task'
+  
 class TaskList(LoginRequiredMixin,ListView):
-    model = Task
-    context_object_name = 'tasks'
-    
+  model = Task
+  context_object_name = 'tasks'
+  
 def home(request):
-    return render(request,'home.html')
+  return render(request,'home.html')
 ```
 
 Ako se niste prijavili i pokušali ste da pristupite zaštićenoj stranici, Django će vas preusmeriti na stranicu za prijavu. Na primer:
@@ -1491,11 +1491,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField(max_length=254)
+  email = forms.EmailField(max_length=254)
 
-    class Meta:
-        model = User
-        fields = ('username',  'email', 'password1', 'password2', )
+  class Meta:
+    model = User
+    fields = ('username',  'email', 'password1', 'password2', )
 ```
 
 RegisterForm koristi model `User` i prikazuje polja korisničko `username`, `email`, `password1` i `password2`.
@@ -1513,17 +1513,17 @@ from django.contrib.auth.models import User
 from .forms import RegisterForm
 
 class RegisterView(FormView):
-    template_name = 'users/register.html'
-    form_class = RegisterForm
-    redirect_authenticated_user = True
-    success_url = reverse_lazy('tasks')
+  template_name = 'users/register.html'
+  form_class = RegisterForm
+  redirect_authenticated_user = True
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    user = form.save()
+    if user:
+      login(self.request, user)
     
-    def form_valid(self, form):
-        user = form.save()
-        if user:
-            login(self.request, user)
-        
-        return super(RegisterView, self).form_valid(form)
+    return super(RegisterView, self).form_valid(form)
 ```
 
 Klasa `RegisterView` nasleđuje klasu `FormView` i ima sledeće atribute i metode:
@@ -1544,9 +1544,9 @@ from django.contrib.auth.views import LogoutView
 from .views import MyLoginView, RegisterView
 
 urlpatterns = [
-    path('login/', MyLoginView.as_view(),name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
-    path('register/', RegisterView.as_view(),name='register'),
+  path('login/', MyLoginView.as_view(),name='login'),
+  path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
+  path('register/', RegisterView.as_view(),name='register'),
 ]
 ```
 
@@ -1558,23 +1558,23 @@ Napravite datoteku `register.html` u `templates/users` direktorijumu aplikacije 
 {%extends 'base.html'%}
 
 {%block content%}
-    <div class="center">
-      <form method="post" novaldiate class="card">
-          {% csrf_token %}
-        <h2 class="text-center">Create your account</h2>
-        {% for field in form %}
-                {{ field.label_tag }} 
-                {{ field }}
-                {% if field.errors %}
-                    <small class="error">{{ field.errors|striptags  }}</small> 
-                {% endif %}
-        {% endfor %}
-        
-        <input type="submit" value="Register" class="btn btn-primary full-width">
-        <hr>
-        <p class="text-center">Already have an account? <a href="{% url 'login'%}">Login Here</a></p>
-        </form>
-    </div>
+  <div class="center">
+    <form method="post" novaldiate class="card">
+      {% csrf_token %}
+    <h2 class="text-center">Create your account</h2>
+    {% for field in form %}
+        {{ field.label_tag }} 
+        {{ field }}
+        {% if field.errors %}
+          <small class="error">{{ field.errors|striptags  }}</small> 
+        {% endif %}
+    {% endfor %}
+    
+    <input type="submit" value="Register" class="btn btn-primary full-width">
+    <hr>
+    <p class="text-center">Already have an account? <a href="{% url 'login'%}">Login Here</a></p>
+    </form>
+  </div>
 
 {%endblock content%}
 ```
@@ -1590,22 +1590,22 @@ Izmenite `login.html` šablon dodavanjem linka za registraciju:
 
 {%block content%}
   <div class="center">
-      <form method="post" class="card" novalidate>
-          {% csrf_token %}
-        <h2 class="text-center">Log in to your account</h2>
-        {% for field in form %}
-                {{ field.label_tag }} 
-                {{ field }}
-                {% if field.errors %}
-                    <small>{{ field.errors|striptags  }}</small> 
-                {% endif %}
-        {% endfor %}
+    <form method="post" class="card" novalidate>
+      {% csrf_token %}
+    <h2 class="text-center">Log in to your account</h2>
+    {% for field in form %}
+        {{ field.label_tag }} 
+        {{ field }}
+        {% if field.errors %}
+          <small>{{ field.errors|striptags  }}</small> 
+        {% endif %}
+    {% endfor %}
 
-1        <input type="submit" value="Login" class="btn btn-primary full-width">
-        <hr>
-        <p class="text-center">Forgot your password <a href="#">Reset Password</a></p>
-        <p class="text-center">Don't have a account? <a href="{%url 'register'%}">Join Now</a></p>
-    </form>
+1    <input type="submit" value="Login" class="btn btn-primary full-width">
+    <hr>
+    <p class="text-center">Forgot your password <a href="#">Reset Password</a></p>
+    <p class="text-center">Don't have a account? <a href="{%url 'register'%}">Join Now</a></p>
+  </form>
 </div>
 
 {%endblock content%}
@@ -1618,51 +1618,51 @@ Takođe, izmenite `base.html` šablon dodavanjem linka za registraciju u navigac
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>Todo List</title>
-    </head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Todo List</title>
+  </head>
 
-    <body>
-        <header class="header">
-            <div class="container">
-                <a href="{%url 'home'%}" class="logo">Todo</a>
-                <nav class="nav">
-                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
-                    {% if request.user.is_authenticated %}
-                              <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
-                              <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
-                        <a href="#">Hi {{request.user | title}}</a>
-                            <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
-                    {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-                            <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
-                    {% endif %}
-                 </nav>
-            </div>
-        </header>
-        <main>
-            <div class="container">
-                {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{message.tags}}">
-                   {{message}}
-                </div>
-                {% endfor %}
-        {% endif %}
-            
-             {%block content %}
-             {%endblock content%}
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="container">
-                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
-            </div>
-        </footer>
-    </body>
+  <body>
+    <header class="header">
+      <div class="container">
+        <a href="{%url 'home'%}" class="logo">Todo</a>
+        <nav class="nav">
+          <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+          {% if request.user.is_authenticated %}
+                <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+                <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+            <a href="#">Hi {{request.user | title}}</a>
+              <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
+          {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+              <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
+          {% endif %}
+         </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{message.tags}}">
+           {{message}}
+        </div>
+        {% endfor %}
+    {% endif %}
+      
+       {%block content %}
+       {%endblock content%}
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+      </div>
+    </footer>
+  </body>
 
 </html>
 ```
@@ -1675,14 +1675,14 @@ Takođe, izmenite `base.html` šablon dodavanjem linka za registraciju u navigac
 {%load static %}
 
 {%block content%}
-    <section class="feature">
-        <div class="feature-content">
-            <h1>Todo</h1>
-            <p>Todo helps you more focus, either work or play.</p>    
-            <a class="btn btn-primary cta" href="{% url 'register' %}">Get Started</a>
-        </div>
-        <img src="{%static 'images/feature.jpg'%}" alt="" class="feature-image">
-    </section>
+  <section class="feature">
+    <div class="feature-content">
+      <h1>Todo</h1>
+      <p>Todo helps you more focus, either work or play.</p>  
+      <a class="btn btn-primary cta" href="{% url 'register' %}">Get Started</a>
+    </div>
+    <img src="{%static 'images/feature.jpg'%}" alt="" class="feature-image">
+  </section>
 {%endblock content%}
 ```
 
@@ -1706,47 +1706,47 @@ from django.contrib import messages
 from .models import Task
 
 class TaskList(LoginRequiredMixin, ListView):
-    model = Task
-    context_object_name = 'tasks'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tasks'] = context['tasks'].filter(user=self.request.user)
-        return context
-    
+  model = Task
+  context_object_name = 'tasks'
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['tasks'] = context['tasks'].filter(user=self.request.user)
+    return context
+  
 class TaskDetail(LoginRequiredMixin, DetailView):
-    model = Task
-    context_object_name = 'task'
-    
-    def get_queryset(self):
-        base_qs = super(TaskDetail, self).get_queryset()
-        return base_qs.filter(user=self.request.user)  
-    
+  model = Task
+  context_object_name = 'task'
+  
+  def get_queryset(self):
+    base_qs = super(TaskDetail, self).get_queryset()
+    return base_qs.filter(user=self.request.user)  
+  
 class TaskUpdate(LoginRequiredMixin, UpdateView):
-    model = Task
-    fields = ['title','description','completed']
-    success_url = reverse_lazy('tasks')
+  model = Task
+  fields = ['title','description','completed']
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    messages.success(self.request, "The task was updated successfully.")
+    return super(TaskUpdate,self).form_valid(form)
     
-    def form_valid(self, form):
-        messages.success(self.request, "The task was updated successfully.")
-        return super(TaskUpdate,self).form_valid(form)
-      
-    def get_queryset(self):
-        base_qs = super(TaskUpdate, self).get_queryset()
-        return base_qs.filter(user=self.request.user)
+  def get_queryset(self):
+    base_qs = super(TaskUpdate, self).get_queryset()
+    return base_qs.filter(user=self.request.user)
  
 class TaskDelete(LoginRequiredMixin, DeleteView):
-    model = Task
-    context_object_name = 'task'
-    success_url = reverse_lazy('tasks')
+  model = Task
+  context_object_name = 'task'
+  success_url = reverse_lazy('tasks')
+  
+  def form_valid(self, form):
+    messages.success(self.request, "The task was deleted successfully.")
+    return super(TaskDelete,self).form_valid(form)
     
-    def form_valid(self, form):
-        messages.success(self.request, "The task was deleted successfully.")
-        return super(TaskDelete,self).form_valid(form)
-      
-    def get_queryset(self):
-        base_qs = super(TaskDelete, self).get_queryset()
-        return base_qs.filter(user=self.request.user)
+  def get_queryset(self):
+    base_qs = super(TaskDelete, self).get_queryset()
+    return base_qs.filter(user=self.request.user)
 ```
 
 Sada, ako se prijavite kao Jane, videćete praznu listu obaveza.
@@ -1796,21 +1796,21 @@ from django.urls import path
 from .views import MyLoginView, RegisterView
 
 from django.contrib.auth.views import (
-    LogoutView, 
-    PasswordResetView, 
-    PasswordResetDoneView, 
-    PasswordResetConfirmView,
-    PasswordResetCompleteView
+  LogoutView, 
+  PasswordResetView, 
+  PasswordResetDoneView, 
+  PasswordResetConfirmView,
+  PasswordResetCompleteView
 )
 
 urlpatterns = [
-    path('login/', MyLoginView.as_view(redirect_authenticated_user=True),name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
-    path('register/', RegisterView.as_view(),name='register'),
-    path('password-reset/', PasswordResetView.as_view(template_name='users/password_reset.html'),name='password-reset'),
-    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),name='password_reset_confirm'),
-    path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),name='password_reset_complete'),
+  path('login/', MyLoginView.as_view(redirect_authenticated_user=True),name='login'),
+  path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
+  path('register/', RegisterView.as_view(),name='register'),
+  path('password-reset/', PasswordResetView.as_view(template_name='users/password_reset.html'),name='password-reset'),
+  path('password-reset/done/', PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),name='password_reset_done'),
+  path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),name='password_reset_confirm'),
+  path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),name='password_reset_complete'),
 ]
 ```
 
@@ -1826,21 +1826,21 @@ Kreirajte `password_reset.html` šablon u `templates/users` direktorijumu:
 {%block content%}
 
 <div class="center">
-    <form method="post" class="card">
-        {% csrf_token %}
-        <h2 class="text-center">Reset Password</h2>
-        {% for field in form %}
-            {{ field.label_tag }} 
-            {{ field }}
-            {% if field.errors %}
-                <small>{{ field.errors|striptags  }}</small> 
-            {% endif %}
-        {% endfor %}
-        <div class="form-buttons">
-            <input type="submit" value="Send" class="btn btn-primary">
-            <a href="{%url 'login' %}"  class="btn btn-outline">Cancel</a>
-        </div>
-    </form>
+  <form method="post" class="card">
+    {% csrf_token %}
+    <h2 class="text-center">Reset Password</h2>
+    {% for field in form %}
+      {{ field.label_tag }} 
+      {{ field }}
+      {% if field.errors %}
+        <small>{{ field.errors|striptags  }}</small> 
+      {% endif %}
+    {% endfor %}
+    <div class="form-buttons">
+      <input type="submit" value="Send" class="btn btn-primary">
+      <a href="{%url 'login' %}"  class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
 </div>
 
 {%endblock content%}
@@ -1862,8 +1862,8 @@ Kreirajte `reset_password_done.html` šablon u `templates/users` direktorijumu:
 {%block content%}
 
 <div class="center card">
-    <h2>Reset Password</h2>
-    <p>Please check your inbox and follow the instruction to reset your password.</p>
+  <h2>Reset Password</h2>
+  <p>Please check your inbox and follow the instruction to reset your password.</p>
 </div>
 
 {%endblock content%}
@@ -1891,22 +1891,22 @@ Kreirajte `password_reset_confirm.html` šablon u `templates/users` direktorijum
 {%block content%}
 
 <div class="center">
-    <form method="post" class="card">
-        {% csrf_token %}
-        <h2>Password Reset Confirm</h2>
-    
-        {% for field in form %}
-            {{ field.label_tag }} 
-            {{ field }}
-            {% if field.errors %}
-                <small>{{ field.errors|striptags  }}</small> 
-            {% endif %}
-        {% endfor %}
+  <form method="post" class="card">
+    {% csrf_token %}
+    <h2>Password Reset Confirm</h2>
   
-        <div>
-            <button type="submit" class="btn btn-primary">Reset Password</button>
-        </div>
-    </form>
+    {% for field in form %}
+      {{ field.label_tag }} 
+      {{ field }}
+      {% if field.errors %}
+        <small>{{ field.errors|striptags  }}</small> 
+      {% endif %}
+    {% endfor %}
+  
+    <div>
+      <button type="submit" class="btn btn-primary">Reset Password</button>
+    </div>
+  </form>
 </div>
 
 {%endblock content%}
@@ -1922,7 +1922,7 @@ Mapirajte kompletnu URL adresu za resetovanje lozinke sa `as_view()` metodom kla
 {%block content%}
 
 <div class="card center">
-    <p>Your password has been changed successfully. Please <a href="{% url 'login' %}">Login</a></p>
+  <p>Your password has been changed successfully. Please <a href="{% url 'login' %}">Login</a></p>
 </div>
 
 {%endblock content%}
@@ -1935,22 +1935,22 @@ Kreirajte `password_reset_complete.html` šablon u `templates/users`direktorijum
 
 {%block content%}
 <div class="center">
-    <form method="post" class="card" novalidate>
-        {% csrf_token %}
-        <h2 class="text-center">Log in to your account</h2>
-        {% for field in form %}
-            {{ field.label_tag }} 
-            {{ field }}
-            {% if field.errors %}
-                <small>{{ field.errors|striptags  }}</small> 
-            {% endif %}
-        {% endfor %}
+  <form method="post" class="card" novalidate>
+    {% csrf_token %}
+    <h2 class="text-center">Log in to your account</h2>
+    {% for field in form %}
+      {{ field.label_tag }} 
+      {{ field }}
+      {% if field.errors %}
+        <small>{{ field.errors|striptags  }}</small> 
+      {% endif %}
+    {% endfor %}
 
-        <input type="submit" value="Login" class="btn btn-primary full-width">
-        <hr>
-        <p class="text-center">Forgot your password <a href="{%url 'password-reset'%}">Reset Password</a></p>
-        <p class="text-center">Don't have a account? <a href="{%url 'register'%}">Join Now</a></p>
-    </form>
+    <input type="submit" value="Login" class="btn btn-primary full-width">
+    <hr>
+    <p class="text-center">Forgot your password <a href="{%url 'password-reset'%}">Reset Password</a></p>
+    <p class="text-center">Don't have a account? <a href="{%url 'register'%}">Join Now</a></p>
+  </form>
 </div>
 
 {%endblock content%}
@@ -2033,11 +2033,11 @@ I navedite `html_email_template_name` u `as_view()` metodi klase `PasswordResetV
 
 ```py
 path('password-reset/', 
-     PasswordResetView.as_view(
-        template_name='users/password_reset.html',
-        html_email_template_name='users/password_reset_email.html'
-    ),
-    name='password-reset'
+   PasswordResetView.as_view(
+    template_name='users/password_reset.html',
+    html_email_template_name='users/password_reset_email.html'
+  ),
+  name='password-reset'
 )
 ```
 
@@ -2103,14 +2103,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('todo.urls')),
-    path('',include('users.urls'))
+  path('admin/', admin.site.urls),
+  path('',include('todo.urls')),
+  path('',include('users.urls'))
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+  urlpatterns += static(settings.MEDIA_URL,
+              document_root=settings.MEDIA_ROOT)
 ```
 
 Ako DEBUGse nalazi Trueu settings.pydatoteci, Django aplikacija će poslužiti medijske datoteke iz MEDIA_URL.
@@ -2125,31 +2125,31 @@ from django.contrib.auth.models import User
 from PIL import Image
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    avatar = models.ImageField(
-        default='avatar.jpg', # default avatar
-        upload_to='profile_avatars' # dir to store the image
-    )
+  avatar = models.ImageField(
+    default='avatar.jpg', # default avatar
+    upload_to='profile_avatars' # dir to store the image
+  )
 
-    def __str__(self):
-        return f'{self.user.username} Profile'
+  def __str__(self):
+    return f'{self.user.username} Profile'
 
-    def save(self, *args, **kwargs):
-        # save the profile first
-        super().save(*args, **kwargs)
+  def save(self, *args, **kwargs):
+    # save the profile first
+    super().save(*args, **kwargs)
 
-        # resize the image
-        img = Image.open(self.avatar.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            # create a thumbnail
-            img.thumbnail(output_size)
-            # overwrite the larger image
-            img.save(self.avatar.path)
+    # resize the image
+    img = Image.open(self.avatar.path)
+    if img.height > 300 or img.width > 300:
+      output_size = (300, 300)
+      # create a thumbnail
+      img.thumbnail(output_size)
+      # overwrite the larger image
+      img.save(self.avatar.path)
 ```
 
-Kako to funkcioniše.
+**Kako ovo funkcioniše?**
 
 Prvo, definišite Profilemodel koji nasleđuje od Modelklase:
 
@@ -2171,8 +2171,8 @@ Definišite avatarpolje koje sadrži avatar korisnika:
 
 ```py
 avatar = models.ImageField(
-        default='avatar.jpg', # default avatar
-        upload_to='profile_avatars' # dir to store the image
+    default='avatar.jpg', # default avatar
+    upload_to='profile_avatars' # dir to store the image
 )
 ```
 
@@ -2182,29 +2182,29 @@ Imajte na umu da možete dodati još polja modelu Profilekao što su adrese, int
 
 Preuzmite avatar.jpg datoteku i kopirajte je u mediadirektorijum projekta:
 
-Definišite __str__()metod koji vraća string reprezentaciju modela Profile:
+Definišite `__str__()` metod koji vraća string reprezentaciju modela Profile:
 
 ```py
 def __str__(self):
    return f'{self.user.username} Profile'
 ```
 
-Šesto, definišite save()metod koji čuva profil u bazi podataka, kreira sličicu avatara i čuva ga u navedenom direktorijumu:
+Šesto, definišite save() metod koji čuva profil u bazi podataka, kreira sličicu avatara i čuva ga u navedenom direktorijumu:
 
 ```py
 def save(self, *args, **kwargs):
-    # save the profile first
-    super().save(*args, **kwargs)
+  # save the profile first
+  super().save(*args, **kwargs)
 
-    # resize the image
-    img = Image.open(self.avatar.path)
-    if img.height > 150 or img.width > 150:
-        output_size = (150, 150)
-        # create a thumbnail
-        img.thumbnail(output_size)
-        
-        # overwrite the large image
-        img.save(self.avatar.path)
+  # resize the image
+  img = Image.open(self.avatar.path)
+  if img.height > 150 or img.width > 150:
+    output_size = (150, 150)
+    # create a thumbnail
+    img.thumbnail(output_size)
+    
+    # overwrite the large image
+    img.save(self.avatar.path)
 ```
 
 Sedmo, registrujte profil u admin.pykako bismo mogli da upravljamo profilom na administratorskoj stranici:
@@ -2225,7 +2225,7 @@ python manage.py makemigrations
 
 Migrations for 'users':
    users\migrations\0001_initial.py
-      - Create model Profile
+    - Create model Profile
 ```
 
 Drugo, primenite migracije:
@@ -2249,43 +2249,43 @@ from django.views import View
 # ...
 
 class MyProfile(LoginRequiredMixin, View):
-    def get(self, request):
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
-        
-        context = {
-            'user_form': user_form,
-            'profile_form': profile_form
-        }
-        
-        return render(request, 'users/profile.html', context)
+  def get(self, request):
+    user_form = UserUpdateForm(instance=request.user)
+    profile_form = ProfileUpdateForm(instance=request.user.profile)
     
-    def post(self,request):
-        user_form = UserUpdateForm(
-            request.POST, 
-            instance=request.user
-        )
-        profile_form = ProfileUpdateForm(
-            request.POST,
-            request.FILES,
-            instance=request.user.profile
-        )
+    context = {
+      'user_form': user_form,
+      'profile_form': profile_form
+    }
+    
+    return render(request, 'users/profile.html', context)
+  
+  def post(self,request):
+    user_form = UserUpdateForm(
+      request.POST, 
+      instance=request.user
+    )
+    profile_form = ProfileUpdateForm(
+      request.POST,
+      request.FILES,
+      instance=request.user.profile
+    )
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            
-            messages.success(request,'Your profile has been updated successfully')
-            
-            return redirect('profile')
-        else:
-            context = {
-                'user_form': user_form,
-                'profile_form': profile_form
-            }
-            messages.error(request,'Error updating you profile')
-            
-            return render(request, 'users/profile.html', context)
+    if user_form.is_valid() and profile_form.is_valid():
+      user_form.save()
+      profile_form.save()
+      
+      messages.success(request,'Your profile has been updated successfully')
+      
+      return redirect('profile')
+    else:
+      context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+      }
+      messages.error(request,'Error updating you profile')
+      
+      return render(request, 'users/profile.html', context)
 ```
 
 Prvo, uvezite Viewklasu iz django.views:
@@ -2316,26 +2316,26 @@ Napravite profile.htmlu templates/usersdirektorijumu koji proširuje base.htmlš
 
 
 <div class="center">
-    <form method="POST" enctype="multipart/form-data" class="card">
-        {% csrf_token %} 
+  <form method="POST" enctype="multipart/form-data" class="card">
+    {% csrf_token %} 
 
-        {% if user.profile %}
-            <img src="{{user.profile.avatar.url}}" alt="{{ user.username }}" class="avatar"  accept=".jpg,.jpeg,.png"/>
-        {% endif %}
+    {% if user.profile %}
+      <img src="{{user.profile.avatar.url}}" alt="{{ user.username }}" class="avatar"  accept=".jpg,.jpeg,.png"/>
+    {% endif %}
+  
+    <h2 class="text-center">{{ user.username | title }}</h2>
+    <p class="text-center"><a href="mailto:{{user.email}}">{{user.email}}
+    </a></p>
+    <hr>
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" value="{{user.email}}" />
     
-        <h2 class="text-center">{{ user.username | title }}</h2>
-        <p class="text-center"><a href="mailto:{{user.email}}">{{user.email}}
-        </a></p>
-        <hr>
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" value="{{user.email}}" />
-        
-        <label for="avatar">Avatar:</label>
-        <input type="file" name="avatar" id="avatar">	
-        
-        <button type="submit" class="btn btn-primary full-width">Update Profile
-        </button>
-    </form>
+    <label for="avatar">Avatar:</label>
+    <input type="file" name="avatar" id="avatar">
+    
+    <button type="submit" class="btn btn-primary full-width">Update Profile
+    </button>
+  </form>
 </div>
 
 {% endblock content %}
@@ -2363,51 +2363,51 @@ Izmenite base.htmlšablon da biste dodali URL profila u zaglavlje:
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>Todo List</title>
-    </head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Todo List</title>
+  </head>
 
-    <body>
-        <header class="header">
-            <div class="container">
-                <a href="{%url 'home'%}" class="logo">Todo</a>
-                <nav class="nav">
-                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
-                    {% if request.user.is_authenticated %}
-                        <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
-                        <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
-                        <a href="{% url 'profile' %}" title="Update my profile">Hi {{request.user | title}}</a>
-                            <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-                        <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
-                    {% endif %}
-                 </nav>
+  <body>
+    <header class="header">
+      <div class="container">
+        <a href="{%url 'home'%}" class="logo">Todo</a>
+        <nav class="nav">
+          <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Home</a>
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'tasks' %}"><i class="bi bi-list-task"></i> My Tasks</a>
+            <a href="{% url 'task-create' %}"><i class="bi bi-plus-circle"></i> Create Task</a>
+            <a href="{% url 'profile' %}" title="Update my profile">Hi {{request.user | title}}</a>
+              <a href="{% url 'logout' %}" class="btn btn-outline">Logout</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
+          {% endif %}
+         </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+              {{message}}
             </div>
-        </header>
-        <main>
-            <div class="container">
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{message.tags}}">
-                            {{message}}
-                        </div>
-                    {% endfor %}
-                {% endif %}
+          {% endfor %}
+        {% endif %}
 
-                {%block content %}
-                {%endblock content%}
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="container">
-                <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
-            </div>
-        </footer>
-    </body>
+        {%block content %}
+        {%endblock content%}
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p>© Copyright {% now "Y" %} by <a href="https://www.pythontutorial.net">Python Tutorial</a></p>
+      </div>
+    </footer>
+  </body>
 </html>
 ```
 
@@ -2427,12 +2427,12 @@ from .models import Profile
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+  if created:
+    Profile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
-    instance.profile.save()
+  instance.profile.save()
 ```
 
 U ovoj signals.pydatoteci:
@@ -2448,11 +2448,11 @@ Drugo, uvezite signale u apps.pydatoteku usersaplikacije:
 from django.apps import AppConfig
 
 class UsersConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'users'
-    
-    def ready(self):
-        import users.signals
+  default_auto_field = 'django.db.models.BigAutoField'
+  name = 'users'
+  
+  def ready(self):
+    import users.signals
 ```
 
 U apps.pyaplikaciji users, uvozimo signals.pymetod ready klase UsersConfig.
@@ -2462,3 +2462,5 @@ Treće, registrujte novog korisnika i proverite profil:
 ### Rezime korisnički profil
 
 - Koristite Django signal da biste automatski kreirali profil za korisnika.
+
+[Sadržaj](#sadržaj)
