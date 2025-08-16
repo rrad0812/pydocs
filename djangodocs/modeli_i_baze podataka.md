@@ -5,7 +5,7 @@
 
 - [Modeli](#modeli)
 - [Postavljanje upita](#postavljanje-upita)
-- Agregacija
+- [Agregacija](#agregacija)
 - Pretraga
 - Menadžeri
 - Izvršavanje sirovih SQL upita
@@ -194,7 +194,7 @@ Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi 
 
 - **primary_key**
 
-    Ako je "True", ovo polje je primarni ključ za model. Ako ne navedete "primary_key=True" ni za jedno polje u vašem modelu, Django će automatski dodati polje koje će čuvati primarni ključ, tako da ne morate da podešavate "primary_key=True" za ni jedno od vaših polja osim ako ne želite da poništite podrazumevano ponašanje primarnog ključa.
+    Ako je "True", ovo polje je primarni ključ za model. Ako ne navedete `primary_key=True` ni za jedno polje u vašem modelu, Django će automatski dodati polje koje će čuvati primarni ključ, tako da ne morate da podešavate `primary_key=True` za ni jedno od vaših polja osim ako ne želite da poništite podrazumevano ponašanje primarnog ključa.
 
     Polje primarnog ključa je samo za čitanje. Ako promenite vrednost primarnog ključa na postojećem objektu, a zatim ga sačuvate, novi objekat će biti kreiran pored starog. Na primer:
 
@@ -225,9 +225,9 @@ Podrazumevano, Django svakom modelu daje automatski inkrementirajući primarni k
 id = models.BigAutoField(primary_key=True)
 ```
 
-Ako želite da navedete prilagođeni primarni ključ, navedite ga kao "primary_key=True" u jednom od vaših polja. Ako Django vidi da ste eksplicitno podesili "primary_key", neće dodati automatsku "id" kolonu.
+Ako želite da navedete prilagođeni primarni ključ, navedite ga kao `primary_key=True` u jednom od vaših polja. Ako Django vidi da ste eksplicitno podesili `primary_key`, neće dodati automatsku "id" kolonu.
 
-Svaki model zahteva tačno jedno polje sa "primary_key=True" (ili eksplicitno deklarisano ili automatski dodato).
+Svaki model zahteva tačno jedno polje sa `primary_key=True` (ili eksplicitno deklarisano ili automatski dodato).
 
 #### Detaljna imena polja
 
@@ -239,7 +239,7 @@ U ovom primeru, detaljno ime je: "person's first name"
 first_name = models.CharField("person's first name", max_length=30)
 ```
 
-U ovom primeru, detaljno ime je :"first name"
+U ovom primeru, detaljno ime je:"first name"
 
 ```py
 first_name = models.CharField(max_length=30)
@@ -444,7 +444,7 @@ Ako prilagođena tabela kroz koju je definisan medjumodelom ne nameće jedinstve
 <QuerySet [<Person: Paul McCartney>]>
 ```
 
-Metoda clear() se može koristiti za uklanjanje svih relacija više prema više za instancu:
+Metoda `clear()` se može koristiti za uklanjanje svih relacija više prema više za instancu:
 
 ```py
 >>> # Beatles have broken up
@@ -500,16 +500,13 @@ Ovo je najkorisnije za primarni ključ objekta kada taj objekat na neki način p
 
 `OneToOneField` zahteva pozicioni argument: klasu sa kojom je model povezan.
 
-Na primer, ako biste pravili bazu podataka mesta, napravili biste prilično standardne stvari kao što su adresa, broj telefona itd. Zatim, ako biste želeli da napravite bazu podataka restorana preko mesta, umesto da ponavljate i replicirate ta polja u modelu Restaurant, mogli biste da napravite `Restauranthave` (jer je restoran mesto; u stvari, da biste ovo rešili, obično biste koristili nasleđivanje OneToOneFieldPlace, što uključuje implicitnu relaciju jedan-na-jedan).
+Na primer, ako biste pravili bazu podataka mesta, napravili biste prilično standardne stvari kao što su adresa, broj telefona itd. Zatim, ako biste želeli da napravite bazu podataka restorana preko mesta, umesto da ponavljate i replicirate ta polja u modelu "Restaurant", mogli biste da napravite "HaveRestaurant" (jer je restoran mesto; u stvari, da biste ovo rešili, obično biste koristili nasleđivanje `OneToOneField`, što uključuje implicitnu relaciju jedan prema jedan).
 
-Kao i kod ForeignKey, može se definisati rekurzivna relacija i mogu se napraviti reference na još uvek nedefinisane modele.
+Kao i kod `ForeignKey`, može se definisati rekurzivna relacija i mogu se napraviti reference na još uvek nedefinisane modele.
 
-Vidi takođe:
-Pogledajte primer modela odnosa jedan-na-jedan za kompletan primer.
+`OneToOneField` polja takođe prihvataju opcioni `parent_link` argument.
 
-OneToOneField polja takođe prihvataju opcioni parent_link argument.
-
-OneToOneField klase su ranije automatski postajale primarni ključ na modelu. To više nije tačno (iako možete ručno da prosledite primary_key argument ako želite). Stoga je sada moguće imati više polja tipa OneToOneField na jednom modelu.
+`OneToOneField` klase su ranije automatski postajale primarni ključ na modelu. To više nije tačno (iako možete ručno da prosledite `primary_key` argument ako želite). Stoga je sada moguće imati više polja tipa `OneToOneField` na jednom modelu.
 
 #### Uvoz modela iz druge aplikacije
 
@@ -529,7 +526,7 @@ class Restaurant(models.Model):
     )
 ```
 
-Alternativno, možete koristiti lenju referencu na povezani model, navedenu kao string u formatu "app_label.ModelName". Ovo ne zahteva uvoz povezanog modela. Na primer:
+Alternativno, možete koristiti lenju referencu na povezani model, navedenu kao string u formatu `app_label.ModelName`. Ovo ne zahteva uvoz povezanog modela. Na primer:
 
 ```py
 from django.db import models
@@ -730,19 +727,19 @@ Još jedan uobičajeni obrazac je pisanje prilagođenih SQL naredbi u metodama m
 
 Nasleđivanje modela u Django-u funkcioniše gotovo identično kao i normalno nasleđivanje klasa u Python-u, ali osnove na početku stranice i dalje treba poštovati. To znači da osnovna klasa treba da napravi podklasu iz `django.db.models.Model`.
 
-Jedina odluka koju morate da donesete je da li želite da roditeljski modeli budu modeli sami po sebi (sa sopstvenim tabelama baze podataka) ili su roditelji samo nosioci zajedničkih informacija koje će biti vidljive samo kroz podređene modele.
+Jedina odluka koju morate da donesete je da li želite da roditeljski modeli budu modeli sami po sebi ( sa sopstvenim tabelama baze podataka ) ili su roditelji samo nosioci zajedničkih informacija koje će biti vidljive samo kroz podređene modele.
 
 Postoje tri stila nasleđivanja koja su moguća u Django-u.
 
-- Često ćete želeti da koristite roditeljsku klasu samo za čuvanje informacija koje ne želite da morate da kucate za svaki podređeni model. Ova klasa se nikada neće koristiti izolovano, tako da su apstraktne osnovne klase ono što tražite.
+- Često ćete želeti da koristite roditeljsku klasu samo za čuvanje informacija koje ne želite da morate da kucate za svaki podređeni model. Ova klasa se nikada neće koristiti izolovano, tako da su `apstraktne osnovne klase` ono što tražite.
 
-- Ako pravite podklasu postojećeg modela (možda nečega iz potpuno druge aplikacije) i želite da svaki model ima svoju tabelu baze podataka, nasleđivanje više tabela je pravi put.
+- Ako pravite podklasu postojećeg modela (možda nečega iz potpuno druge aplikacije) i želite da svaki model ima svoju tabelu baze podataka, `nasleđivanje više tabela` je pravi put.
 
-- Konačno, ako želite samo da izmenite ponašanje modela na nivou Pajtona, bez ikakve promene polja modela, možete koristiti proksi modele.
+- Konačno, ako želite samo da izmenite ponašanje modela na nivou Pajtona, bez ikakve promene polja modela, možete koristiti `proksi modele`.
 
-### Apstraktne osnovne klase
+#### Apstraktne osnovne klase
 
-Apstraktne osnovne klase su korisne kada želite da stavite neke zajedničke informacije u više drugih modela. Pišete svoju osnovnu klasu i stavljate je abstract=Trueu klasu Meta. Ovaj model se zatim neće koristiti za kreiranje bilo koje tabele baze podataka. Umesto toga, kada se koristi kao osnovna klasa za druge modele, njena polja će biti dodata poljima podređene klase.
+Apstraktne osnovne klase su korisne kada želite da stavite neke zajedničke informacije u više modela. Pišete svoju osnovnu klasu i stavljate `abstract=True` u klasu `Meta`. Ovaj model se zatim neće koristiti za kreiranje bilo koje tabele baze podataka. Umesto toga, kada se koristi kao osnovna klasa za druge modele, njena polja će biti dodata poljima podređene klase.
 
 Primer:
 
@@ -760,15 +757,15 @@ class Student(CommonInfo):
     home_group = models.CharField(max_length=5)
 ```
 
-Model Student će imati tri polja: name, age i home_group. CommonInfo model se ne može koristiti kao normalan Django model, jer je apstraktna bazna klasa. Ne generiše tabelu baze podataka niti ima menadžer, i ne može se direktno instancirati ili sačuvati.
+Model Student će imati tri polja: "name", "age" i "home_group". "CommonInfo" model se ne može koristiti kao normalan Django model, jer je apstraktna bazna klasa. Ne generiše tabelu baze podataka niti ima menadžer, i ne može se direktno instancirati ili sačuvati.
 
-Polja nasleđena od apstraktnih osnovnih klasa mogu se zameniti drugim poljem ili vrednošću ili ukloniti pomoću None.
+Polja nasleđena od apstraktnih osnovnih klasa mogu se zameniti drugim poljem ili vrednošću ili ukloniti pomoću `None`.
 
 Za mnoge primene, ova vrsta nasleđivanja modela će biti upravo ono što želite. Ona pruža način za faktorizaciju zajedničkih informacija na nivou Pajtona, dok se i dalje kreira samo jedna tabela baze podataka po podređenom modelu na nivou baze podataka.
 
-### Meta nasleđivanje
+##### Meta nasleđivanje
 
-Kada se kreira apstraktna osnovna klasa, Django čini bilo koju unutrašnju Meta klasu koju ste deklarisali u osnovnoj klasi dostupnom kao atribut. Ako podređena klasa ne deklariše sopstvenu Meta klasu, naslediće Meta klasu roditelja. Ako podređena klasa želi da proširi Meta klasu roditelja , može je podklasirati. Na primer:
+Kada se kreira apstraktna osnovna klasa, Django čini bilo koju unutrašnju Meta klasu koju ste deklarisali u osnovnoj klasi dostupnom kao atribut. Ako podređena klasa ne deklariše sopstvenu Meta klasu, naslediće Meta klasu roditelja. Ako podređena klasa želi da proširi Meta klasu roditelja, može je podklasirati. Na primer:
 
 ```py
 from django.db import models
@@ -785,9 +782,9 @@ class Student(CommonInfo):
         db_table = "student_info"
 ```
 
-Django pravi jedno prilagođavanje klasi Meta apstraktne osnovne klase: pre instaliranja atributa Meta , postavlja abstract=False. To znači da deca apstraktnih osnovnih klasa ne postaju automatski i sama apstraktna klasa. Da biste napravili apstraktnu osnovnu klasu koja nasleđuje drugu apstraktnu osnovnu klasu, potrebno je eksplicitno postaviti abstract=Truena dete.
+Django pravi jedno prilagođavanje klasi Meta apstraktne osnovne klase: pre instaliranja atributa Meta , postavlja `abstract=False`. To znači da deca apstraktnih osnovnih klasa ne postaju automatski i sama apstraktna klasa. Da biste napravili apstraktnu osnovnu klasu koja nasleđuje drugu apstraktnu osnovnu klasu, potrebno je eksplicitno postaviti `abstract=True` na dete.
 
-Neke atribute neće imati smisla uključivati u Meta klasu apstraktne osnovne klase. Na primer, uključivanje db_tablebi značilo da bi sve podklase (one koje ne navode sopstveni Meta ) koristile istu tabelu baze podataka, što gotovo sigurno nije ono što želite.
+Neke atribute neće imati smisla uključivati u Meta klasu apstraktne osnovne klase. Na primer, uključivanje `db_table` bi značilo da bi sve podklase (one koje ne navode sopstveni Meta ) koristile istu tabelu baze podataka, što gotovo sigurno nije ono što želite.
 
 Zbog načina na koji funkcioniše nasleđivanje u Pajtonu, ako podređena klasa nasleđuje od više apstraktnih osnovnih klasa, podrazumevano će biti nasleđene samo Meta opcije iz prve navedene klase. Da biste nasledili Meta opcije od više apstraktnih osnovnih klasa, morate eksplicitno deklarisati Meta nasleđivanje. Na primer:
 
@@ -815,17 +812,17 @@ class Student(CommonInfo, Unmanaged):
         pass
 ```
 
-Budite oprezni sa related_namei related_query_name
+Budite oprezni sa `related_name` i `related_query_name`.
 
-Ako koristite `related_name` or `related_query_namena` ForeignKey ili `ManyToManyField`, uvek morate da navedete jedinstveno obrnuto ime i ime upita za polje. Ovo bi obično izazvalo problem u apstraktnim osnovnim klasama, jer su polja u ovoj klasi uključena u svaku od podklasa, sa potpuno istim vrednostima za atribute ( uključujući `related_namei` i `related_query_name` ) svaki put.
+Ako koristite `related_name` or `related_query_name` na `ForeignKey` ili `ManyToManyField`, uvek morate da navedete jedinstveno obrnuto ime i ime upita za polje. Ovo bi obično izazvalo problem u apstraktnim osnovnim klasama, jer su polja u ovoj klasi uključena u svaku od podklasa, sa potpuno istim vrednostima za atribute ( uključujući `related_name` i `related_query_name` ) svaki put.
 
-Da biste zaobišli ovaj problem, kada koristite related_nameili related_query_nameu apstraktnoj osnovnoj klasi (samo), deo vrednosti treba da sadrži '%(app_label)s'i '%(class)s'.
+Da biste zaobišli ovaj problem, kada koristite `related_name` ili `related_query_name` u apstraktnoj osnovnoj klasi (samo), deo vrednosti treba da sadrži `'%(app_label)s'` i `'%(class)s'`.
 
-'%(class)s'se zamenjuje malim slovima napisanim imenom podređene klase u kojoj se polje koristi.
+`'%(class)s'` se zamenjuje malim slovima napisanim imenom podređene klase u kojoj se polje koristi.
 
-'%(app_label)s'se zamenjuje malim slovima imena aplikacije u kojoj se nalazi podređena klasa. Svako instalirano ime aplikacije mora biti jedinstveno, a imena klasa modela unutar svake aplikacije takođe moraju biti jedinstvena, stoga će rezultujuće ime na kraju biti drugačije.
+`'%(app_label)s'` se zamenjuje malim slovima imena aplikacije u kojoj se nalazi podređena klasa. Svako instalirano ime aplikacije mora biti jedinstveno, a imena klasa modela unutar svake aplikacije takođe moraju biti jedinstvena, stoga će rezultujuće ime na kraju biti drugačije.
 
-Na primer, ako je data aplikacija common/models.py:
+Na primer, ako je data aplikacija `common/models.py`:
 
 ```py
 from django.db import models
@@ -845,22 +842,24 @@ class ChildA(Base):
 
 class ChildB(Base):
     pass
+```
 
-Zajedno sa još jednom aplikacijom rare/models.py:
+Zajedno sa još jednom aplikacijom `rare/models.py`:
 
+```py
 from common.models import Base
 
 class ChildB(Base):
     pass
 ```
 
-Obrnuto ime polja common.ChildA.m2mće biti , common_childa_relateda obrnuto ime upita će biti common_childas. Obrnuto ime polja common.ChildB.m2mće biti , common_childb_relateda obrnuto ime upita će biti common_childbs. Konačno, obrnuto ime polja rare.ChildB.m2mće biti, rare_childb_relateda obrnuto ime upita će biti rare_childbs. Na vama je kako ćete koristiti deo `'%(class)s'` i `'%(app_label)s'` da biste konstruisali svoje povezano ime ili povezano ime upita, ali ako zaboravite da ga koristite, Django će izbaciti greške kada izvršite sistemske provere (ili pokrenete migrate).
+Obrnuto ime polja `common.ChildA.m2m` će biti `common_childa_relateda` obrnuto ime upita će biti `common_childas`. Obrnuto ime polja `common.ChildB.m2m` će biti `common_childb_relateda` obrnuto ime upita će biti `common_childbs`. Konačno, obrnuto ime polja `rare.ChildB.m2m` će biti, `rare_childb_relateda` obrnuto ime upita će biti `rare_childbs`. Na vama je kako ćete koristiti deo `'%(class)s'` i `'%(app_label)s'` da biste konstruisali povezano ime ili povezano ime upita, ali ako zaboravite da ga koristite, Django će izbaciti greške kada izvršite sistemske provere (ili pokrenete migrate).
 
-Ako ne navedete related_nameatribut za polje u apstraktnoj osnovnoj klasi, podrazumevano obrnuto ime će biti ime podređene klase praćeno sa '_set', baš kao što bi to normalno bilo kada biste polje deklarisali direktno na podređenoj klasi. Na primer, u gornjem kodu, ako related_nameje atribut izostavljen, obrnuto ime za m2mpolje bi bilo childa_setu ChildAslučaju i childb_setza ChildBpolje.
+Ako ne navedete `related_name` atribut za polje u apstraktnoj osnovnoj klasi, podrazumevano obrnuto ime će biti ime podređene klase praćeno sa `'_set'`, baš kao što bi to normalno bilo kada biste polje deklarisali direktno na podređenoj klasi. Na primer, u gornjem kodu, ako `related_name` je atribut izostavljen, obrnuto ime za `m2m` polje bi bilo `childa_set` u `ChildA` slučaju i `childb_set` za `ChildB` polje.
 
-### Nasleđivanje više tabela
+#### Nasleđivanje više tabela
 
-Drugi tip nasleđivanja modela koji podržava Django je kada je svaki model u hijerarhiji model za sebe. Svaki model odgovara sopstvenoj tabeli baze podataka i može se upitivati i kreirati pojedinačno. Relacija nasleđivanja uvodi veze između podređenog modela i svakog od njegovih roditelja (putem automatski kreiranog OneToOneField). Na primer:
+Drugi tip nasleđivanja modela koji podržava Django je kada je svaki model u hijerarhiji model za sebe. Svaki model odgovara sopstvenoj tabeli baze podataka i može se upitivati i kreirati pojedinačno. Relacija nasleđivanja uvodi veze između podređenog modela i svakog od njegovih roditelja (putem automatski kreiranog `OneToOneField`). Na primer:
 
 ```py
 from django.db import models
@@ -869,20 +868,19 @@ class Place(models.Model):
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=80)
 
-
 class Restaurant(Place):
     serves_hot_dogs = models.BooleanField(default=False)
     serves_pizza = models.BooleanField(default=False)
 ```
 
-Sva polja Placeće takođe biti dostupna u Restaurant, iako će se podaci nalaziti u drugoj tabeli baze podataka. Dakle, oba su moguća:
+Sva polja "Place" će takođe biti dostupna u "Restaurant", iako će se podaci nalaziti u drugoj tabeli baze podataka. Dakle, oba su moguća:
 
 ```py
 >>> Place.objects.filter(name="Bob's Cafe")
 >>> Restaurant.objects.filter(name="Bob's Cafe")
 ```
 
-Ako imate Placekoji je takođe Restaurant, možete preći sa Placeobjekta na Restaurantobjekat koristeći malu verziju imena modela:
+Ako imate "Place" koji je takođe Restaurant, možete preći sa "Place" objekta na `Restaurant" objekat koristeći malu verziju imena modela:
 
 ```py
 >>> p = Place.objects.get(id=12)
@@ -891,9 +889,9 @@ Ako imate Placekoji je takođe Restaurant, možete preći sa Placeobjekta na Res
 <Restaurant:...>
 ```
 
-Međutim, ako pu gornjem primeru nije bilo Restaurant(kreiran je direktno kao Placeobjekat ili je bio roditelj neke druge klase), pozivanje na p.restaurantbi izazvalo Restaurant.DoesNotExistizuzetak.
+Međutim, ako "p" u gornjem primeru nije bio "Restaurant" (kreiran je direktno kao "Place" objekat ili je bio roditelj neke druge klase), pozivanje na `p.restaurant` bi izazvalo "Restaurant"."DoesNotExist" izuzetak.
 
-Automatski kreirana OneToOneFieldadresa Restaurantkoja je povezuje Placeizgleda ovako:
+Automatski kreirana `OneToOneField` adresa "Restaurant" koja je povezuje "Place" izgleda ovako:
 
 ```py
 place_ptr = models.OneToOneField(
@@ -904,15 +902,15 @@ place_ptr = models.OneToOneField(
 )
 ```
 
-Možete poništiti to polje deklarišući svoje OneToOneFieldsa parent_link=Trueon Restaurant.
+Možete poništiti to polje deklarišući svoje `OneToOneField` sa `parent_link=True` on Restaurant.
 
-### Meta i nasleđivanje više tabela
+##### Meta i nasleđivanje više tabela
 
-U situaciji nasleđivanja više tabela, nema smisla da podređena klasa nasleđuje od Meta klase svog roditelja. Sve Meta opcije su već primenjene na roditeljsku klasu i njihova ponovna primena bi normalno dovela samo do kontradiktornog ponašanja (ovo je u suprotnosti sa slučajem apstraktne osnovne klase, gde osnovna klasa ne postoji sama po sebi).
+U situaciji nasleđivanja više tabela, nema smisla da podređena klasa nasleđuje od `Meta` klase svog roditelja. Sve `Meta` opcije su već primenjene na roditeljsku klasu i njihova ponovna primena bi normalno dovela samo do kontradiktornog ponašanja (ovo je u suprotnosti sa slučajem apstraktne osnovne klase, gde osnovna klasa ne postoji sama po sebi).
 
-Dakle, dete modela nema pristup Meta klasi svog roditelja. Međutim, postoji nekoliko ograničenih slučajeva gde dete nasleđuje ponašanje od roditelja: ako dete ne navede orderingatribut ili get_latest_byatribut, naslediće ih od svog roditelja.
+Dakle, dete modela nema pristup `Meta` klasi svog roditelja. Međutim, postoji nekoliko ograničenih slučajeva gde dete nasleđuje ponašanje od roditelja: ako dete ne navede `ordering` atribut ili `get_latest_byatribut`, naslediće ih od svog roditelja.
 
-Ako roditelj ima redosled, a vi ne želite da dete ima bilo kakav prirodni redosled, možete ga eksplicitno onemogućiti:
+Ako roditelj ima `ordering`, a vi ne želite da dete ima bilo kakav prirodni redosled, možete ga eksplicitno onemogućiti:
 
 ```py
 class ChildModel(ParentModel):
@@ -922,11 +920,11 @@ class ChildModel(ParentModel):
         ordering = []
 ```
 
-### Nasleđivanje i obrnute relacije
+##### Nasleđivanje i obrnute relacije
 
-Pošto nasleđivanje više tabela koristi implicitnu funkciju OneToOneFielDja povezivanje deteta i roditelja, moguće je preći sa roditelja nadole na dete, kao u gornjem primeru. Međutim, ovo koristi ime koje je podrazumevana related_namevrednost za ForeignKeyi ManyToManyFieldrelacije. Ako stavljate te tipove relacija na podklasu roditeljskog modela, morate navesti related_nameatribut za svako takvo polje. Ako zaboravite, Django će izazvati grešku validacije.
+Pošto nasleđivanje više tabela koristi implicitnu funkciju `OneToOneField` za povezivanje deteta i roditelja, moguće je preći sa roditelja nadole na dete, kao u gornjem primeru. Međutim, ovo koristi ime koje je podrazumevana `related_name` vrednost za `ForeignKey` i `ManyToManyField` relacije. Ako stavljate te tipove relacija na podklasu roditeljskog modela, morate navesti `related_name` atribut za svako takvo polje. Ako zaboravite, Django će izazvati grešku validacije.
 
-Na primer, ponovo koristeći gornju Placeklasu, hajde da kreiramo još jednu podklasu sa ManyToManyField:
+Na primer, ponovo koristeći gornju "Place" klasu, hajde da kreiramo još jednu podklasu sa `ManyToManyField`:
 
 ```py
 class Supplier(Place):
@@ -935,23 +933,27 @@ class Supplier(Place):
 
 To rezultira greškom:
 
-Reverse query name for 'Supplier.customers' clashes with reverse query name for 'Supplier.place_ptr'.
+"Reverse query name for 'Supplier.customers' clashes with reverse query name for 'Supplier.place_ptr'.
 
-HINT: Add or change a related_name argument to the definition for 'Supplier.customers' or 'Supplier.place_ptr'.
+HINT: Add or change a related_name argument to the definition for 'Supplier.customers' or 'Supplier.place_ptr'."
 
-Dodavanje related_nameu customerspolje na sledeći način bi rešilo grešku:.models.ManyToManyField(Place, related_name='provider')
+Dodavanje `related_name` u `customers` polje na sledeći način bi rešilo grešku:
 
-### Određivanje polja roditeljske veze
+```py
+models.ManyToManyField(Place, related_name='provider')
+```
 
-Kao što je pomenuto, Django će automatski kreirati OneToOneField vezu između vaše podređene klase i bilo kog roditeljskog modela koji nije apstraktan. Ako želite da kontrolišete ime atributa koji se povezuje sa roditeljskim modelom, možete kreirati svoj OneToOneField i podesiti ga parent_link=True tako da označava da je vaše polje veza sa roditeljskom klasom.
+##### Određivanje polja roditeljske veze
 
-### Proksi modeli
+Kao što je pomenuto, Django će automatski kreirati `OneToOneField` vezu između vaše podređene klase i bilo kog roditeljskog modela koji nije apstraktan. Ako želite da kontrolišete ime atributa koji se povezuje sa roditeljskim modelom, možete kreirati svoj `OneToOneField` i podesiti ga `parent_link=True` tako da označava da je vaše polje veza sa roditeljskom klasom.
 
-Kada se koristi nasleđivanje više tabela , nova tabela baze podataka se kreira za svaku podklasu modela. Ovo je obično željeno ponašanje, jer podklasi je potrebno mesto za čuvanje svih dodatnih polja podataka koja nisu prisutna u osnovnoj klasi. Međutim, ponekad želite samo da promenite ponašanje modela u Pajtonu – možda da promenite podrazumevani menadžer ili dodate novu metodu.
+#### Proksi modeli
 
-Za ovo služi nasleđivanje proksi modela: kreiranje proksija za originalni model. Možete kreirati, brisati i ažurirati instance proksi modela i svi podaci će biti sačuvani kao da koristite originalni (neproksirani) model. Razlika je u tome što možete promeniti stvari poput podrazumevanog redosleda modela ili podrazumevanog menadžera u proksiju, bez potrebe da menjate original.
+Kada se koristi nasleđivanje više tabela, nova tabela baze podataka se kreira za svaku podklasu modela. Ovo je obično željeno ponašanje, jer podklasi je potrebno mesto za čuvanje svih dodatnih polja podataka koja nisu prisutna u osnovnoj klasi. Međutim, ponekad želite samo da promenite ponašanje modela u Pajtonu – možda da promenite podrazumevani menadžer ili dodate novu metodu.
 
-Proksi modeli se deklarišu kao i normalni modeli. Djangu govorite da je to proksi model postavljanjem proxyatributa klase Meta na True.
+Za ovo služi proksi nasleđivanje modela: kreiranje proksija za originalni model. Možete kreirati, brisati i ažurirati instance proksi modela i svi podaci će biti sačuvani kao da koristite originalni (neproksirani) model. Razlika je u tome što možete promeniti stvari poput podrazumevanog redosleda modela ili podrazumevanog menadžera u proksiju, bez potrebe da menjate original.
+
+Proksi modeli se deklarišu kao i normalni modeli. Djangu govorite da je to proksi model postavljanjem `proxy` atributa klase `Meta` na `True`.
 
 Na primer, pretpostavimo da želite da dodate metod modelu Person. To možete učiniti ovako:
 
@@ -979,7 +981,7 @@ Klasa MyPerson radi na istoj tabeli baze podataka kao i njena roditeljska Person
 <MyPerson: foobar>
 ```
 
-Takođe možete koristiti proksi model da definišete drugačiji podrazumevani redosled na modelu. Možda nećete uvek želeti da sortirate Person model, ali redovno redite po last_name atributu kada koristite proksi:
+Takođe možete koristiti proksi model da definišete drugačiji podrazumevani redosled na modelu. Možda nećete uvek želeti da sortirate Person model, ali redovno radite po "last_name" atributu kada koristite proksi:
 
 ```py
 class OrderedPerson(Person):
@@ -988,23 +990,23 @@ class OrderedPerson(Person):
         proxy = True
 ```
 
-Sada Person će normalni upiti biti neuređeni, a Ordered Person upiti će biti poređani po last_name.
+Sada će "Person" normalni upiti biti neuređeni, a "OrderedPerson" upiti će biti poređani po "last_name".
 
-Proksi modeli nasleđuju Meta atribute na isti način kao i regularni modeli.
+Proksi modeli nasleđuju `Meta` atribute na isti način kao i regularni modeli.
 
-### QuerySet i dalje vraća traženi model
+##### QuerySet i dalje vraća traženi model
 
-Ne postoji način da Django vrati, recimo, MyPersonobjekat kad god upitate za Personobjekte. Skup upita za Personobjekte će vratiti te tipove objekata. Čitava poenta proksi objekata je u tome što Personće kod koji se oslanja na original koristiti te objekte, a vaš sopstveni kod može koristiti ekstenzije koje ste uključili (na koje se nijedan drugi kod ionako ne oslanja). To nije način da zamenite Person(ili bilo koji drugi) model svuda nečim što ste sami kreirali.
+Ne postoji način da Django vrati, recimo, "MyPerson" objekat kad god upitate za "Person" objekte. Skup upita za "Person" objekte će vratiti te tipove objekata. Čitava poenta proksi objekata je u tome što će kod koji se oslanja na original "Person" koristiti te objekte, a vaš sopstveni kod može koristiti ekstenzije koje ste uključili (na koje se nijedan drugi kod ionako ne oslanja). To nije način da zamenite Person (ili bilo koji drugi) model svuda nečim što ste sami kreirali.
 
-### Ograničenja osnovne klase
+##### Ograničenja osnovne klase
 
 Proksi model mora da nasleđuje od tačno jedne neapstraktne klase modela. Ne možete nasleđivati od više neapstraktnih modela jer proksi model ne pruža nikakvu vezu između redova u različitim tabelama baze podataka. Proksi model može da nasleđuje od bilo kog broja apstraktnih klasa modela, pod uslovom da one ne definišu nikakva polja modela. Proksi model takođe može da nasleđuje od bilo kog broja proksi modela koji dele zajedničku neapstraktnu roditeljsku klasu.
 
-### Menadžeri proksi modela
+##### Menadžeri proksi modela
 
 Ako ne navedete nijednog menadžera modela na proksi modelu, on nasleđuje menadžere od svojih roditeljskih modela. Ako definišete menadžer na proksi modelu, on će postati podrazumevani, iako će svi menadžeri definisani na roditeljskim klasama i dalje biti dostupni.
 
-Nastavljajući naš primer odozgo, možete promeniti podrazumevani menadžer koji se koristi kada upitujete Person model na ovaj način:
+Nastavljajući naš primer odozgo, možete promeniti podrazumevani menadžer koji se koristi kada upitujete "Person" model na ovaj način:
 
 ```py
 from django.db import models
@@ -1020,7 +1022,7 @@ class MyPerson(Person):
         proxy = True
 ```
 
-Ako želite da dodate novog menadžera proksiju, bez zamene postojećeg podrazumevanog, možete koristiti tehnike opisane u dokumentaciji za prilagođene menadžere : kreirajte osnovnu klasu koja sadrži nove menadžere i nasledite je nakon primarne osnovne klase:
+Ako želite da dodate novog menadžera proksiju, bez zamene postojećeg podrazumevanog, možete koristiti tehnike opisane u dokumentaciji za prilagođene menadžere - kreirajte osnovnu klasu koja sadrži nove menadžere i nasledite je nakon primarne osnovne klase:
 
 ```py
 # Create an abstract class for the new manager.
@@ -1036,7 +1038,8 @@ class MyPerson(Person, ExtraManagers):
 ```
 
 Verovatno vam ovo neće biti potrebno često, ali kada to uradite, moguće je.
-Razlike između proksi nasleđivanja i neupravljanih modela 
+
+##### Razlike između proksi nasleđivanja i neupravljanih modela
 
 Nasleđivanje proksi modela može izgledati prilično slično kreiranju neupravljanog modela, korišćenjem managed atributa na klasi modela Meta.
 
@@ -1050,13 +1053,13 @@ Ako preslikavate postojeći model ili tabelu baze podataka i ne želite sve orig
 
 Ako želite da promenite ponašanje modela samo u Pajtonu, ali da zadržite sva ista polja kao u originalu, koristite Meta.proxy=True. Ovo podešava stvari tako da je proksi model tačna kopija strukture skladištenja originalnog modela kada se podaci sačuvaju.
 
-### Višestruko nasleđivanje
+#### Višestruko nasleđivanje
 
 Baš kao i kod podklasiranja u Pajtonu, moguće je da Django model nasleđuje od više roditeljskih modela. Imajte na umu da se primenjuju uobičajena pravila za razrešavanje imena u Pajtonu. Prva osnovna klasa u kojoj se određeno ime (npr. Meta ) pojavi biće ona koja se koristi; na primer, to znači da ako više roditelja sadrži Meta klasu, koristiće se samo prva, a svi ostali će biti ignorisani.
 
-Generalno, nećete morati da nasleđujete od više roditelja. Glavni slučaj upotrebe gde je ovo korisno je za mix-in klase: dodavanje određenog dodatnog polja ili metode svakoj klasi koja nasleđuje mix-in. Pokušajte da vaše hijerarhije nasleđivanja budu što jednostavnije i jasnije kako ne biste morali da se mučite da shvatite odakle dolazi određeni deo informacije.
+Generalno, nećete morati da nasleđujete od više roditelja. Glavni slučaj upotrebe gde je ovo korisno je za `mixin` klase: dodavanje određenog dodatnog polja ili metode svakoj klasi koja nasleđuje `mixin`. Pokušajte da vaše hijerarhije nasleđivanja budu što jednostavnije i jasnije kako ne biste morali da se mučite da shvatite odakle dolazi određeni deo informacije.
 
-Imajte na umu da će nasleđivanje iz više modela koji imaju zajedničko idpolje primarnog ključa izazvati grešku. Da biste pravilno koristili višestruko nasleđivanje, možete koristiti eksplicitni izraz AutoField u osnovnim modelima:
+Imajte na umu da će nasleđivanje iz više modela koji imaju zajedničko `id` polje primarnog ključa izazvati grešku. Da biste pravilno koristili višestruko nasleđivanje, možete koristiti eksplicitni izraz `AutoField` u osnovnim modelima:
 
 ```py
 class Article(models.Model):
@@ -1071,7 +1074,7 @@ class BookReview(Book, Article):
     pass
 ```
 
-Ili koristite zajedničkog pretka za čuvanje AutoField. Ovo zahteva korišćenje eksplicitnog OneToOneField od svakog roditeljskog modela do zajedničkog pretka kako bi se izbegao sukob između polja koja se automatski generišu i nasleđuju od strane deteta:
+Ili koristite zajedničkog pretka za čuvanje `AutoField`. Ovo zahteva korišćenje eksplicitnog `OneToOneField` od svakog roditeljskog modela do zajedničkog pretka kako bi se izbegao sukob između polja koja se automatski generišu i nasleđuju od strane deteta:
 
 ```py
 class Piece(models.Model):
@@ -1091,58 +1094,62 @@ class BookReview(Book, Article):
     pass
 ```
 
-### Naziv polja hidden nije dozvoljen
+#### Naziv polja ne mogu biti sakriveni ili nadjačani
 
-U normalnom nasleđivanju klasa u Pajtonu, dozvoljeno je da podređena klasa prepiše bilo koji atribut iz roditeljske klase. U Djangu, ovo obično nije dozvoljeno za polja modela. Ako neapstraktna osnovna klasa modela ima polje pod nazivom author, ne možete kreirati drugo polje modela ili definisati atribut pod nazivom authoru bilo kojoj klasi koja nasleđuje iz te osnovne klase.
+U normalnom nasleđivanju klasa u Pajtonu, dozvoljeno je da podređena klasa prepiše bilo koji atribut iz roditeljske klase. U Djangu, ovo obično nije dozvoljeno za polja modela. Ako neapstraktna osnovna klasa modela ima polje pod nazivom "author", ne možete kreirati drugo polje modela ili definisati atribut pod nazivom "author" u bilo kojoj klasi koja nasleđuje iz te osnovne klase.
 
-Ovo ograničenje se ne odnosi na polja modela nasleđena iz apstraktnog modela. Takva polja mogu biti zamenjena drugim poljem ili vrednošću ili uklonjena postavljanjem.field_name = None
+Ovo ograničenje se ne odnosi na polja modela nasleđena iz apstraktnog modela. Takva polja mogu biti zamenjena drugim poljem ili vrednošću ili uklonjena postavljanjem `field_name = None`.
 
-Upozorenje
-Menadžeri modela se nasleđuju iz apstraktnih osnovnih klasa. Prepisivanje nasleđenog polja na koje se poziva nasleđena klasa Manager može prouzrokovati suptilne greške. Pogledajte prilagođene menadžere i nasleđivanje modela.
+> [!Warning]
+>
+> Menadžeri modela se nasleđuju iz apstraktnih osnovnih klasa. Prepisivanje nasleđenog polja na
+> koje se poziva nasleđena klasa Manager može prouzrokovati suptilne greške. Pogledajte
+> prilagođene menadžere i nasleđivanje modela.
+>
+> [!Note]
+>
+> Neka polja definišu dodatne atribute na modelu, npr. `ForeignKey` definiše dodatni atribut sa
+> `_id` dodatkom nazivu polja, kao i `related_name` i `related_query_name` na stranom modelu.
+>
+> Ovi dodatni atributi ne mogu biti zamenjeni osim ako se polje koje ih definiše ne promeni ili
+> ukloni tako da više ne definiše dodatni atribut.
 
-Napomena
-Neka polja definišu dodatne atribute na modelu, npr. a ForeignKeydefiniše dodatni atribut sa _id dodatkom nazivu polja, kao i related_namei related_query_namena stranom modelu.
+Prepisivanje polja u roditeljskom modelu dovodi do poteškoća u oblastima kao što su inicijalizacija novih instanci (određivanje koje polje se inicijalizuje u `Model.__init__`) i serijalizacija. To su funkcije sa kojima se normalno nasleđivanje Pajton klasa ne mora nositi na isti način, tako da razlika između nasleđivanja Django modela i nasleđivanja Pajton klasa nije proizvoljna.
 
-Ovi dodatni atributi ne mogu biti zamenjeni osim ako se polje koje ih definiše ne promeni ili ukloni tako da više ne definiše dodatni atribut.
+Ovo ograničenje se odnosi samo na atribute koji su `Field` instance. Normalni Pajton atributi mogu se zameniti ako želite. Takođe se odnosi samo na ime atributa kako ga Pajton vidi: ako ručno navodite ime kolone baze podataka, možete imati isto ime kolone koje se pojavljuje i u podređenom i u prethodnom modelu za nasleđivanje više tabela (to su kolone u dve različite tabele baze podataka).
 
-Prepisivanje polja u roditeljskom modelu dovodi do poteškoća u oblastima kao što su inicijalizacija novih instanci (određivanje koje polje se inicijalizuje u Model.__init__) i serijalizacija. To su funkcije sa kojima se normalno nasleđivanje Pajton klasa ne mora nositi na isti način, tako da razlika između nasleđivanja Django modela i nasleđivanja Pajton klasa nije proizvoljna.
-
-Ovo ograničenje se odnosi samo na atribute koji su Field instance. Normalni Pajton atributi mogu se zameniti ako želite. Takođe se odnosi samo na ime atributa kako ga Pajton vidi: ako ručno navodite ime kolone baze podataka, možete imati isto ime kolone koje se pojavljuje i u podređenom i u prethodnom modelu za nasleđivanje više tabela (to su kolone u dve različite tabele baze podataka).
-
-Django će podići FieldError ako prepišete bilo koje polje modela u bilo kom modelu pretka.
+Django će podići `FieldError` ako prepišete bilo koje polje modela u bilo kom modelu pretka.
 
 Imajte na umu da se zbog načina na koji se polja razrešavaju tokom definisanja klase, polja modela nasleđena od više apstraktnih roditeljskih modela razrešavaju strogo u dubinu. Ovo je suprotno standardnom Python MRO-u, koji se rešava u širinu u slučajevima nasleđivanja u obliku dijamanta. Ova razlika utiče samo na složene hijerarhije modela, koje (kao što je gore navedeno) treba pokušati da izbegnete.
 
-Organizovanje modela u paketu 
-Komanda kreira strukturu aplikacije koja uključuje datoteku. Ako imate mnogo modela, njihovo organizovanje u odvojene datoteke može biti korisno.manage.py startappmodels.py
+#### Organizovanje modela u paketu
 
-Da biste to uradili, kreirajte modelspaket. Uklonite models.pyi kreirajte myapp/models/ direktorijum sa __init__.py datotekom i datotekama za čuvanje vaših modela. Morate da uvezete modele u __init__.py datoteku.
+Komanda `manage.py startapp` kreira strukturu aplikacije koja uključuje datoteku `models.py`. Ako imate mnogo modela, njihovo organizovanje u odvojene datoteke može biti korisno.
 
-Na primer, ako ste imali organic.py i synthetic.py u models direktorijumu:
+Da biste to uradili, kreirajte `models` paket. Uklonite `models.py` i kreirajte `myapp/models/` direktorijum sa `__init__.py` datotekom i datotekama za čuvanje vaših modela. Morate da uvezete modele u `__init__.py` datoteku.
 
-myapp/models/__init__.py
+Na primer, ako ste imali `organic.py` i `synthetic.py` u models direktorijumu:
 
-from.organic import Person
-from.synthetic import Robot
+`myapp/models/__init__.py`
 
-Eksplicitni uvoz svakog modela umesto korišćenja from.models import * ima prednosti jer ne zatrpava imenski prostor, čini kod čitljivijim i održava alate za analizu koda korisnim. 
+```py
+from .organic import Person
+from .synthetic import Robot
+```
 
-Vidi takođe
-Referenca za modele
-Pokriva sve API-je povezane sa modelom, uključujući polja modela, povezane objekte i QuerySet.
+Eksplicitni uvoz svakog modela umesto korišćenja `from .models import *` ima prednosti jer ne zatrpava imenski prostor, čini kod čitljivijim i održava alate za analizu koda korisnim.
 
 [Sadržaj](#sadržaj)
 
 ## Postavljanje upita
 
-Kada kreirate svoje modele podataka , Django vam automatski daje API za apstrakciju baze podataka koji vam omogućava da kreirate, preuzimate, ažurirate i brišete objekte. Ovaj dokument objašnjava kako se koristi ovaj API. Pogledajte referencu za modele podataka za sve detalje o svim različitim opcijama pretrage modela.
+Kada kreirate svoje modele podataka, Django vam automatski daje API za apstrakciju baze podataka koji vam omogućava da kreirate, preuzimate, ažurirate i brišete objekte. Ovaj dokument objašnjava kako se koristi ovaj API.
 
-Kroz ovaj vodič (i u referenci), pozivaćemo se na sledeće modele, koji čine blog aplikaciju:
+Kroz ovaj vodič pozivaćemo se na sledeće modele, koji čine blog aplikaciju:
 
+```py
 from datetime import date
-
 from django.db import models
-
 
 class Blog(models.Model):
     name = models.CharField(max_length=100)
@@ -1151,14 +1158,12 @@ class Blog(models.Model):
     def __str__(self):
         return self.name
 
-
 class Author(models.Model):
     name = models.CharField(max_length=200)
     email = models.EmailField()
 
     def __str__(self):
         return self.name
-
 
 class Entry(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
@@ -1173,71 +1178,84 @@ class Entry(models.Model):
 
     def __str__(self):
         return self.headline
+```
 
-Kreiranje objekata
+### Kreiranje objekata
 
-Da bi predstavio podatke tabele baze podataka u Pajton objektima, DŽango koristi intuitivan sistem: klasa modela predstavlja tabelu baze podataka, a instanca te klase predstavlja određeni zapis u tabeli baze podataka.
+Da bi predstavio podatke tabele baze podataka u Pajton objektima, Django koristi intuitivan sistem: klasa modela predstavlja tabelu baze podataka, a instanca te klase predstavlja određeni zapis u tabeli baze podataka.
 
-Da biste kreirali objekat, instancirajte ga koristeći ključne reči kao argumente u klasi modela, a zatim pozovite funkciju save()da biste ga sačuvali u bazi podataka.
+Da biste kreirali objekat, instancirajte ga koristeći ključne reči kao argumente u klasi modela, a zatim pozovite funkciju `save()` da biste ga sačuvali u bazi podataka.
 
-Pod pretpostavkom da se modeli nalaze u models.pydatoteci unutar blogDjango aplikacije, evo primera:
+Pod pretpostavkom da se modeli nalaze u `models.py` datoteci unutar "blog" Django aplikacije, evo primera:
 
+```py
 >>> from blog.models import Blog
 >>> b = Blog(name="Beatles Blog", tagline="All the latest Beatles news.")
 >>> b.save()
+```
 
-Ovo izvršava INSERTSQL izraz iza kulisa. Django ne dolazi u bazu podataka dok eksplicitno ne pozovete save().
+Ovo izvršava INSERT SQL izraz iza kulisa. Django ne dolazi u bazu podataka dok eksplicitno ne pozovete `save()`.
 
-Metoda save()nema povratnu vrednost.
+Metoda `save()` nema povratnu vrednost.
 
-Vidi takođe
+Da biste kreirali i sačuvali objekat u jednom koraku, koristite `create()` metodu.
 
-save()koristi niz naprednih opcija koje nisu ovde opisane. Pogledajte dokumentaciju za save()kompletne detalje.
+### Čuvanje promena na objektima
 
-Da biste kreirali i sačuvali objekat u jednom koraku, koristite create()metodu.
-Čuvanje promena na objektima
+Da biste sačuvali izmene objekta koji se već nalazi u bazi podataka, koristite `save()`.
 
-Da biste sačuvali izmene objekta koji se već nalazi u bazi podataka, koristite save().
+S obzirom na "Blog" instancu "b5" koja je već sačuvana u bazi podataka, ovaj primer menja njeno ime i ažurira njen zapis u bazi podataka:
 
-S obzirom na Bloginstancu b5koja je već sačuvana u bazi podataka, ovaj primer menja njeno ime i ažurira njen zapis u bazi podataka:
-
+```py
 >>> b5.name = "New name"
 >>> b5.save()
+```
 
-Ovo izvršava UPDATESQL izraz iza kulisa. Django ne dolazi u bazu podataka dok eksplicitno ne pozovete save().
-Čuvanje ForeignKeyi ManyToManyFieldpolja
+Ovo izvršava UPDATE SQL izraz iza kulisa. Django ne dolazi u bazu podataka dok eksplicitno ne pozovete `save()`.
 
-Ažuriranje ForeignKeypolja funkcioniše potpuno na isti način kao i čuvanje normalnog polja – dodelite objekat odgovarajućeg tipa dotičnom polju. Ovaj primer ažurira blogatribut instance Entry, entrypretpostavljajući da su odgovarajuće instance Entryi Blogveć sačuvane u bazi podataka (tako da ih možemo preuzeti u nastavku):
+### Čuvanje ForeignKey i ManyToManyField polja
 
+Ažuriranje `ForeignKey` polja funkcioniše potpuno na isti način kao i čuvanje normalnog polja – dodelite objekat odgovarajućeg tipa dotičnom polju. Ovaj primer ažurira "blog" atribut instance "Entry" pretpostavljajući da su odgovarajuće instance "Entry" i "Blog" već sačuvane u bazi podataka (tako da ih možemo preuzeti u nastavku):
+
+```py
 >>> from blog.models import Blog, Entry
+>>>
 >>> entry = Entry.objects.get(pk=1)
 >>> cheese_blog = Blog.objects.get(name="Cheddar Talk")
 >>> entry.blog = cheese_blog
 >>> entry.save()
+```
 
-Ažuriranje ManyToManyFieldfunkcioniše malo drugačije – koristite add()metodu na polju da biste dodali zapis u relaciju. Ovaj primer dodaje Authorinstancu joeobjektu entry:
+Ažuriranje `ManyToManyField` funkcioniše malo drugačije – koristite `add()` metodu na polju da biste dodali zapis u relaciju. Ovaj primer dodaje "Author" instancu "joe" objektu "entry":
 
+```py
 >>> from blog.models import Author
+>>>
 >>> joe = Author.objects.create(name="Joe")
 >>> entry.authors.add(joe)
+```
 
-Da biste dodali više zapisa u ManyToManyFieldodjednom, uključite više argumenata u pozivu funkcije add(), kao što je ovo:
+Da biste dodali više zapisa u `ManyToManyField` odjednom, uključite više argumenata u pozivu funkcije `add()`, kao što je ovo:
 
+```py
 >>> john = Author.objects.create(name="John")
 >>> paul = Author.objects.create(name="Paul")
 >>> george = Author.objects.create(name="George")
 >>> ringo = Author.objects.create(name="Ringo")
 >>> entry.authors.add(john, paul, george, ringo)
+```
 
 Django će se žaliti ako pokušate da dodelite ili dodate objekat pogrešnog tipa.
-Preuzimanje objekata
 
-Da biste preuzeli objekte iz vaše baze podataka, konstruišite QuerySetvia a Managerna vašoj klasi modela.
+### Preuzimanje objekata
 
-A QuerySetpredstavlja kolekciju objekata iz vaše baze podataka. Može imati nula, jedan ili više filtera . Filteri sužavaju rezultate upita na osnovu datih parametara. U SQL terminologiji, a je QuerySetjednako iskazu SELECT, a filter je ograničavajuća klauza kao što je WHERE`or` LIMIT.
+Da biste preuzeli objekte iz vaše baze podataka, konstruišite `QuerySet` preko `Managera` na vašoj klasi modela.
 
-Dobijate QuerySetkoristeći `` vašeg modela`` Manager. Svaki model ima barem jedan `` Manager,`` i on se poziva objectspodrazumevano. Pristupite mu direktno preko klase modela, ovako:
+`QuerySet` predstavlja kolekciju objekata iz vaše baze podataka. Može imati nula, jedan ili više filtera. Filteri sužavaju rezultate upita na osnovu datih parametara. U SQL terminologiji, `QuerySet` je jednako iskazu SELECT, a filter je ograničavajuća klauza kao što je WHERE ili LIMIT.
 
+Dobijate `QuerySet` koristeći `Manager` vašeg modela. Svaki model ima barem jedan `Manager` i on se zova `objects` podrazumevano. Pristupite mu direktno preko klase modela, ovako:
+
+```py
 >>> Blog.objects
 <django.db.models.manager.Manager object at ...>
 >>> b = Blog(name="Foo", tagline="Bar")
@@ -1245,199 +1263,256 @@ Dobijate QuerySetkoristeći `` vašeg modela`` Manager. Svaki model ima barem je
 Traceback:
     ...
 AttributeError: "Manager isn't accessible via Blog instances."
+```
 
-Napomena
+> [!Note]
+>
+> Manager je dostupan samo preko klasa modela, a ne iz instanci modela, kako bi se sprovelo
+> razdvajanje između operacija "na nivou tabele" i operacija "na nivou zapisa".
 
-A Managerje dostupan samo preko klasa modela, a ne iz instanci modela, kako bi se sprovelo razdvajanje između operacija „na nivou tabele“ i operacija „na nivou zapisa“.
+`Manager` je glavni izvor `QuerySet`-a za model. Na primer, `Blog.objects.all()` vraća `QuerySet` koji sadrži sve "Blog" objekte u bazi podataka.
 
-je Managerglavni izvor skupova upita za model. Na primer, Blog.objects.all()vraća QuerySetkoji sadrži sve Blogobjekte u bazi podataka.
-Preuzimanje svih objekata
+#### Preuzimanje svih objekata
 
-Najjednostavniji način za preuzimanje objekata iz tabele jeste da ih preuzmete sve. Da biste to uradili, koristite all()metodu na Manager:
+Najjednostavniji način za preuzimanje objekata iz tabele jeste da ih preuzmete sve. Da biste to uradili, koristite `all()` metodu na `Manager`-u:
 
+```py
 >>> all_entries = Entry.objects.all()
+```
 
-Metoda all()vraća broj QuerySetsvih objekata u bazi podataka.
-Preuzimanje određenih objekata pomoću filtera
+Metoda `all()` vraća `QuerySet` svih objekata u bazi podataka.
 
-Vraćena QuerySetvrednost all()opisuje sve objekte u tabeli baze podataka. Međutim, obično ćete morati da izaberete samo podskup kompletnog skupa objekata.
+#### Preuzimanje određenih objekata pomoću filtera
 
-Da biste kreirali takav podskup, precizirate početni QuerySet, dodajući uslove filtera. Dva najčešća načina za preciziranje QuerySetsu:
+Vraćena `QuerySet` vrednost sa all() opisuje sve objekte u tabeli baze podataka. Međutim, obično ćete morati da izaberete samo podskup kompletnog skupa objekata.
 
-filter(**kwargs)
+Da biste kreirali takav podskup, precizirate početni QuerySet, dodajući uslove filtera. Dva najčešća načina za preciziranje `QuerySet` su:
 
-    Vraća novi QuerySetkoji sadrži objekte koji odgovaraju datim parametrima pretrage.
-exclude(**kwargs)
+- filter(**kwargs)
 
-    Vraća novu vrednost QuerySetkoja sadrži objekte koji se ne podudaraju sa datim parametrima pretrage.
+    Vraća novi `QuerySet` koji sadrži objekte koji odgovaraju datim parametrima pretrage.
 
-Parametri pretrage ( **kwargsu gore navedenim definicijama funkcija) treba da budu u formatu opisanom u odeljku Pretrage polja ispod.
+- exclude(**kwargs)
 
-Na primer, da biste dobili QuerySetblog zapise iz 2006. godine, koristite filter()ovako:
+    Vraća novu vrednost `QuerySet` koja sadrži objekte koji se ne podudaraju sa datim parametrima pretrage.
 
+Parametri pretrage `**kwargs` u gore navedenim definicijama funkcija treba da budu u formatu opisanom u odeljku "Pretrage polja" ispod.
+
+Na primer, da biste dobili `QuerySet` "blog" zapise iz 2006. godine, koristite `filter()` ovako:
+
+```py
 Entry.objects.filter(pub_date__year=2006)
+```
 
 Sa podrazumevanom klasom menadžera, to je isto kao:
 
+```py
 Entry.objects.all().filter(pub_date__year=2006)
+```
 
-Ulančavanje filtera
+#### Ulančavanje filtera
 
-Rezultat prečišćavanja a QuerySetje sam po sebi a QuerySet, tako da je moguće povezati prečišćavanja zajedno. Na primer:
+Rezultat filtriranja `QuerySet` je sam po sebi `QuerySet`, tako da je moguće povezati filtriranje zajedno. Na primer:
 
+```py
 >>> Entry.objects.filter(headline__startswith="What").exclude(
 ...     pub_date__gte=datetime.date.today()
 ... ).filter(pub_date__gte=datetime.date(2005, 1, 30))
+```
 
-Ovo uzima početno slovo QuerySetsvih unosa u bazi podataka, dodaje filter, zatim isključenje, pa još jedan filter. Konačni rezultat je baza podataka koja QuerySetsadrži sve unose sa naslovom koji počinje sa „Šta“, a koji su objavljeni između 30. januara 2005. i današnjeg dana.
-Filtrirani QuerySets su jedinstveni
+Ovo uzima početak svih unosa u bazi podataka, dodaje filter, zatim isključenje, pa još jedan filter. Konačni rezultat je `QuerySet` koji sadrži sve unose sa naslovom koji počinje sa "What", a koji su objavljeni između 30. januara 2005. i današnjeg dana.
 
-Svaki put kada precizirate QuerySet, dobijate potpuno novi QuerySetkoji nije ni na koji način vezan za prethodni QuerySet. Svako preciziranje stvara zasebnu i jedinstvenu stavku QuerySetkoja se može čuvati, koristiti i ponovo koristiti.
+#### Filtrirani QuerySet su jedinstveni
+
+Svaki put kada filtrirate `QuerySet`, dobijate potpuno novi `QuerySet` koji nije ni na koji način nije vezan za prethodni `QuerySet`. Svako filtriranje stvara zasebnu i jedinstveni objekat `QuerySet` koja se može čuvati, koristiti i ponovo koristiti.
 
 Primer:
 
+```py
 >>> q1 = Entry.objects.filter(headline__startswith="What")
 >>> q2 = q1.exclude(pub_date__gte=datetime.date.today())
 >>> q3 = q1.filter(pub_date__gte=datetime.date.today())
+```
 
-Ova tri skupa upita su odvojena. Prvi je baza QuerySetkoja sadrži sve unose koji sadrže naslov koji počinje sa „Šta“. Drugi je podskup prvog, sa dodatnim kriterijumom koji isključuje zapise čiji pub_dateje danas ili u budućnosti. Treći je podskup prvog, sa dodatnim kriterijumom koji bira samo zapise čiji pub_dateje danas ili u budućnosti. Početni QuerySet( q1) nije pod uticajem procesa preciziranja.
-QuerySetsu lenji
+Ova tri `QuerySet` su odvojena. Prvi je `QuerySet` koja sadrži sve unose koji sadrže naslov koji počinje sa "What". Drugi je podskup prvog, sa dodatnim kriterijumom koji isključuje zapise čiji `pub_date` je danas ili u budućnosti. Treći je podskup prvog, sa dodatnim kriterijumom koji bira samo zapise čiji `pub_date` je danas ili u budućnosti. Početni `QuerySet` ( "q1" ) nije pod uticajem procesa filtriranja.
 
-QuerySetobjekti su lenji – čin kreiranja QuerySetne uključuje nikakvu aktivnost baze podataka. Možete slagati filtere zajedno ceo dan, a Django zapravo neće pokrenuti upit dok QuerySetse ne izračuna . Pogledajte ovaj primer:
+#### QuerySet je lenj
 
+`QuerySet` objekti su lenji – čin kreiranja `QuerySet` ne uključuje nikakvu aktivnost baze podataka. Možete slagati filtere zajedno ceo dan, a Django zapravo neće pokrenuti upit dok se `QuerySet` ne izračuna. Pogledajte ovaj primer:
+
+```py
 >>> q = Entry.objects.filter(headline__startswith="What")
 >>> q = q.filter(pub_date__lte=datetime.date.today())
 >>> q = q.exclude(body_text__icontains="food")
 >>> print(q)
+```
 
-Iako ovo izgleda kao tri pogotka u bazi podataka, u stvari pogađa bazu podataka samo jednom, u poslednjem redu ( print(q)). Generalno, rezultati QuerySetse ne preuzimaju iz baze podataka dok ih ne „zatražite“. Kada to uradite, QuerySetse procenjuje pristupom bazi podataka. Za više detalja o tome kada se tačno procena vrši, pogledajte Kada se procenjuju skupovi upita .
-Preuzimanje jednog objekta pomoću get()¶
+Iako ovo izgleda kao tri pogotka u bazi podataka, u stvari pogađa bazu podataka samo jednom, u poslednjem redu ( print(q) ). Generalno, rezultati `QuerySet` se ne preuzimaju iz baze podataka dok ih ne "zatražite". Kada to uradite, `QuerySet` se procenjuje pristupom bazi podataka. Za više detalja o tome kada se tačno procena vrši, pogledajte "Kada se procenjuju `QuerySet`-ovi".
 
-filter()uvek će vam dati QuerySet, čak i ako samo jedan objekat odgovara upitu - u ovom slučaju, to će biti koji QuerySetsadrži jedan element.
+#### Preuzimanje jednog objekta pomoću get()
 
-Ako znate da postoji samo jedan objekat koji odgovara vašem upitu, možete koristiti get()metodu na Managerkoja direktno vraća objekat:
+`filter()` će vam uvek dati `QuerySet`, čak i ako samo jedan objekat odgovara upitu - u ovom slučaju, to će biti `QuerySet` kojisadrži jedan element.
 
+Ako znate da postoji samo jedan objekat koji odgovara vašem upitu, možete koristiti `get()` metodu na `Manager`-u koja direktno vraća objekat:
+
+```py
 >>> one_entry = Entry.objects.get(pk=1)
+```
 
-Možete koristiti bilo koji izraz upita sa get(), baš kao i sa filter()-, pogledajte Pretrage polja ispod.
+Možete koristiti bilo koji izraz upita sa `get()`, baš kao i sa `filter()`.
 
-Imajte na umu da postoji razlika između korišćenja get()i korišćenja filter()sa delom [0]. Ako nema rezultata koji odgovaraju upitu, get()će izazvati DoesNotExistizuzetak. Ovaj izuzetak je atribut klase modela na kojoj se upit izvršava - pa u gornjem kodu, ako ne postoji Entryobjekat sa primarnim ključem 1, DŽango će izazvati Entry.DoesNotExist.
+Imajte na umu da postoji razlika između korišćenja `get()` i korišćenja `filter()` sa delom [0]. Ako nema rezultata koji odgovaraju upitu, `get()` će izazvati `DoesNotExist` izuzetak. Ovaj izuzetak je atribut klase modela na kojoj se upit izvršava - pa u gornjem kodu, ako ne postoji "Entry" objekat sa primarnim ključem 1, Django će izazvati `Entry.DoesNotExist`.
 
-Slično tome, Django će se žaliti ako se više od jedne stavke podudara sa get()upitom. U ovom slučaju, podići će MultipleObjectsReturned, što je opet atribut same klase modela.
-Druge QuerySetmetode
+Slično tome, Django će se žaliti ako se više od jedne stavke podudara sa `get()` upitom. U ovom slučaju, podići će `MultipleObjectsReturned`, što je opet atribut same klase modela.
 
-Većinu vremena ćete koristiti all(), get(), filter()i exclude()kada vam je potrebno da pretražite objekte iz baze podataka. Međutim, to nije sve što postoji; pogledajte QuerySet API referencu za kompletnu listu svih različitih QuerySetmetoda.
-Ograničavanje QuerySets
+#### Druge QuerySet metode
 
-Koristite podskup Pajtonove sintakse za sečenje nizova da biste ograničili QuerySetna određeni broj rezultata. Ovo je ekvivalent SQL-ovima LIMITi OFFSETklauzama.
+Većinu vremena ćete koristiti `all()`, `get()`, `filter()` i `exclude()` kada vam je potrebno da pretražite objekte iz baze podataka. Međutim, to nije sve što postoji; pogledajte "`QuerySet` API referencu" za kompletnu listu svih različitih `QuerySet` metoda.
 
-Na primer, ovo vraća prvih 5 objekata ( ):LIMIT 5
+#### Ograničavanje `QuerySet`-a
 
+Koristite podskup u Pajton sintaksi isecanja nizova da biste ograničili `QuerySet` na određeni broj rezultata. Ovo je ekvivalent SQL-ovima LIMIT i OFFSET klauzama.
+
+Na primer, ovo vraća prvih 5 objekata ( LIMIT 5 ):
+
+```py
 >>> Entry.objects.all()[:5]
+```
 
-Ovo vraća objekte od šestog do desetog ( ):OFFSET 5 LIMIT 5
+Ovo vraća objekte od šestog do desetog ( OFFSET 5 LIMIT 5 ):
 
+```py
 >>> Entry.objects.all()[5:10]
+```
 
-Negativno indeksiranje (tj. Entry.objects.all()[-1]) nije podržano.
+Negativno indeksiranje (tj. Entry.objects.all()[-1]  nije podržano.
 
-Generalno, sečenje QuerySetvraća new QuerySet– ne procenjuje upit. Izuzetak je ako koristite parametar „step“ sintakse sečenja u Pajtonu. Na primer, ovo bi zapravo izvršilo upit kako bi vratilo listu svakog drugog objekta od prvih 10:
+Generalno, isecanje `QuerySet` vraća novi `QuerySet` – ne procenjuje upit. Izuzetak je ako koristite parametar "step" sintakse isecanja u Pajtonu. Na primer, ovo bi zapravo izvršilo upit kako bi vratilo listu svakog drugog objekta od prvih 10:
 
 >>> Entry.objects.all()[:10:2]
 
 Dalje filtriranje ili uređivanje isečenog skupa upita je zabranjeno zbog dvosmislene prirode načina na koji bi to moglo da funkcioniše.
 
-Da biste preuzeli jedan objekat umesto liste (npr. ), koristite indeks umesto segmenta. Na primer, ovo vraća prvi objekat u bazi podataka, nakon što se unosi poređaju po abecednom redu po naslovu:SELECT foo FROM bar LIMIT 1Entry
+Da biste preuzeli jedan objekat umesto liste (npr. SELECT foo FROM bar LIMIT 1), koristite indeks umesto segmenta. Na primer, ovo vraća prvi Entry objekat u bazi podataka, nakon što se unosi poređaju po abecednom redu po naslovu:
 
+```py
 >>> Entry.objects.order_by("headline")[0]
+```
 
-Ovo je otprilike ekvivalentno:
+Ovo je otprilike ekvivalentno sa:
 
+```py
 >>> Entry.objects.order_by("headline")[0:1].get()
+```
 
-Međutim, imajte na umu da će se prvi od njih podići, IndexErrordok će se drugi podići DoesNotExistako nijedan objekat ne ispunjava date kriterijume. Vidite get()za više detalja.
-Pretrage polja
+Međutim, imajte na umu da će prvi od njih podići `IndexError` dok će se drugi podići `DoesNotExis` tako nijedan objekat ne ispunjava date kriterijume. Vidite `get()` za više detalja.
 
-Pretrage polja su način na koji određujete suštinu SQL WHEREklauzule. Ona se navode kao ključni argumenti za QuerySetmetode filter()`` exclude()i get()``.
+### Pretrage polja
 
-Argumenti ključnih reči za osnovne pretrage imaju oblik field__lookuptype=value. (To je dvostruka donja crta). Na primer:
+Pretrage polja su način na koji određujete suštinu SQL WHERE klauzule. Ona se navode kao ključni argumenti za `QuerySet` metode `filter()`, `exclude()` i `get()`.
 
+Argumenti ključnih reči za osnovne pretrage imaju oblik `field__lookuptype=value`. (To je dvostruka donja crta). Na primer:
+
+```py
 >>> Entry.objects.filter(pub_date__lte="2006-01-01")
+```
 
-prevodi (otprilike) u sledeći SQL:
+se prevodi (otprilike) u sledeći SQL:
 
+```sql
 SELECT * FROM blog_entry WHERE pub_date <= '2006-01-01';
+```
 
-Kako je ovo moguće
+Kako je ovo moguće?
 
-Pajton ima mogućnost definisanja funkcija koje prihvataju proizvoljne argumente imena-vrednosti čija se imena i vrednosti procenjuju tokom izvršavanja. Za više informacija pogledajte odeljak „Ključne reči argumenti“ u zvaničnom Pajton tutorijalu.
+Pajton ima mogućnost definisanja funkcija koje prihvataju proizvoljne argumente imena-vrednosti čija se imena i vrednosti procenjuju tokom izvršavanja. Za više informacija pogledajte odeljak "Argumenti ključne reči" u zvaničnom Pajton tutorijalu.
 
-Polje navedeno u pretrazi mora biti naziv polja modela. Međutim, postoji jedan izuzetak, u slučaju ForeignKeymožete navesti naziv polja sa sufiksom _id. U ovom slučaju, očekuje se da parametar vrednosti sadrži sirovu vrednost primarnog ključa stranog modela. Na primer:
+Polje navedeno u pretrazi mora biti naziv polja modela. Međutim, postoji jedan izuzetak, u slučaju `ForeignKey` možete navesti naziv polja sa sufiksom _id. U ovom slučaju, očekuje se da parametar vrednosti sadrži sirovu vrednost primarnog ključa stranog modela. Na primer:
 
 >>> Entry.objects.filter(blog_id=4)
 
-Ako prosledite nevažeći argument ključne reči, funkcija pretraživanja će podići TypeError.
+Ako prosledite nevažeći argument ključne reči, funkcija pretraživanja će podići `TypeError`.
 
-API baze podataka podržava oko dvadesetak tipova pretraga; kompletnu referencu možete pronaći u referenci za pretragu polja . Da biste stekli uvid u ono što je dostupno, evo nekih od najčešćih pretraga koje ćete verovatno koristiti:
+API baze podataka podržava oko dvadesetak tipova pretraga; kompletnu referencu možete pronaći u "Referenci za pretragu polja". Da biste stekli uvid u ono što je dostupno, evo nekih od najčešćih pretraga koje ćete verovatno koristiti:
 
-exact
+- `exact`
 
-    „Potpuno“ podudaranje. Na primer:
+    "Potpuno" podudaranje. Na primer:
 
+    ```py
     >>> Entry.objects.get(headline__exact="Cat bites dog")
+    ```
 
     Generisao bi SQL na sledeći način:
 
+    ```sql
     SELECT ... WHERE headline = 'Cat bites dog';
+    ```
 
-    Ako ne navedete tip pretrage – to jest, ako vaš argument ključne reči ne sadrži dvostruku donju crtu – pretpostavlja se da je tip pretrage exact.
+    Ako ne navedete tip pretrage – to jest, ako vaš argument ključne reči ne sadrži dvostruku donju crtu – pretpostavlja se da je tip pretrage `exact`.
 
     Na primer, sledeće dve izjave su ekvivalentne:
 
+    ```py
     >>> Blog.objects.get(id__exact=14)  # Explicit form
     >>> Blog.objects.get(id=14)  # __exact is implied
+    ```
 
-    Ovo je zbog praktičnosti, jer exactsu pretrage uobičajeni slučaj.
-iexact
+    Ovo je zbog praktičnosti, jer su `exact` pretrage uobičajeni slučaj.
+
+- `iexact`
 
     Podudaranje koje ne razlikuje velika i mala slova. Dakle, upit:
 
+    ```py
     >>> Blog.objects.get(name__iexact="beatles blog")
+    ```
 
-    Podudaralo bi se sa Blognaslovom , , ili čak ."Beatles Blog""beatles blog""BeAtlES blOG"
-contains
+    podudaralo bi se sa Blog naslovom "Beatles Blog", "beatles blog", ili čak "BeAtlES blOG".
+
+- `contains`
 
     Test ograničenja koji razlikuje velika i mala slova. Na primer:
 
+    ```py
     Entry.objects.get(headline__contains="Lennon")
+    ```
 
     Otprilike se prevodi u ovaj SQL:
 
+    ```sql
     SELECT ... WHERE headline LIKE '%Lennon%';
+    ```
 
-    Imajte na umu da će se ovo podudarati sa naslovom, ali ne i sa .'Today Lennon honored''today lennon honored'
+    Imajte na umu da će se ovo podudarati sa naslovom 'Today Lennon honored', ali ne i sa 'today lennon honored'.
 
-    Postoji i verzija koja ne razlikuje velika i mala slova, icontains.
-startswith,endswith
+    Postoji i verzija koja ne razlikuje velika i mala slova, `icontains`.
 
-    Počinje sa i završava se sa pretraga, respektivno. Postoje i verzije koje ne razlikuju velika i mala slova, a koje se zovu istartswithi iendswith.
+- `startswith`, `endswith`
 
-Opet, ovo je samo površno zagrebanje. Kompletna referenca se može naći u referenci za pretragu polja .
-Pretrage koje obuhvataju odnose
+    Počinje sa i završava se sa pretraga, respektivno. Postoje i verzije koje ne razlikuju velika i mala slova, a koje se zovu `istartswith` i `iendswith`.
+
+Opet, ovo je samo površno zagrebanje. Kompletna referenca se može naći u "Referenci za pretragu polja".
+
+### Pretrage koje obuhvataju odnose
 
 Django nudi moćan i intuitivan način za „praćenje“ odnosa u pretragama, JOINautomatski vodeći računa o SQL zahtevima umesto vas, iza kulisa. Da biste obuhvatili odnos, koristite naziv polja povezanih polja u različitim modelima, odvojen dvostrukim donjim crtama, dok ne dođete do željenog polja.
 
 Ovaj primer preuzima sve Entryobjekte sa Blogčijim nameje :'Beatles Blog'
 
+```py
 >>> Entry.objects.filter(blog__name="Beatles Blog")
+```
 
 Ovaj raspon može biti dubok koliko želite.
 
-Radi i obrnuto. Iako je , podrazumevano se pozivate na „obrnuti“ odnos u pretrazi koristeći mali naziv modela.can be customized
+Radi i obrnuto. Iako je , podrazumevano se pozivate na „obrnuti“ odnos u pretrazi koristeći mali naziv modela. can be customized
 
 Ovaj primer preuzima sve Blogobjekte koji imaju barem jedan Entryčiji headlinesadrži 'Lennon':
 
+```py
 >>> Blog.objects.filter(entry__headline__contains="Lennon")
+```
 
 Ako filtrirate preko više relacija i jedan od srednjih modela nema vrednost koja ispunjava uslov filtera, Django će ga tretirati kao da postoji prazan (sve vrednosti su NULL), ali validan objekat. Sve ovo znači da se neće pojaviti greška. Na primer, u ovom filteru:
 
@@ -1447,9 +1522,11 @@ Blog.objects.filter(entry__authors__name="Lennon")
 
 Blog.objects.filter(entry__authors__name__isnull=True)
 
-vratiće Blogobjekte koji imaju prazan ` namena` author, a takođe i one koji imaju prazan ` authorna` entry. Ako ne želite ove druge objekte, možete napisati:
+vratiće Blogobjekte koji imaju prazan namena author, a takođe i one koji imaju prazan `author` na entry. Ako ne želite ove druge objekte, možete napisati:
 
+```py
 Blog.objects.filter(entry__authors__isnull=False, entry__authors__name__isnull=True)
+```
 
 Obuhvatanje višeznačnih odnosa
 
@@ -1461,9 +1538,11 @@ Blog.objects.filter(entry__headline__contains="Lennon", entry__pub_date__year=20
 
 U suprotnom, da bismo izvršili popustljiviji upit koji bira bilo koje blogove sa samo nekim unosom sa „Lenon“ u naslovu i nekim unosom iz 2008. godine, napisali bismo:
 
+```py
 Blog.objects.filter(entry__headline__contains="Lennon").filter(
     entry__pub_date__year=2008
 )
+```
 
 Pretpostavimo da postoji samo jedan blog koji ima i unose koji sadrže „Lenon“ i unose iz 2008. godine, ali da nijedan od unosa iz 2008. ne sadrži „Lenon“ . Prvi upit ne bi vratio nijedan blog, ali bi drugi upit vratio taj jedan blog. (To je zato što unosi koje je izabrao drugi filter mogu, ali i ne moraju biti isti kao unosi u prvom filteru. Filtriramo Blogstavke sa svakom izjavom filtera, a ne same Entrystavke.) Ukratko, ako svaki uslov treba da se podudara sa istim povezanim objektom, onda bi svaki trebalo da bude sadržan u jednom filter()pozivu.
 
@@ -1471,6 +1550,7 @@ Napomena
 
 Kako drugi (dozvoljeniji) upit povezuje više filtera, on vrši višestruka spajanja sa primarnim modelom, što potencijalno rezultira duplikatima.
 
+```py
 >>> from datetime import date
 >>> beatles = Blog.objects.create(name="Beatles Blog")
 >>> pop = Blog.objects.create(name="Pop Music Blog")
@@ -1509,6 +1589,7 @@ Kako drugi (dozvoljeniji) upit povezuje više filtera, on vrši višestruka spaj
 ...     entry__pub_date__year=2008,
 ... )
 <QuerySet [<Blog: Beatles Blog>, <Blog: Beatles Blog>, <Blog: Pop Music Blog]>
+```
 
 Napomena
 
@@ -1516,19 +1597,23 @@ Ponašanje filter()`for` upita koji obuhvataju viševrednosne odnose, kao što j
 
 Na primer, sledeći upit bi isključio blogove koji sadrže i unose sa „Lenon“ u naslovu i unose objavljene 2008. godine:
 
+```py
 Blog.objects.exclude(
     entry__headline__contains="Lennon",
     entry__pub_date__year=2008,
 )
+```
 
 Međutim, za razliku od ponašanja pri korišćenju filter(), ovo neće ograničiti blogove na osnovu unosa koji zadovoljavaju oba uslova. Da biste to uradili, tj. da biste izabrali sve blogove koji ne sadrže unose objavljene sa „Lenon“ koji su objavljeni 2008. godine, potrebno je da napravite dva upita:
 
+```py
 Blog.objects.exclude(
     entry__in=Entry.objects.filter(
         headline__contains="Lennon",
         pub_date__year=2008,
     ),
 )
+```
 
 Filteri mogu da se pozivaju na polja na modelu
 
@@ -1565,6 +1650,7 @@ Objekti F()podržavaju bitne operacije pomoću .bitand(), .bitor(), .bitxor(), .
 Proročište
 
 Oracle ne podržava bitnu XOR operaciju.
+
 Izrazi mogu da referenciraju transformacije
 
 Django podržava korišćenje transformacija u izrazima.
@@ -1593,7 +1679,7 @@ Ovaj primer pronalazi vrednost najbolje ocenjenog unosa i ukupan broj komentara 
 ...     total_comments=Sum("number_of_comments"),
 ... )
 
-Prečica pkza pretragu
+Prečica pk za pretragu
 
 Radi lakšeg snalaženja, Django pruža pkprečicu za pretragu, što je skraćenica od „primarni ključ“.
 
@@ -1605,11 +1691,13 @@ U datom Blogmodelu, primarni ključ je idpolje, tako da su ove tri izjave ekviva
 
 Upotreba pknije ograničena samo na __exactupite – bilo koji termin upita može se kombinovati sa pkda bi se izvršio upit nad primarnim ključem modela:
 
+```py
 # Get blogs entries with id 1, 4 and 7
 >>> Blog.objects.filter(pk__in=[1, 4, 7])
 
 # Get all blog entries with id > 14
 >>> Blog.objects.filter(pk__gt=14)
+```
 
 pkPretrage takođe rade preko spajanja. Na primer, ove tri izjave su ekvivalentne:
 
@@ -1649,7 +1737,7 @@ To avoid this problem, save the QuerySet and reuse it:
 >>> print([p.headline for p in queryset])  # Evaluate the query set.
 >>> print([p.pub_date for p in queryset])  # Reuse the cache from the evaluation.
 
-When QuerySets are not cached¶
+When QuerySets are not cached
 
 Querysets do not always cache their results. When evaluating only део of the queryset, the cache is checked, but if it is not populated then the items returned by the subsequent query are not cached. Specifically, this means that који ограничава скуп упита using an array slice or an index will not populate the cache.
 
@@ -1731,7 +1819,7 @@ class Dog(models.Model):
     def __str__(self):
         return self.name
 
-Čuvanje i upiti za None¶
+Čuvanje i upiti za None
 
 Kao i kod drugih polja, čuvanje Nonekao vrednosti polja će ga čuvati kao SQL NULL. Iako se ne preporučuje, moguće je čuvati JSON skalar nullumesto SQL- NULLa korišćenjem .Value(None, JSONField())
 
@@ -1979,12 +2067,13 @@ Poll.objects.get(
 
 ... bi bio validan upit, ekvivalentan prethodnom primeru; ali:
 
+```py
 # INVALID QUERY
 Poll.objects.get(
     question__startswith="Who",
     Q(pub_date=date(2005, 5, 2)) | Q(pub_date=date(2005, 5, 6)),
 )
-
+```
 ... ne bi bilo validno.
 
 Vidi takođe
@@ -2022,9 +2111,11 @@ Imajte na umu da će se ovo, kad god je to moguće, izvršavati isključivo u SQ
 
 Kada Django obriše objekat, podrazumevano emulira ponašanje SQL ograničenja – drugim rečima, svi objekti koji su imali strane ključeve koji ukazuju na objekat koji treba obrisati biće obrisani zajedno sa njim. Na primer:ON DELETE CASCADE
 
+```py
 b = Blog.objects.get(pk=1)
 # This will delete the Blog and all of its Entry objects.
 b.delete()
+```
 
 Ovo kaskadno ponašanje se može prilagoditi putem on_deleteargumenta za ForeignKey.
 
@@ -2080,22 +2171,28 @@ Ažuriranje više objekata odjednom
 
 Ponekad želite da postavite polje na određenu vrednost za sve objekte u QuerySet. To možete učiniti pomoću update()metode. Na primer:
 
+```py
 # Update all the headlines with pub_date in 2007.
 Entry.objects.filter(pub_date__year=2007).update(headline="Everything is the same")
+```
 
 Ovim metodom možete podesiti samo polja koja nisu relacije i ForeignKeypolja. Da biste ažurirali polje koje nije relacija, unesite novu vrednost kao konstantu. Da biste ažurirali ForeignKeypolja, podesite novu vrednost da bude nova instanca modela na koju želite da ukazujete. Na primer:
 
+```py
 >>> b = Blog.objects.get(pk=1)
 
 # Change every Entry so that it belongs to this Blog.
 >>> Entry.objects.update(blog=b)
+```
 
 Metod update()se primenjuje odmah i vraća broj redova koji se podudaraju sa upitom (koji možda neće biti jednak broju ažuriranih redova ako neki redovi već imaju novu vrednost). Jedino ograničenje za QuerySetažuriranje je da može pristupiti samo jednoj tabeli baze podataka: glavnoj tabeli modela. Možete filtrirati na osnovu povezanih polja, ali možete ažurirati samo kolone u glavnoj tabeli modela. Primer:
 
+```py
 >>> b = Blog.objects.get(pk=1)
 
 # Update all the headlines belonging to this Blog.
 >>> Entry.objects.filter(blog=b).update(headline="Everything is the same")
+```
 
 Imajte na umu da update()se metod direktno konvertuje u SQL izraz. To je grupna operacija za direktna ažuriranja. Ne pokreće nikakve save()metode na vašim modelima, niti emituje signale ` pre_saveor` post_save(koji su posledica pozivanja `or` save()), niti poštuje auto_nowopciju `field`. Ako želite da sačuvate svaku stavku u `a` QuerySeti da se uverite da save()se metoda poziva u svakoj instanci, ne treba vam nikakva posebna funkcija za to. Pređite preko njih petljom i pozovite save()`: `
 
@@ -2108,8 +2205,10 @@ Pozivi funkcije update takođe mogu da se koriste za ažuriranje jednog polja na
 
 Međutim, za razliku od F()objekata u klauzulama filter i exclude, ne možete uvesti spajanja kada koristite F()objekte u ažuriranju – možete referencirati samo polja lokalna za model koji se ažurira. Ako pokušate da uvedete spajanje sa F()objektom, FieldErrorizazvaće se :
 
+```py
 # This will raise a FieldError
 >>> Entry.objects.update(headline=F("blog__name"))
+```
 
 Povezani objekti
 
@@ -2311,7 +2410,9 @@ Ako se nađete u situaciji da treba da napišete SQL upit koji je previše slož
 
 Konačno, važno je napomenuti da je sloj baze podataka Django samo interfejs ka vašoj bazi podataka. Možete pristupiti svojoj bazi podataka putem drugih alata, programskih jezika ili okvira baza podataka; nema ničeg specifičnog za Django u vezi sa vašom bazom podataka.
 
-[⚠️ Suspicious Content] Agregacija
+[Sadržaj](#sadržaj)
+
+## Agregacija
 
 Vodič kroz teme o Django-ovom API-ju za apstrakciju baze podataka opisao je način na koji možete koristiti Django upite koji kreiraju, preuzimaju, ažuriraju i brišu pojedinačne objekte. Međutim, ponekad će vam biti potrebno da preuzmete vrednosti koje su izvedene sumiranjem ili agregacijom kolekcije objekata. Ovaj vodič kroz teme opisuje načine na koje se agregatne vrednosti mogu generisati i vratiti pomoću Django upita.
 
@@ -3664,8 +3765,8 @@ clean_savepoints ( користећи = None ) [извор]
 
 Следећи пример показује употребу тачака чувања:
 
+```py
 from django.db import transaction
-
 
 # open a transaction
 @transaction.atomic
@@ -3684,6 +3785,7 @@ def viewfunc(request):
     else:
         transaction.savepoint_rollback(sid)
         # open transaction now contains only a.save()
+```
 
 Тачке чувања могу се користити за опоравак од грешке у бази података извршавањем делимичног враћања на претходно стање. Ако ово радите унутар atomic()блока, цео блок ће и даље бити враћен, јер не зна да сте решили ситуацију на нижем нивоу! Да бисте то спречили, можете контролисати понашање враћања на претходно стање помоћу следећих функција.
 
@@ -3892,6 +3994,7 @@ Opisana konfiguracija primarni/replika (koju neke baze podataka nazivaju master/
 
 Dakle - šta ovo znači u praksi? Hajde da razmotrimo još jedan primer konfiguracije. Ovaj će imati nekoliko baza podataka: jednu za authaplikaciju, a sve ostale aplikacije će koristiti primarnu/repličnu postavku sa dve replike za čitanje. Evo podešavanja koja određuju ove baze podataka:
 
+```py
 DATABASES = {
     "default": {},
     "auth_db": {
@@ -3919,9 +4022,11 @@ DATABASES = {
         "PASSWORD": "bacon",
     },
 }
+```
 
 Sada ćemo morati da se pozabavimo rutiranjem. Prvo nam je potreban ruter koji zna da šalje upite za authi contenttypesaplikacije na auth_db( authmodeli su povezani sa ContentType, tako da moraju biti sačuvani u istoj bazi podataka):
 
+```py
 class AuthRouter:
     """
     A router to control all database operations on models in the
@@ -3966,11 +4071,12 @@ class AuthRouter:
         if app_label in self.route_app_labels:
             return db == "auth_db"
         return None
+```
 
 Takođe želimo ruter koji šalje sve ostale aplikacije u primarnu/repličnu konfiguraciju i nasumično bira repliku sa koje će čitati:
 
+```py
 import random
-
 
 class PrimaryReplicaRouter:
     def db_for_read(self, model, **hints):
@@ -4000,15 +4106,19 @@ class PrimaryReplicaRouter:
         All non-auth models end up in this pool.
         """
         return True
+```
 
 Konačno, u datoteci podešavanja dodajemo sledeće (zamenjujući path.to.stvarnom Pajton putanjom do modula(a) gde su definisani ruteri):
 
+```py
 DATABASE_ROUTERS = ["path.to.AuthRouter", "path.to.PrimaryReplicaRouter"]
+```
 
 Redosled kojim se ruteri obrađuju je značajan. Ruteri će biti upitivani redosledom kojim su navedeni u podešavanju DATABASE_ROUTERS. U ovom primeru, AuthRouterse obrađuje pre PrimaryReplicaRouter, i kao rezultat toga, odluke koje se tiču modela u authse obrađuju pre nego što se donese bilo koja druga odluka. Ako je DATABASE_ROUTERSpodešavanje navelo dva rutera drugim redosledom, PrimaryReplicaRouter.allow_migrate()bi se prvo obradio. Priroda sveobuhvatnosti implementacije PrimaryReplicaRouter značila bi da bi svi modeli bili dostupni u svim bazama podataka.
 
 Nakon što je ova postavka instalirana i sve baze podataka migrirane kao što je opisano u odeljku Sinhronizacija baza podataka , pokrenimo Django kod:
 
+```py
 >>> # This retrieval will be performed on the 'auth_db' database
 >>> fred = User.objects.get(username="fred")
 >>> fred.first_name = "Frederick"
@@ -4031,6 +4141,7 @@ Nakon što je ova postavka instalirana i sve baze podataka migrirane kao što je
 
 >>> # ... but if we re-retrieve the object, it will come back on a replica
 >>> mh = Book.objects.get(title="Mostly Harmless")
+```
 
 Ovaj primer je definisao ruter za rukovanje interakcijom sa modelima iz authaplikacije i druge rutere za rukovanje interakcijom sa svim ostalim aplikacijama. Ako ste ostavili defaultbazu podataka praznu i ne želite da definišete ruter baze podataka koji obuhvata sve aplikacije koje nisu drugačije navedene, vaši ruteri moraju da obrade imena svih aplikacija INSTALLED_APPSpre nego što migrirate. Pogledajte Ponašanje aplikacija za doprinos za informacije o aplikacijama za doprinos koje moraju biti zajedno u jednoj bazi podataka.
 Ručno biranje baze podataka
@@ -4042,6 +4153,7 @@ Možete odabrati bazu podataka za QuerySetu bilo kojoj tački u QuerySet„lancu
 
 using()prima jedan argument: alias baze podataka na kojoj želite da pokrenete upit. Na primer:
 
+```py
 >>> # This will run on the 'default' database.
 >>> Author.objects.all()
 
@@ -4050,6 +4162,7 @@ using()prima jedan argument: alias baze podataka na kojoj želite da pokrenete u
 
 >>> # This will run on the 'other' database.
 >>> Author.objects.using("other")
+```
 
 Izbor baze podataka za save()¶
 
@@ -4057,7 +4170,9 @@ Koristite usingključnu reč „to“ Model.save()da biste naveli u koju bazu po
 
 Na primer, da biste sačuvali objekat u legacy_usersbazi podataka, koristili biste ovo:
 
+```py
 >>> my_object.save(using="legacy_users")
+```
 
 Ako ne navedete using, save()metoda će sačuvati u podrazumevanu bazu podataka koju su dodelili ruteri.
 Premeštanje objekta iz jedne baze podataka u drugu
@@ -4066,9 +4181,11 @@ Ako ste sačuvali instancu u jednoj bazi podataka, možda bi bilo primamljivo da
 
 Razmotrite sledeći primer:
 
+```py
 >>> p = Person(name="Fred")
 >>> p.save(using="first")  # (statement 1)
 >>> p.save(using="second")  # (statement 2)
+```
 
 U prvoj naredbi, novi Personobjekat se čuva u firstbazi podataka. U ovom trenutku, pnema primarni ključ, pa Django izdaje SQL INSERTnaredbu. Ovo kreira primarni ključ, a Django dodeljuje taj primarni ključ objektu p.
 
@@ -4078,31 +4195,40 @@ Međutim, ako je primarni ključ pveć u upotrebi u secondbazi podataka, postoje
 
 Ovo možete izbeći na dva načina. Prvo, možete obrisati primarni ključ instance. Ako objekat nema primarni ključ, Django će ga tretirati kao novi objekat, izbegavajući gubitak podataka u secondbazi podataka:
 
+```py
 >>> p = Person(name="Fred")
 >>> p.save(using="first")
 >>> p.pk = None  # Clear the primary key.
 >>> p.save(using="second")  # Write a completely new object.
+```
 
 Druga opcija je korišćenje force_insertopcije kako bi save()se osiguralo da Django izvrši SQL INSERT:
 
+```py
 >>> p = Person(name="Fred")
 >>> p.save(using="first")
 >>> p.save(using="second", force_insert=True)
+```
 
 Ovo će osigurati da će imenovana osoba Fredimati isti primarni ključ u obe baze podataka. Ako se taj primarni ključ već koristi kada pokušate da sačuvate podatke u secondbazi podataka, pojaviće se greška.
+
 Izbor baze podataka za brisanje
 
 Podrazumevano, poziv za brisanje postojećeg objekta biće izvršen na istoj bazi podataka koja je korišćena za prvobitno preuzimanje objekta:
 
+```py
 >>> u = User.objects.using("legacy_users").get(username="fred")
 >>> u.delete()  # will delete from the `legacy_users` database
+```
 
 Da biste odredili bazu podataka iz koje će model biti obrisan, prosledite usingključni argument metodi Model.delete(). Ovaj argument funkcioniše isto kao i usingključni argument metodi save().
 
 Na primer, ako migrirate korisnika iz legacy_usersbaze podataka u new_usersbazu podataka, možete koristiti ove komande:
 
+```py
 >>> user_obj.save(using="new_users")
 >>> user_obj.delete(using="legacy_users")
+```
 
 Korišćenje menadžera sa više baza podataka
 
@@ -4110,7 +4236,9 @@ Koristite db_manager()metodu na menadžerima da biste menadžerima dali pristup 
 
 Na primer, recimo da imate prilagođenu metodu menadžera koja dodiruje bazu podataka – User.objects.create_user(). Pošto create_user()je metoda menadžera, a ne QuerySetmetoda, ne možete da uradite User.objects.using('new_users').create_user(). ( create_user()Metoda je dostupna samo na User.objects, menadžeru, a ne na QuerySetobjektima izvedenim iz menadžera.) Rešenje je da koristite db_manager(), ovako:
 
+```py
 User.objects.db_manager("new_users").create_user(...)
+```
 
 db_manager()vraća kopiju menadžera vezanog za bazu podataka koju navedete.
 Korišćenje get_queryset()sa više baza podataka
@@ -4119,12 +4247,14 @@ Ako vršite prepisivanje get_queryset()na svom menadžeru, obavezno pozovite met
 
 Na primer, ako želite da vratite prilagođenu QuerySetklasu iz get_querysetmetode, možete to učiniti:
 
+```py
 class MyManager(models.Manager):
     def get_queryset(self):
         qs = CustomQuerySet(self.model)
         if self._db is not None:
             qs = qs.using(self._db)
         return qs
+```
 
 Prikazivanje više baza podataka u administratorskom interfejsu Django-a
 
@@ -4132,6 +4262,7 @@ Django-ov administratorski interfejs nema eksplicitnu podršku za više baza pod
 
 ModelAdminobjekti imaju sledeće metode koje zahtevaju prilagođavanje za podršku više baza podataka:
 
+```py
 class MultiDBModelAdmin(admin.ModelAdmin):
     # A handy constant for the name of the alternate database.
     using = "other"
@@ -4161,11 +4292,13 @@ class MultiDBModelAdmin(admin.ModelAdmin):
         return super().formfield_for_manytomany(
             db_field, request, using=self.using, **kwargs
         )
+```
 
 Implementacija koja je ovde data implementira strategiju više baza podataka gde se svi objekti datog tipa čuvaju u određenoj bazi podataka (npr. svi Userobjekti su u otherbazi podataka). Ako je vaše korišćenje više baza podataka složenije, ModelAdminmoraćete da odrazite tu strategiju.
 
 InlineModelAdminobjekti se mogu obraditi na sličan način. Potrebne su im tri prilagođene metode:
 
+```py
 class MultiDBTabularInline(admin.TabularInline):
     using = "other"
 
@@ -4186,9 +4319,11 @@ class MultiDBTabularInline(admin.TabularInline):
         return super().formfield_for_manytomany(
             db_field, request, using=self.using, **kwargs
         )
+```
 
 Kada napišete definicije administratora modela, one se mogu registrovati sa bilo kojom Admininstancom:
 
+```py
 from django.contrib import admin
 from myapp.models import Author, Book, Publisher
 
@@ -4210,6 +4345,7 @@ admin.site.register(Publisher, PublisherAdmin)
 
 othersite = admin.AdminSite("othersite")
 othersite.register(Publisher, MultiDBModelAdmin)
+```
 
 Ovaj primer podešava dve administratorske stranice. Na prvoj stranici su izloženi objekti Authori ; objekti imaju tabelarni ugrađeni prikaz knjiga koje je objavio taj izdavač. Druga stranica prikazuje samo izdavače, bez ugrađenih stranica.PublisherPublisher
 Korišćenje sirovih kursora sa više baza podataka
@@ -4235,35 +4371,27 @@ Ponašanje aplikacija za doprinos
 
 Nekoliko aplikacija za doprinos uključuju modele, a neke aplikacije zavise od drugih. Pošto su veze između baza podataka nemoguće, ovo stvara neka ograničenja u načinu na koji možete podeliti ove modele između baza podataka:
 
-    svaki od contenttypes.ContentType, sessions.Sessioni sites.Sitemože se sačuvati u bilo kojoj bazi podataka, uz odgovarajući ruter.
+- svaki od contenttypes.ContentType, sessions.Sessioni sites.Sitemože se sačuvati u bilo kojoj bazi podataka, uz odgovarajući ruter.
 
-    authModeli — User, Groupi Permission— su povezani zajedno i povezani sa ContentType, tako da moraju biti sačuvani u istoj bazi podataka kao i ContentType.
+- authModeli — User, Groupi Permission— su povezani zajedno i povezani sa ContentType, tako da moraju biti sačuvani u istoj bazi podataka kao i ContentType.
 
-    adminzavisi od auth, tako da njegovi modeli moraju biti u istoj bazi podataka kao i auth.
+- adminzavisi od auth, tako da njegovi modeli moraju biti u istoj bazi podataka kao i auth.
 
-    flatpagesi redirectszavise od sites, tako da njihovi modeli moraju biti u istoj bazi podataka kao i sites.
+- flatpagesi redirectszavise od sites, tako da njihovi modeli moraju biti u istoj bazi podataka kao i sites.
 
 Pored toga, neki objekti se automatski kreiraju odmah nakon migratekreiranja tabele koja ih čuva u bazi podataka:
 
-    podrazumevano Site,
+- podrazumevano Site,
 
-    za ContentTypesvaki model (uključujući i one koji nisu sačuvani u toj bazi podataka),
+- za ContentTypesvaki model (uključujući i one koji nisu sačuvani u toj bazi podataka),
 
-    s Permissionza svaki model (uključujući i one koji nisu sačuvani u toj bazi podataka).
+- s Permissionza svaki model (uključujući i one koji nisu sačuvani u toj bazi podataka).
 
 Za uobičajena podešavanja sa više baza podataka, nije korisno imati ove objekte u više od jedne baze podataka. Uobičajena podešavanja uključuju primarnu/repliku i povezivanje sa eksternim bazama podataka. Stoga se preporučuje pisanje rutera baze podataka koji omogućava sinhronizaciju ova tri modela samo sa jednom bazom podataka. Koristite isti pristup za contrib i aplikacije trećih strana kojima nisu potrebne tabele u više baza podataka.
 
 Upozorenje
 
 Ako sinhronizujete tipove sadržaja sa više baza podataka, imajte na umu da se njihovi primarni ključevi možda neće podudarati u različitim bazama podataka. To može dovesti do oštećenja ili gubitka podataka.
-
-
-
-    Dobijanje pomoći 
-
-    Jezik : en 
-
-    Verzija dokumentacije: 5.2 
 
 Tabelarni prostori
 
@@ -4284,8 +4412,10 @@ Možete proslediti db_tablespaceopciju konstruktoru Indexda biste naveli ime tab
 Možete koristiti DEFAULT_INDEX_TABLESPACEpodešavanje da biste odredili podrazumevanu vrednost za db_tablespace.
 
 Ako db_tablespacenije navedeno i niste podesili DEFAULT_INDEX_TABLESPACE, indeks se kreira u istom tabelarnom prostoru kao i tabele.
+
 Primer
 
+```py
 class TablespaceExample(models.Model):
     name = models.CharField(max_length=30, db_index=True, db_tablespace="indexes")
     data = models.CharField(max_length=255, db_index=True)
@@ -4295,6 +4425,7 @@ class TablespaceExample(models.Model):
     class Meta:
         db_tablespace = "tables"
         indexes = [models.Index(fields=["shortcut"], db_tablespace="other_indexes")]
+```
 
 U ovom primeru, tabele koje generiše TablespaceExamplemodel (tj. tabela modela i tabela „više-prema-više“) bi bile sačuvane u tablestabelarnom prostoru. Indeks za polje sa imenom i indeksi na tabeli „više-prema-više“ bi bili sačuvani u indexestabelarnom prostoru. dataPolje bi takođe generisalo indeks, ali za njega nije naveden tabelarni prostor, pa bi podrazumevano bilo sačuvano u tabelarnom prostoru modela tables. Indeks za shortcutpolje bi bio sačuvan u other_indexestabelarnom prostoru.
 Podrška za baze podataka
@@ -4317,9 +4448,9 @@ Koristite standardne tehnike optimizacije baze podataka
 
 ...uključujući:
 
-    Indeksi . Ovo je prioritet broj jedan, nakon što ste iz profilisanja utvrdili koje indekse treba dodati. Koristite Meta.indexesili Field.db_indexda biste ih dodali iz Django-a. Razmislite o dodavanju indeksa poljima koja često upitujete koristeći filter(), exclude(), order_by(), itd., jer indeksi mogu pomoći u ubrzavanju pretrage. Imajte na umu da je određivanje najboljih indeksa složena tema koja zavisi od baze podataka i vaše konkretne aplikacije. Troškovi održavanja indeksa mogu nadmašiti bilo kakve dobitke u brzini upita.
+- Indeksi . Ovo je prioritet broj jedan, nakon što ste iz profilisanja utvrdili koje indekse treba dodati. Koristite Meta.indexesili Field.db_indexda biste ih dodali iz Django-a. Razmislite o dodavanju indeksa poljima koja često upitujete koristeći filter(), exclude(), order_by(), itd., jer indeksi mogu pomoći u ubrzavanju pretrage. Imajte na umu da je određivanje najboljih indeksa složena tema koja zavisi od baze podataka i vaše konkretne aplikacije. Troškovi održavanja indeksa mogu nadmašiti bilo kakve dobitke u brzini upita.
 
-    Odgovarajuća upotreba tipova polja.
+- Odgovarajuća upotreba tipova polja.
 
 Pretpostavićemo da ste uradili gore navedene stvari. Ostatak ovog dokumenta fokusira se na to kako da koristite Django na takav način da ne obavljate nepotreban posao. Ovaj dokument se takođe ne bavi drugim tehnikama optimizacije koje se primenjuju na sve skupe operacije, kao što je keširanje opšte namene .
 Razumeti QuerySet¶​
@@ -4329,25 +4460,29 @@ Razumevanje QuerySetevaluacije
 
 Da biste izbegli probleme sa performansama, važno je razumeti:
 
-    da su QuerySets-ovi lenji .
+- da su QuerySets-ovi lenji .
 
-    kada se ocenjuju .
+- kada se ocenjuju .
 
-    kako se podaci čuvaju u memoriji .
+- kako se podaci čuvaju u memoriji .
 
 Razumevanje keširanih atributa
 
 Pored keširanja celog QuerySet, postoji i keširanje rezultata atributa na ORM objektima. Generalno, atributi koji se ne mogu pozvati biće keširani. Na primer, pod pretpostavkom da su primerni modeli bloga :
 
+```py
 >>> entry = Entry.objects.get(id=1)
 >>> entry.blog  # Blog object is retrieved at this point
 >>> entry.blog  # cached version, no DB access
+```
 
 Ali generalno, pozivajući atributi svaki put izazivaju pretrage baze podataka:
 
+```py
 >>> entry = Entry.objects.get(id=1)
 >>> entry.authors.all()  # query performed
 >>> entry.authors.all()  # query performed again
+```
 
 Budite oprezni pri čitanju koda šablona - sistem šablona ne dozvoljava upotrebu zagrada, već će automatski pozivati pozivajuće elemente, skrivajući gore navedenu razliku.
 
@@ -4365,13 +4500,14 @@ Da li radite sa bazom podataka u bazi podataka umesto u Pajtonu
 
 Na primer:
 
-    Na najosnovnijem nivou, koristite filter i isključenje za filtriranje u bazi podataka.
+- Na najosnovnijem nivou, koristite filter i isključenje za filtriranje u bazi podataka.
 
-    Koristite za filtriranje na osnovu drugih polja unutar istog modela.F expressions
+- Koristite za filtriranje na osnovu drugih polja unutar istog modela.F expressions
 
-    Koristite anotaciju za agregaciju u bazi podataka .
+- Koristite anotaciju za agregaciju u bazi podataka .
 
 Ako ovo nije dovoljno za generisanje SQL-a koji vam je potreban:
+
 Koristite RawSQL¶
 
 Manje prenosiva, ali moćnija metoda je RawSQLizraz, koji omogućava eksplicitno dodavanje SQL koda upitu. Ako to i dalje nije dovoljno moćno:
@@ -4384,17 +4520,23 @@ Postoje dva razloga za korišćenje kolone sa uniqueili db_indexkada se koristi 
 
 Dakle, koristeći primere modela bloga :
 
+```py
 >>> entry = Entry.objects.get(id=10)
+```
 
 biće brže nego:
 
+```py
 >>> entry = Entry.objects.get(headline="News Item Title")
+```
 
 jer idje indeksiran od strane baze podataka i garantovano je jedinstven.
 
 Obavljanje sledećeg je potencijalno prilično sporo:
 
+```py
 >>> entry = Entry.objects.get(headline__startswith="News")
+```
 
 Pre svega, headlinenije indeksirano, što će usporiti preuzimanje osnovne baze podataka.
 
@@ -4406,9 +4548,9 @@ Koristite QuerySet.select_related()i prefetch_related()¶
 
 Razumeti select_related()i prefetch_related()temeljno ih koristiti:
 
-    u menadžerima i podrazumevanim menadžerima gde je to prikladno. Budite svesni kada se vaš menadžer koristi, a kada se ne; ponekad je ovo teško, zato nemojte praviti pretpostavke.
+- u menadžerima i podrazumevanim menadžerima gde je to prikladno. Budite svesni kada se vaš menadžer koristi, a kada se ne; ponekad je ovo teško, zato nemojte praviti pretpostavke.
 
-    u kodu prikaza ili drugim slojevima, eventualno koristeći prefetch_related_objects()gde je potrebno.
+- u kodu prikaza ili drugim slojevima, eventualno koristeći prefetch_related_objects()gde je potrebno.
 
 Ne vraćajte stvari koje vam ne trebaju
 Koristite QuerySet.values()i values_list()¶
@@ -4436,6 +4578,7 @@ Ako će vam biti potrebni drugi podaci iz QuerySet-a, odmah ih procenite.
 
 Na primer, pod pretpostavkom da Groupmodel ima relaciju „više-prema-više“ sa User, sledeći kod je optimalan:
 
+```py
 members = group.members.all()
 
 if display_group_members:
@@ -4449,6 +4592,7 @@ if display_group_members:
             print(member.username)
     else:
         print("There are no members in this group.")
+```py
 
 Optimalno je jer:
 
@@ -4465,11 +4609,13 @@ Optimalno je jer:
     Petlja se ponavlja kroz keš rezultata.for member
 
 Ukupno, ovaj kod vrši jedan ili nula upita bazi podataka. Jedina namerna optimizacija koja se izvodi je korišćenje memberspromenljive . Korišćenje QuerySet.exists()za if, QuerySet.contains()za inili QuerySet.count()za bi izazvalo dodatne upite.
+
 Koristite QuerySet.update()i delete()¶
 
 Umesto da preuzimate gomilu objekata, postavljate neke vrednosti i čuvate ih pojedinačno, koristite grupni SQL UPDATE izraz, putem QuerySet.update() . Slično tome, vršite grupno brisanje gde god je to moguće.
 
 Međutim, imajte na umu da ove metode grupnog ažuriranja ne mogu pozivati metode save()ili delete()pojedinačnih instanci, što znači da se bilo koje prilagođeno ponašanje koje ste dodali za ove metode neće izvršiti, uključujući i sve što je pokrenuto iz normalnih signala objekata baze podataka .
+
 Direktno korišćenje vrednosti stranog ključa
 
 Ako vam je potrebna samo vrednost stranog ključa, koristite vrednost stranog ključa koja se već nalazi na objektu koji imate, umesto da uzmete ceo povezani objekat i njegov primarni ključ. Na primer, uradite sledeće:
@@ -4492,32 +4638,39 @@ Kreiraj grupno
 
 Prilikom kreiranja objekata, gde god je to moguće, koristite bulk_create()metod za smanjenje broja SQL upita. Na primer:
 
+```py
 Entry.objects.bulk_create(
     [
         Entry(headline="This is a test"),
         Entry(headline="This is only a test"),
     ]
 )
+```
 
 ... je poželjnije od:
 
+```py
 Entry.objects.create(headline="This is a test")
 Entry.objects.create(headline="This is only a test")
+```
 
 Imajte na umu da ih postoji nekoliko , zato se uverite da je to prikladno za vaš slučaj upotrebe.caveats to this method
 Ažuriraj grupno
 
 Prilikom ažuriranja objekata, gde god je to moguće, koristite bulk_update()metod za smanjenje broja SQL upita. Data je lista ili skup upita objekata:
 
+```py
 entries = Entry.objects.bulk_create(
     [
         Entry(headline="This is a test"),
         Entry(headline="This is only a test"),
     ]
 )
+```py
 
 Sledeći primer:
 
+```py
 entries[0].headline = "This is not a test"
 entries[1].headline = "This is no longer a test"
 Entry.objects.bulk_update(entries, ["headline"])
@@ -4528,23 +4681,29 @@ entries[0].headline = "This is not a test"
 entries[0].save()
 entries[1].headline = "This is no longer a test"
 entries[1].save()
+```
 
 Imajte na umu da ih postoji nekoliko , zato se uverite da je to prikladno za vaš slučaj upotrebe.caveats to this method
 Ubaci grupno
 
 Prilikom umetanja objekata u ManyToManyFields, koristite add()sa više objekata da biste smanjili broj SQL upita. Na primer:
 
+```py
 my_band.members.add(me, my_friend)
+```
 
 ... je poželjnije od:
 
+```py
 my_band.members.add(me)
 my_band.members.add(my_friend)
+```
 
 ...gde su Bandi Artistmodeli sa relacijom „više-prema-više“.
 
 Prilikom umetanja različitih parova objekata u ManyToManyFieldili kada je prilagođena throughtabela definisana, koristite bulk_create()metodu da biste smanjili broj SQL upita. Na primer:
 
+```py
 PizzaToppingRelationship = Pizza.toppings.through
 PizzaToppingRelationship.objects.bulk_create(
     [
@@ -4554,28 +4713,36 @@ PizzaToppingRelationship.objects.bulk_create(
     ],
     ignore_conflicts=True,
 )
+```
 
 ... je poželjnije od:
 
+```py
 my_pizza.toppings.add(pepperoni)
 your_pizza.toppings.add(pepperoni, mushroom)
+```
 
 ...gde Pizzai Toppingimaju relaciju „više-prema-više“. Imajte na umu da postoji više , zato se uverite da je to prikladno za vaš slučaj upotrebe.caveats to this method
 Ukloni grupno
 
 Prilikom uklanjanja objekata iz ManyToManyFields, koristite remove()sa više objekata da biste smanjili broj SQL upita. Na primer:
 
+```py
 my_band.members.remove(me, my_friend)
+```
 
 ... je poželjnije od:
 
+```py
 my_band.members.remove(me)
 my_band.members.remove(my_friend)
+```
 
 ...gde su Bandi Artistmodeli sa relacijom „više-prema-više“.
 
 Prilikom uklanjanja različitih parova objekata iz ManyToManyFields, koristite delete()na Qizrazu sa više throughinstanci modela da biste smanjili broj SQL upita. Na primer:
 
+```py
 from django.db.models import Q
 
 PizzaToppingRelationship = Pizza.toppings.through
@@ -4584,21 +4751,16 @@ PizzaToppingRelationship.objects.filter(
     | Q(pizza=your_pizza, topping=pepperoni)
     | Q(pizza=your_pizza, topping=mushroom)
 ).delete()
+```
 
 ... je poželjnije od:
 
+```py
 my_pizza.toppings.remove(pepperoni)
 your_pizza.toppings.remove(pepperoni, mushroom)
+```
 
 ...gde Pizzai Toppingimaju relaciju „više-prema-više“.
-
-
-
-    Dobijanje pomoći 
-
-    Jezik : en 
-
-    Verzija dokumentacije: 5.2 
 
 Instrumentacija baze podataka
 
@@ -4610,20 +4772,23 @@ Instaliranje omotača se vrši u menadžeru konteksta – tako da su omotači pr
 
 Kao što je gore pomenuto, primer omotača je blokator izvršavanja upita. Mogao bi izgledati ovako:
 
+```py
 def blocker(*args):
     raise Exception("No database access allowed here.")
+```
 
 I koristilo bi se u prikazu za blokiranje upita iz šablona ovako:
 
+```py
 from django.db import connection
 from django.shortcuts import render
-
 
 def my_view(request):
     context = {...}  # Code to generate context with all data.
     template_name = ...
     with connection.execute_wrapper(blocker):
         return render(request, template_name, context)
+```
 
 Parametri koji se šalju omotačima su:
 
@@ -4639,14 +4804,16 @@ Parametri koji se šalju omotačima su:
 
 Koristeći parametre, malo složenija verzija blokatora mogla bi da uključi ime veze u poruku o grešci:
 
+```py
 def blocker(execute, sql, params, many, context):
     alias = context["connection"].alias
     raise Exception("Access to database '{}' blocked here".format(alias))
+```
 
 Za potpuniji primer, logger upita može izgledati ovako:
 
+```py
 import time
-
 
 class QueryLogger:
     def __init__(self):
@@ -4668,9 +4835,11 @@ class QueryLogger:
             duration = time.monotonic() - start
             current_query["duration"] = duration
             self.queries.append(current_query)
+```
 
 Da biste ovo koristili, kreirali biste objekat loggera i instalirali ga kao omotač:
 
+```py
 from django.db import connection
 
 ql = QueryLogger()
@@ -4682,6 +4851,7 @@ print(ql.queries)
 connection.execute_wrapper()¶
 
 execute_wrapper ( omotač )
+```
 
 Vraća menadžer konteksta koji, kada se uđe u njega, instalira omotač oko izvršavanja upita baze podataka, a kada se izlazi iz njega, uklanja omotač. Omotač se instalira na objektu lokalne niti za povezivanje.
 
@@ -4702,8 +4872,10 @@ Kako se koristi fikster
 
 Fiksture se mogu koristiti za prethodno popunjavanje baze podataka podacima za testove :
 
+```py
 class MyTestCase(TestCase):
     fixtures = ["fixture-label"]
+```
 
 ili da biste obezbedili neke početne podatke pomoću loaddatakomande:
 
@@ -4713,15 +4885,17 @@ Kako se otkrivaju uređaji
 
 Django će pretraživati uređaje na ovim lokacijama:
 
-    U fixturesdirektorijumu svake instalirane aplikacije
+- U fixturesdirektorijumu svake instalirane aplikacije
 
-    U bilo kom direktorijumu navedenom u FIXTURE_DIRSpodešavanju
+- U bilo kom direktorijumu navedenom u FIXTURE_DIRSpodešavanju
 
-    U bukvalnoj putanji koju je imenovao uređaj
+- U bukvalnoj putanji koju je imenovao uređaj
 
 Django će učitati sve uređaje koje pronađe na ovim lokacijama, a koji odgovaraju navedenim imenima uređaja. Ako imenovani uređaj ima ekstenziju datoteke, biće učitani samo uređaji tog tipa. Na primer:
 
+```shell
 django-admin loaddata mydata.json
+```
 
 bi učitao samo JSON fiksture pod nazivom mydata. Ekstenzija fiksture mora odgovarati registrovanom imenu serijalizatora ( npr. jsonili xml.
 
@@ -4733,19 +4907,25 @@ bi tražio bilo koji uređaj bilo kog tipa pod nazivom mydata. Ako direktorijum 
 
 Imenovani uređaji mogu da sadrže komponente direktorijuma. Ovi direktorijumi će biti uključeni u putanju pretrage. Na primer:
 
+```shell
 django-admin loaddata foo/bar/mydata.json
+```
 
 bi tražio <app_label>/fixtures/foo/bar/mydata.jsonsvaku instaliranu aplikaciju, <dirname>/foo/bar/mydata.jsonsvaki direktorijum u FIXTURE_DIRS, i doslovnu putanju foo/bar/mydata.json.
 Redosled učitavanja rasporeda
 
 Više fiksnih rešenja može biti navedeno u istom pozivu. Na primer:
 
+```shell
 django-admin loaddata mammals birds insects
+```
 
 ili u klasi testnih slučajeva:
 
+```py
 class AnimalTestCase(TestCase):
     fixtures = ["mammals", "birds", "insects"]
+```
 
 Redosled kojim se uređaji učitavaju prati redosled kojim su navedeni, bilo da se radi o korišćenju komande za upravljanje ili o njihovom navođenju u klasi test slučaja kao što je prikazano gore.
 
@@ -4756,9 +4936,9 @@ Kako se uređaji čuvaju u bazi podataka
 
 Kada se datoteke fikstura obrađuju, podaci se čuvaju u bazi podataka kakvi jesu. save()Metode definisane modelom se ne pozivaju, a bilo koji signali pre_saveili će biti pozvani sa , jer instanca sadrži samo atribute koji su lokalni za model. Na primer, možete želeti da onemogućite rukovaoce koji pristupaju povezanim poljima koja nisu prisutna tokom učitavanja fikstura i koja bi u suprotnom izazvala izuzetak:post_saveraw=True
 
+```py
 from django.db.models.signals import post_save
 from .models import MyModel
-
 
 def my_handler(**kwargs):
     # disable the handler during fixture loading
@@ -4766,13 +4946,13 @@ def my_handler(**kwargs):
         return
     ...
 
-
 post_save.connect(my_handler, sender=MyModel)
+```
 
 Takođe možete napisati dekorator da biste obuhvatili ovu logiku:
 
+```py
 from functools import wraps
-
 
 def disable_for_loaddata(signal_handler):
     """
@@ -4790,6 +4970,7 @@ def disable_for_loaddata(signal_handler):
 
 @disable_for_loaddata
 def my_handler(**kwargs): ...
+```
 
 Samo imajte na umu da će ova logika onemogućiti signale kad god se uređaji deserijalizuju, ne samo tokom loaddata.
 Kompresovani fiksni elementi
@@ -4817,8 +4998,8 @@ Da biste definisali relaciju „više-prema-više“, koristite ManyToManyField.
 
 U ovom primeru, `an` Articlemože biti objavljen u više Publicationobjekata, a `a` Publicationima više Articleobjekata:
 
+```py
 from django.db import models
-
 
 class Publication(models.Model):
     title = models.CharField(max_length=30)
@@ -4829,7 +5010,6 @@ class Publication(models.Model):
     def __str__(self):
         return self.title
 
-
 class Article(models.Model):
     headline = models.CharField(max_length=100)
     publications = models.ManyToManyField(Publication)
@@ -4839,77 +5019,98 @@ class Article(models.Model):
 
     def __str__(self):
         return self.headline
+```
 
 U nastavku su navedeni primeri operacija koje se mogu izvršiti korišćenjem mogućnosti Pajton API-ja.
 
 Napravite nekoliko Publicationinstanci:
 
+```py
 >>> p1 = Publication(title="The Python Journal")
 >>> p1.save()
 >>> p2 = Publication(title="Science News")
 >>> p2.save()
 >>> p3 = Publication(title="Science Weekly")
 >>> p3.save()
-
+```
 Napravite Article:
 
+```py
 >>> a1 = Article(headline="Django lets you build web apps easily")
+```
 
 Ne možete ga povezati sa Publicationdok se ne sačuva:
 
+```py
 >>> a1.publications.add(p1)
 Traceback (most recent call last):
 ...
 ValueError: "<Article: Django lets you build web apps easily>" needs to have a value for field "id" before this many-to-many relationship can be used.
+```
 
 Sačuvaj to!
 
+```py
 >>> a1.save()
+```
 
 Povežite Articlesa Publication:
 
+```py
 >>> a1.publications.add(p1)
+```
 
 Napravite još jednu funkciju Articlei podesite je da se pojavljuje u njenim publikacijama:
 
+```py
 >>> a2 = Article(headline="NASA uses Python")
 >>> a2.save()
 >>> a2.publications.add(p1, p2)
 >>> a2.publications.add(p3)
+```
 
 Dodavanje drugog vremena je u redu, neće duplirati relaciju:
-
+```py
 >>> a2.publications.add(p3)
+```
 
 Dodavanje objekta pogrešnog tipa izaziva TypeError:
 
+```py
 >>> a2.publications.add(a1)
 Traceback (most recent call last):
 ...
 TypeError: 'Publication' instance expected
+```
 
 Kreirajte i dodajte Publicationu Articlejedan korak koristeći create():
 
+```py
 >>> new_publication = a2.publications.create(title="Highlights for Children")
-
+```
 Articleobjekti imaju pristup svojim povezanim Publicationobjektima:
 
+```py
 >>> a1.publications.all()
 <QuerySet [<Publication: The Python Journal>]>
 >>> a2.publications.all()
 <QuerySet [<Publication: Highlights for Children>, <Publication: Science News>, <Publication: Science Weekly>, <Publication: The Python Journal>]>
+```
 
 Publicationobjekti imaju pristup svojim povezanim Articleobjektima:
 
+```py
 >>> p2.article_set.all()
 <QuerySet [<Article: NASA uses Python>]>
 >>> p1.article_set.all()
 <QuerySet [<Article: Django lets you build web apps easily>, <Article: NASA uses Python>]>
 >>> Publication.objects.get(id=4).article_set.all()
 <QuerySet [<Article: NASA uses Python>]>
+```
 
 Relacije tipa „više prema više“ mogu se ispitivati korišćenjem pretraga u relacijama :
 
+```py
 >>> Article.objects.filter(publications__id=1)
 <QuerySet [<Article: Django lets you build web apps easily>, <Article: NASA uses Python>]>
 >>> Article.objects.filter(publications__pk=1)
@@ -4924,9 +5125,11 @@ Relacije tipa „više prema više“ mogu se ispitivati korišćenjem pretraga 
 
 >>> Article.objects.filter(publications__title__startswith="Science").distinct()
 <QuerySet [<Article: NASA uses Python>]>
+```
 
 Funkcija takođe count()poštuje :distinct()
 
+```py
 >>> Article.objects.filter(publications__title__startswith="Science").count()
 2
 
@@ -4937,9 +5140,11 @@ Funkcija takođe count()poštuje :distinct()
 <QuerySet [<Article: Django lets you build web apps easily>, <Article: NASA uses Python>]>
 >>> Article.objects.filter(publications__in=[p1, p2]).distinct()
 <QuerySet [<Article: Django lets you build web apps easily>, <Article: NASA uses Python>]>
+```
 
 Podržani su obrnuti m2m upiti (tj. počevši od tabele koja nema ManyToManyField):
 
+```py
 >>> Publication.objects.filter(id=1)
 <QuerySet [<Publication: The Python Journal>]>
 >>> Publication.objects.filter(pk=1)
@@ -4961,31 +5166,39 @@ Podržani su obrnuti m2m upiti (tj. počevši od tabele koja nema ManyToManyFiel
 <QuerySet [<Publication: Highlights for Children>, <Publication: Science News>, <Publication: Science Weekly>, <Publication: The Python Journal>]>
 >>> Publication.objects.filter(article__in=[a1, a2]).distinct()
 <QuerySet [<Publication: Highlights for Children>, <Publication: Science News>, <Publication: Science Weekly>, <Publication: The Python Journal>]>
+```
 
 Isključivanje povezane stavke takođe funkcioniše kako biste očekivali (iako je uključeni SQL malo složen):
 
+```py
 >>> Article.objects.exclude(publications=p2)
 <QuerySet [<Article: Django lets you build web apps easily>]>
+```
 
 Ako obrišemo Publication, njegove povezane Articleinstance neće moći da mu pristupe:
 
+```py
 >>> p1.delete()
 >>> Publication.objects.all()
 <QuerySet [<Publication: Highlights for Children>, <Publication: Science News>, <Publication: Science Weekly>]>
 >>> a1 = Article.objects.get(pk=1)
 >>> a1.publications.all()
 <QuerySet []>
+```
 
 Ako obrišemo Article, njegove povezane Publicationinstance neće moći da mu pristupe:
 
+```py
 >>> a2.delete()
 >>> Article.objects.all()
 <QuerySet [<Article: Django lets you build web apps easily>]>
 >>> p2.article_set.all()
 <QuerySet []>
+```
 
 Dodavanje preko „drugog“ kraja m2m:
 
+```py
 >>> a4 = Article(headline="NASA finds intelligent life on Earth")
 >>> a4.save()
 >>> p2.article_set.add(a4)
@@ -4993,48 +5206,60 @@ Dodavanje preko „drugog“ kraja m2m:
 <QuerySet [<Article: NASA finds intelligent life on Earth>]>
 >>> a4.publications.all()
 <QuerySet [<Publication: Science News>]>
+```
 
 Dodavanje preko drugog kraja pomoću ključnih reči:
 
+```py
 >>> new_article = p2.article_set.create(headline="Oxygen-free diet works wonders")
 >>> p2.article_set.all()
 <QuerySet [<Article: NASA finds intelligent life on Earth>, <Article: Oxygen-free diet works wonders>]>
 >>> a5 = p2.article_set.all()[1]
 >>> a5.publications.all()
 <QuerySet [<Publication: Science News>]>
+```
 
 Uklanjanje Publicationiz Article:
 
+```py
 >>> a4.publications.remove(p2)
 >>> p2.article_set.all()
 <QuerySet [<Article: Oxygen-free diet works wonders>]>
 >>> a4.publications.all()
 <QuerySet []>
+```
 
 I sa drugog kraja:
 
+```py
 >>> p2.article_set.remove(a5)
 >>> p2.article_set.all()
 <QuerySet []>
 >>> a5.publications.all()
 <QuerySet []>
+```
 
 Skupovi relacija mogu se podesiti:
 
+```py
 >>> a4.publications.all()
 <QuerySet [<Publication: Science News>]>
 >>> a4.publications.set([p3])
 >>> a4.publications.all()
 <QuerySet [<Publication: Science Weekly>]>
+```
 
 Skupovi relacija mogu se obrisati:
 
+```py
 >>> p2.article_set.clear()
 >>> p2.article_set.all()
 <QuerySet []>
+```
 
 I možete očistiti sa drugog kraja:
 
+```py
 >>> p2.article_set.add(a4, a5)
 >>> p2.article_set.all()
 <QuerySet [<Article: NASA finds intelligent life on Earth>, <Article: Oxygen-free diet works wonders>]>
@@ -5045,17 +5270,21 @@ I možete očistiti sa drugog kraja:
 <QuerySet []>
 >>> p2.article_set.all()
 <QuerySet [<Article: Oxygen-free diet works wonders>]>
+```
 
 Ponovo kreirajte Articlei Publicationobrisali smo:
 
+```py
 >>> p1 = Publication(title="The Python Journal")
 >>> p1.save()
 >>> a2 = Article(headline="NASA uses Python")
 >>> a2.save()
 >>> a2.publications.add(p1, p2, p3)
+```
 
 Grupno obrišite neke Publicationinstance i reference na obrisane publikacije više neće biti uključene u povezane unose:
 
+```py
 >>> Publication.objects.filter(title__startswith="Science").delete()
 >>> Publication.objects.all()
 <QuerySet [<Publication: Highlights for Children>, <Publication: The Python Journal>]>
@@ -5063,20 +5292,25 @@ Grupno obrišite neke Publicationinstance i reference na obrisane publikacije vi
 <QuerySet [<Article: Django lets you build web apps easily>, <Article: NASA finds intelligent life on Earth>, <Article: NASA uses Python>, <Article: Oxygen-free diet works wonders>]>
 >>> a2.publications.all()
 <QuerySet [<Publication: The Python Journal>]>
+```
 
 Masovno brisanje nekih članaka - reference na obrisane objekte treba da idu:
 
+```py
 >>> q = Article.objects.filter(headline__startswith="Django")
 >>> print(q)
 <QuerySet [<Article: Django lets you build web apps easily>]>
 >>> q.delete()
+```
 
 Nakon toga delete(), QuerySetkeš memorija mora biti obrisana, a referencirani objekti bi trebalo da nestanu:
 
+```py
 >>> print(q)
 <QuerySet []>
 >>> p1.article_set.all()
 <QuerySet [<Article: NASA uses Python>]>
+```
 
 Релације „више према једном“
 
@@ -5084,8 +5318,8 @@ Nakon toga delete(), QuerySetkeš memorija mora biti obrisana, a referencirani o
 
 У овом примеру, a Reporterможе бити повезан са многим Articleобјектима, али an Articleможе имати само један Reporterобјекат:
 
+```py
 from django.db import models
-
 
 class Reporter(models.Model):
     first_name = models.CharField(max_length=30)
@@ -5094,7 +5328,6 @@ class Reporter(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
 
 class Article(models.Model):
     headline = models.CharField(max_length=100)
@@ -5106,19 +5339,23 @@ class Article(models.Model):
 
     class Meta:
         ordering = ["headline"]
+```
 
 У наставку су наведени примери операција које се могу извршити коришћењем могућности Пајтон АПИ-ја.
 
 Направите неколико репортера:
 
+```py
 >>> r = Reporter(first_name="John", last_name="Smith", email="john@example.com")
 >>> r.save()
 
 >>> r2 = Reporter(first_name="Paul", last_name="Jones", email="paul@example.com")
 >>> r2.save()
+```
 
 Направите чланак:
 
+```py
 >>> from datetime import date
 >>> a = Article(id=None, headline="This is a test", pub_date=date(2005, 7, 27), reporter=r)
 >>> a.save()
@@ -5128,9 +5365,11 @@ class Article(models.Model):
 
 >>> a.reporter
 <Reporter: John Smith>
+```
 
 Имајте на уму да морате сачувати објекат пре него што му се може доделити релација страног кључа. На пример, креирање Articleса несачуваним Reporterповећањима ValueError:
 
+```py
 >>> r3 = Reporter(first_name="John", last_name="Smith", email="john@example.com")
 >>> Article.objects.create(
 ...     headline="This is a test", pub_date=date(2005, 7, 27), reporter=r3
@@ -5138,13 +5377,17 @@ class Article(models.Model):
 Traceback (most recent call last):
 ...
 ValueError: save() prohibited to prevent data loss due to unsaved related object 'reporter'.
+```
 
 Објекти чланка имају приступ својим повезаним објектима репортера:
 
+```py
 >>> r = a.reporter
+```
 
 Направите чланак преко објекта Репортер:
 
+```py
 >>> new_article = r.article_set.create(
 ...     headline="John's second story", pub_date=date(2005, 7, 29)
 ... )
@@ -5154,9 +5397,11 @@ ValueError: save() prohibited to prevent data loss due to unsaved related object
 <Reporter: John Smith>
 >>> new_article.reporter.id
 1
+```
 
 Направите нови чланак:
 
+```py
 >>> new_article2 = Article.objects.create(
 ...     headline="Paul's story", pub_date=date(2006, 1, 17), reporter=r
 ... )
@@ -5166,17 +5411,21 @@ ValueError: save() prohibited to prevent data loss due to unsaved related object
 1
 >>> r.article_set.all()
 <QuerySet [<Article: John's second story>, <Article: Paul's story>, <Article: This is a test>]>
+```
 
 Додајте исти чланак у други скуп чланака - проверите да ли се помера:
 
+```py
 >>> r2.article_set.add(new_article2)
 >>> new_article2.reporter.id
 2
 >>> new_article2.reporter
 <Reporter: Paul Jones>
+```
 
 Додавање објекта погрешног типа изазива грешку TypeError:
 
+```py
 >>> r.article_set.add(r2)
 Traceback (most recent call last):
 ...
@@ -5192,30 +5441,38 @@ TypeError: 'Article' instance expected, got <Reporter: Paul Jones>
 
 >>> r2.article_set.count()
 1
+```
 
 Имајте на уму да је у последњем примеру члан премештен са Јована на Павла.
 
 Повезани менаџери такође подржавају претраге поља. API аутоматски прати односе колико год вам је потребно. Користите двоструке подвлаке за одвајање односа. Ово функционише онолико дубоко колико желите. Нема ограничења. На пример:
 
+```py
 >>> r.article_set.filter(headline__startswith="This")
 <QuerySet [<Article: This is a test>]>
 
 # Find all Articles for any Reporter whose first name is "John".
 >>> Article.objects.filter(reporter__first_name="John")
 <QuerySet [<Article: John's second story>, <Article: This is a test>]>
+```
 
 Овде се подразумева тачно подударање:
 
+```py
 >>> Article.objects.filter(reporter__first_name="John")
 <QuerySet [<Article: John's second story>, <Article: This is a test>]>
+```
 
 Двапут упитајте повезано поље. Ово се преводи у услов AND у WHERE клаузули:
 
+```py
 >>> Article.objects.filter(reporter__first_name="John", reporter__last_name="Smith")
 <QuerySet [<Article: John's second story>, <Article: This is a test>]>
+```
 
 За повезану претрагу можете навести вредност примарног кључа или експлицитно проследити повезани објекат:
 
+```py
 >>> Article.objects.filter(reporter__pk=1)
 <QuerySet [<Article: John's second story>, <Article: This is a test>]>
 >>> Article.objects.filter(reporter=1)
@@ -5227,16 +5484,20 @@ TypeError: 'Article' instance expected, got <Reporter: Paul Jones>
 <QuerySet [<Article: John's second story>, <Article: Paul's story>, <Article: This is a test>]>
 >>> Article.objects.filter(reporter__in=[r, r2]).distinct()
 <QuerySet [<Article: John's second story>, <Article: Paul's story>, <Article: This is a test>]>
+```
 
 Такође можете користити скуп упита уместо буквалне листе инстанци:
 
+```py
 >>> Article.objects.filter(
 ...     reporter__in=Reporter.objects.filter(first_name="John")
 ... ).distinct()
 <QuerySet [<Article: John's second story>, <Article: This is a test>]>
+```
 
 Упит у супротном смеру:
 
+```py
 >>> Reporter.objects.filter(article__pk=1)
 <QuerySet [<Reporter: John Smith>]>
 >>> Reporter.objects.filter(article=1)
@@ -5248,25 +5509,31 @@ TypeError: 'Article' instance expected, got <Reporter: Paul Jones>
 <QuerySet [<Reporter: John Smith>, <Reporter: John Smith>, <Reporter: John Smith>]>
 >>> Reporter.objects.filter(article__headline__startswith="This").distinct()
 <QuerySet [<Reporter: John Smith>]>
+```
 
 Бројање у супротном смеру функционише заједно са distinct():
 
+```py
 >>> Reporter.objects.filter(article__headline__startswith="This").count()
 3
 >>> Reporter.objects.filter(article__headline__startswith="This").distinct().count()
 1
+```
 
 Упити се могу вртети у круг:
 
+```py
 >>> Reporter.objects.filter(article__reporter__first_name__startswith="John")
 <QuerySet [<Reporter: John Smith>, <Reporter: John Smith>, <Reporter: John Smith>, <Reporter: John Smith>]>
 >>> Reporter.objects.filter(article__reporter__first_name__startswith="John").distinct()
 <QuerySet [<Reporter: John Smith>]>
 >>> Reporter.objects.filter(article__reporter=r).distinct()
 <QuerySet [<Reporter: John Smith>]>
+```
 
 Ако обришете репортера, његови чланци ће бити обрисани (под претпоставком да је ForeignKey дефинисан са django.db.models.ForeignKey.on_deleteподешено на CASCADE, што је подразумевана вредност):
 
+```py
 >>> Article.objects.all()
 <QuerySet [<Article: John's second story>, <Article: Paul's story>, <Article: This is a test>]>
 >>> Reporter.objects.order_by("first_name")
@@ -5276,14 +5543,17 @@ TypeError: 'Article' instance expected, got <Reporter: Paul Jones>
 <QuerySet [<Article: John's second story>, <Article: This is a test>]>
 >>> Reporter.objects.order_by("first_name")
 <QuerySet [<Reporter: John Smith>]>
+```
 
 Можете обрисати помоћу JOIN-а у упиту:
 
+```py
 >>> Reporter.objects.filter(article__headline__startswith="This").delete()
 >>> Reporter.objects.all()
 <QuerySet []>
 >>> Article.objects.all()
 <QuerySet []>
+```
 
 Jedan-na-jedan odnosi
 
@@ -5291,8 +5561,8 @@ Da biste definisali odnos jedan-na-jedan, koristite OneToOneField.
 
 U ovom primeru, Placeopciono može biti Restaurant:
 
+```py
 from django.db import models
-
 
 class Place(models.Model):
     name = models.CharField(max_length=50)
@@ -5300,7 +5570,6 @@ class Place(models.Model):
 
     def __str__(self):
         return f"{self.name} the place"
-
 
 class Restaurant(models.Model):
     place = models.OneToOneField(
@@ -5314,40 +5583,49 @@ class Restaurant(models.Model):
     def __str__(self):
         return "%s the restaurant" % self.place.name
 
-
 class Waiter(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return "%s the waiter at %s" % (self.name, self.restaurant)
+```
 
 U nastavku su navedeni primeri operacija koje se mogu izvršiti korišćenjem mogućnosti Pajton API-ja.
 
 Napravite nekoliko mesta:
 
+```py
 >>> p1 = Place(name="Demon Dogs", address="944 W. Fullerton")
 >>> p1.save()
 >>> p2 = Place(name="Ace Hardware", address="1013 N. Ashland")
 >>> p2.save()
+```
 
 Napravite restoran. Prosledite „roditeljski“ objekat kao primarni ključ ovog objekta:
 
+```py
 >>> r = Restaurant(place=p1, serves_hot_dogs=True, serves_pizza=False)
 >>> r.save()
+```
 
 Restoran može da pristupi svom prostoru:
 
+```py
 >>> r.place
 <Place: Demon Dogs the place>
+```
 
 Mesto može pristupiti svom restoranu, ako je dostupan:
 
+```py
 >>> p1.restaurant
 <Restaurant: Demon Dogs the restaurant>
+```
 
 p2 nema povezani restoran:
 
+```py
 >>> from django.core.exceptions import ObjectDoesNotExist
 >>> try:
 ...     p2.restaurant
@@ -5355,47 +5633,61 @@ p2 nema povezani restoran:
 ...     print("There is no restaurant here.")
 ...
 There is no restaurant here.
+```
 
 Takođe možete koristiti hasattrda biste izbegli potrebu za hvatanjem izuzetaka:
 
+```py
 >>> hasattr(p2, "restaurant")
 False
+```
 
 Podesite mesto koristeći notaciju dodele. Pošto je mesto primarni ključ za restoran, čuvanje će kreirati novi restoran:
 
+```py
 >>> r.place = p2
 >>> r.save()
 >>> p2.restaurant
 <Restaurant: Ace Hardware the restaurant>
 >>> r.place
 <Place: Ace Hardware the place>
+```
 
 Vratite mesto ponovo, koristeći dodelu u obrnutom smeru:
 
+```py
 >>> p1.restaurant = r
 >>> p1.restaurant
 <Restaurant: Demon Dogs the restaurant>
+```
 
 Imajte na umu da morate sačuvati objekat pre nego što mu se može dodeliti relacija jedan-na-jedan. Na primer, kreiranje Restaurantsa nesačuvanim Placepovećanjima ValueError:
 
+```py
 >>> p3 = Place(name="Demon Dogs", address="944 W. Fullerton")
 >>> Restaurant.objects.create(place=p3, serves_hot_dogs=True, serves_pizza=False)
 Traceback (most recent call last):
 ...
 ValueError: save() prohibited to prevent data loss due to unsaved related object 'place'.
+```
 
 Restaurant.objects.all() vraća restorane, a ne mesta. Imajte na umu da postoje dva restorana - Ace Hardware je kreiran pozivom funkcije r.place = p2:
 
+```py
 >>> Restaurant.objects.all()
 <QuerySet [<Restaurant: Demon Dogs the restaurant>, <Restaurant: Ace Hardware the restaurant>]>
+```
 
 Place.objects.all() vraća sva mesta, bez obzira na to da li imaju restorane:
 
+```py
 >>> Place.objects.order_by("name")
 <QuerySet [<Place: Ace Hardware the place>, <Place: Demon Dogs the place>]>
+```
 
 Možete da upitate modele koristeći pretrage u različitim odnosima :
 
+```py
 >>> Restaurant.objects.get(place=p1)
 <Restaurant: Demon Dogs the restaurant>
 >>> Restaurant.objects.get(place__pk=1)
@@ -5404,9 +5696,11 @@ Možete da upitate modele koristeći pretrage u različitim odnosima :
 <QuerySet [<Restaurant: Demon Dogs the restaurant>]>
 >>> Restaurant.objects.exclude(place__address__contains="Ashland")
 <QuerySet [<Restaurant: Demon Dogs the restaurant>]>
+```
 
 Ovo takođe funkcioniše obrnuto:
 
+```py
 >>> Place.objects.get(pk=1)
 <Place: Demon Dogs the place>
 >>> Place.objects.get(restaurant__place=p1)
@@ -5415,24 +5709,30 @@ Ovo takođe funkcioniše obrnuto:
 <Place: Demon Dogs the place>
 >>> Place.objects.get(restaurant__place__name__startswith="Demon")
 <Place: Demon Dogs the place>
+```
 
 Ako obrišete mesto, njegov restoran će biti obrisan (pod pretpostavkom da OneToOneFieldje definisano sa on_deletepodešeno na CASCADE, što je podrazumevana vrednost):
 
+```py
 >>> p2.delete()
 (2, {'one_to_one.Restaurant': 1, 'one_to_one.Place': 1})
 >>> Restaurant.objects.all()
 <QuerySet [<Restaurant: Demon Dogs the restaurant>]>
+```
 
 Dodajte konobara u restoran:
 
+```py
 >>> w = r.waiter_set.create(name="Joe")
 >>> w
 <Waiter: Joe the waiter at Demon Dogs the restaurant>
+```
 
 Pitajte konobare:
 
+```py
 >>> Waiter.objects.filter(restaurant__place=p1)
 <QuerySet [<Waiter: Joe the waiter at Demon Dogs the restaurant>]>
 >>> Waiter.objects.filter(restaurant__place__name__startswith="Demon")
 <QuerySet [<Waiter: Joe the waiter at Demon Dogs the restaurant>]>
-
+```
