@@ -23,10 +23,10 @@ Model je jedini, definitivni izvor informacija o vašim podacima. On sadrži osn
 
 Osnove:
 
-- Svaki model je Pajton klasa koja gradi podklase `django.db.models.Model`.
+- Svaki model je Pajton klasa koja gradi podklase iz `django.db.models.Model`.
 - Svaki atribut modela predstavlja polje baze podataka.
 
-Uz sve ovo, Django vam daje automatski generisan API za pristup bazi podataka, pogledajte [Pravljenje upita]().
+Uz sve ovo, Django vam daje automatski generisan API za pristup bazi podataka.
 
 ### Brzi primer
 
@@ -54,9 +54,9 @@ CREATE TABLE myapp_person (
 
 Neke tehničke napomene:
 
-- Naziv tabele, "myapp_person", se automatski izvodi iz nekih meta podataka modela, ali se može zameniti. Više detalja potražite u odeljku [Nazivi tabela]().
+- Naziv tabele, "myapp_person", se automatski izvodi iz nekih meta podataka modela, ali se može zameniti.
 
-- Polje "id" se dodaje automatski, ali ovo ponašanje se može zameniti. Pogledajte [Automatska polja primarnog ključa]().
+- Polje "id" se dodaje automatski, ali ovo ponašanje se može zameniti.
 
 - SQL u ovom primeru je formatiran korišćenjem PostgreSQL CREATE TABLE sintakse, ali vredi napomenuti da Django koristi SQL prilagođen serverskoj strani baze podataka navedenoj u vašoj datoteci sa podešavanjima.
 
@@ -74,7 +74,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Kada dodajete nove aplikacije u INSTALLED_APPS, obavezno pokrenite `manage.py migrate`, opciono prvo izvršite `manage.py makemigrations` migracije za njih.
+Kada dodajete nove aplikacije u INSTALLED_APPS, obavezno pokrenite mgracije, `manage.py migrate`, opciono prvo izvršite `manage.py makemigrations`.
 
 ### Polja
 
@@ -107,15 +107,13 @@ Svako polje u vašem modelu treba da bude instanca odgovarajuće `Field` klase. 
 
 - Minimalni zahtevi za validaciju, koji se koriste u Djangovoj administraciji i u automatski generisanim formama.
 
-Django se isporučuje sa desetinama ugrađenih tipova polja, kompletnu listu možete pronaći u [Referenci za polja modela]().
-
-Možete lako napisati sopstvena polja ako Django-ova ugrađena polja nisu dovoljna; pogledajte [Kako kreirati prilagođena polja modela]().
+Django se isporučuje sa desetinama ugrađenih tipova polja, možete lako napisati sopstvena polja ako Django-ova ugrađena polja nisu dovoljna.
 
 #### Opcije polja
 
-Svako polje prihvata određeni skup argumenata specifičnih za polje (dokumentovano u [Referenci polja modela]() ). Na primer, `CharField` (i njegove podklase) zahtevaju `max_length` argument koji određuje veličinu VARCHAR polja baze podataka koje se koristi za čuvanje podataka.
+Svako polje prihvata određeni skup argumenata specifičnih za polje. Na primer, `CharField` (i njegove podklase) zahtevaju `max_length` argument koji određuje veličinu VARCHAR polja baze podataka koje se koristi za čuvanje podataka.
 
-Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi su opcioni. Detaljno su objašnjeni u [Referenci polja modela]() , ali evo kratkog pregleda najčešće korišćenih:
+Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi su opcioni. Evo kratkog pregleda najčešće korišćenih:
 
 - **null**
 
@@ -123,13 +121,11 @@ Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi 
 
 - **blank**
 
-    Ako je "True", polje može biti prazno. Podrazumevano je "False".  
-
-    Imajte na umu da se ovo razlikuje od `null`. `Null` je isključivo vezano za bazu podataka, dok je `blank` vezano za validaciju. Ako polje ima `blank=True`, validacija obrasca će dozvoliti unos prazne vrednosti. Ako polje ima `blank=False`, polje će biti obavezno.
+    Ako je "True", polje može biti prazno. Podrazumevano je "False". Imajte na umu da se ovo razlikuje od `null`. `Null` je isključivo vezano za bazu podataka, dok je `blank` vezano za validaciju. Ako polje ima `blank=True`, validacija obrasca će dozvoliti unos prazne vrednosti. Ako polje ima `blank=False`, polje će biti obavezno.
 
 - **choices**
 
-    Niz torki, mapiranja, tip nabrajanja ili pozivljiva klasifikacija (koja ne očekuje argumente i vraća bilo koji od prethodnih formata), koja se koristi kao izbor za ovo polje. Ako je ovo dato, podrazumevani vidžet forme će biti polje za izbor umesto standardnog tekstualnog polja i ograničiće izbore na date opcije.  
+    Niz torki, mapiranja, tip nabrajanja ili objekat koji se može pozvati (koji ne očekuje argumente i vraća bilo koji od prethodnih formata), koja se koristi kao izbor za ovo polje. Ako je ovo dato, podrazumevani vidžet forme će biti polje za izbor umesto standardnog tekstualnog polja i ograničiće izbore na date opcije.  
 
     Lista izbora može izgledati ovako:
 
@@ -145,7 +141,7 @@ Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi 
 
     > [!Note]
     >
-    > Nova migracija se kreira svaki put kada se redosled `choices` promeni.
+    > Novu migraciju treba kreirati svaki put kada se redosled `choices` promeni.
 
     Prvi element u svakoj torci je vrednost koja će biti sačuvana u bazi podataka. Drugi element prikazuje vidžet polja forme.
 
@@ -182,8 +178,6 @@ Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi 
         medal = models.CharField(blank=True, choices=MedalType, max_length=10)
     ```
 
-    Dalji primeri su dostupni u [Referenci polja modela]().
-
 - **default**
 
     Podrazumevana vrednost za polje. Ovo može biti vrednost ili objekat koji se može pozvati. Ako je objekat koji se može pozvati, biće pozvan svaki put kada se kreira novi objekat.
@@ -196,13 +190,11 @@ Takođe postoji skup uobičajenih argumenata dostupnih za sve tipove polja. Svi 
 
 - **help_text**
 
-    Dodatni tekst pomoći koji će se prikazivati uz vidžet formulara. Koristan je za dokumentaciju čak i ako se vaše polje ne koristi na formularu.
+    Dodatni tekst pomoći koji će se prikazivati uz vidžet forme. Koristan je za dokumentaciju čak i ako se vaše polje ne koristi na formi.
 
 - **primary_key**
 
-    Ako je "True", ovo polje je primarni ključ za model.
-
-    Ako ne navedete "primary_key=True" ni za jedno polje u vašem modelu, Django će automatski dodati polje koje će čuvati primarni ključ, tako da ne morate da podešavate "primary_key=True" za ni jedno od vaših polja osim ako ne želite da poništite podrazumevano ponašanje primarnog ključa. Za više informacija, pogledajte [Automatska polja primarnog ključa]().
+    Ako je "True", ovo polje je primarni ključ za model. Ako ne navedete "primary_key=True" ni za jedno polje u vašem modelu, Django će automatski dodati polje koje će čuvati primarni ključ, tako da ne morate da podešavate "primary_key=True" za ni jedno od vaših polja osim ako ne želite da poništite podrazumevano ponašanje primarnog ključa.
 
     Polje primarnog ključa je samo za čitanje. Ako promenite vrednost primarnog ključa na postojećem objektu, a zatim ga sačuvate, novi objekat će biti kreiran pored starog. Na primer:
 
@@ -233,13 +225,13 @@ Podrazumevano, Django svakom modelu daje automatski inkrementirajući primarni k
 id = models.BigAutoField(primary_key=True)
 ```
 
-Ako želite da navedete prilagođeni primarni ključ, navedite ga kao "primary_key=True" u jednom od vaših polja. Ako Django vidi da ste eksplicitno podesili "Field.primary_key", neće dodati automatsku "id" kolonu.
+Ako želite da navedete prilagođeni primarni ključ, navedite ga kao "primary_key=True" u jednom od vaših polja. Ako Django vidi da ste eksplicitno podesili "primary_key", neće dodati automatsku "id" kolonu.
 
 Svaki model zahteva tačno jedno polje sa "primary_key=True" (ili eksplicitno deklarisano ili automatski dodato).
 
 #### Detaljna imena polja
 
-Svaki tip polja, osim `ForeignKey`, `ManyToManyField` i `OneToOneField`, prihvata opcioni prvi pozicioni argument – detaljno ime. Ako detaljno ime nije dato, Django će ga automatski kreirati koristeći ime atributa polja, pretvarajući donje crte u razmake.
+Svaki tip polja, osim `ForeignKey`, `ManyToManyField` i `OneToOneField`, prihvata opcioni prvi pozicioni argument – detaljno ime ( `verbose_name` ). Ako detaljno ime nije dato, Django će ga automatski kreirati koristeći ime atributa polja, pretvarajući donje crte u razmake.
 
 U ovom primeru, detaljno ime je: "person's first name"
 
@@ -253,7 +245,7 @@ U ovom primeru, detaljno ime je :"first name"
 first_name = models.CharField(max_length=30)
 ```
 
-`ForeignKey`, `ManyToManyField` i `OneToOneField` zahtevaju da prvi argument bude klasa modela, pa koristite `verbose_name` ključnu reč kao argument:
+`ForeignKey`, `ManyToManyField` i `OneToOneField` zahtevaju da prvi argument bude klasa modela, pa koristite `verbose_name` ključnu reč kao argument da bi definisali detaljno ime polja:
 
 ```py
 poll = models.ForeignKey(
@@ -269,19 +261,23 @@ place = models.OneToOneField(
 )
 ```
 
-Konvencija je da se prvo slovo reference ne piše velikim slovom u verbose_name. Django će automatski pisati veliko prvo slovo gde je potrebno.
+Konvencija je da se prvo slovo reference ne piše velikim slovom u `verbose_name`. Django će automatski pisati veliko prvo slovo gde je potrebno.
 
-### Relacije
+#### Relacije
 
-Jasno je da moć relacionih baza podataka leži u povezivanju tabela jedne sa drugom. Django nudi načine za definisanje tri najčešća tipa odnosa između tabela baza podataka: `više prema jedan`, `više prema više` i `jedan prema jedan`.
+Jasno je da moć relacionih baza podataka leži u povezivanju tabela jedne sa drugom. Django nudi načine za definisanje tri najčešća tipa relacija između tabela baza podataka:
 
-#### Relacije više prema jedan
+- `više prema jedan`,
+- `više prema više`,
+- `jedan prema jedan`.
 
-Da biste definisali odnos `više prema jedan`, koristite `django.db.models.ForeignKey`. Koristite ga baš kao i bilo koji drugi `Field` tip: uključivanjem kao atributa klase vašeg modela.
+##### Relacije više prema jedan
 
-ForeignKey zahteva pozicioni argument: klasu sa kojom je model povezan.
+Da biste definisali relaciju `više prema jedan`, koristite `django.db.models.ForeignKey`. Koristite ga baš kao i bilo koji drugi `Field` tip: uključivanjem kao atributa klase vašeg modela.
 
-Na primer, ako Car model ima Manufacturer– to jest, Manufacturer proizvodi više automobila, ali svaki Car ima samo jedan Manufacturer– koristite sledeće definicije:
+`ForeignKey` zahteva pozicioni argument: klasu sa kojom je model povezan.
+
+Na primer, ako "Car" model ima "Manufacturer" koristite sledeće definicije:
 
 ```py
 from django.db import models
@@ -295,9 +291,9 @@ class Car(models.Model):
     #...
 ```
 
-Takođe možete kreirati rekurzivne odnose (objekat sa odnosom više prema jedan prema samom sebi) i odnose sa modelima koji još nisu definisani; pogledajte referencu polja modela za detalje.
+Takođe možete kreirati rekurzivne odnose (objekat sa odnosom više prema jedan prema samom sebi) i odnose sa modelima koji još nisu definisani.
 
-Preporučuje se, ali nije obavezno, da naziv ForeignKey polja ( manufacturer u gornjem primeru ) bude naziv modela, malim slovima. Možete nazvati polje kako god želite. Na primer:
+Preporučuje se, ali nije obavezno, da naziv `ForeignKey` polja ( "manufacturer" u gornjem primeru ) bude naziv modela, malim slovima. Možete nazvati polje kako god želite. Na primer:
 
 ```py
 class Car(models.Model):
@@ -308,21 +304,17 @@ class Car(models.Model):
     #...
 ```
 
-Vidi takođe:
-
-ForeignKey polja prihvataju brojne dodatne argumente koji su objašnjeni u referenci polja modela. Ove opcije pomažu u definisanju kako bi odnos trebalo da funkcioniše; sve su opcione.
+ForeignKey polja prihvataju brojne dodatne argumente koji su objašnjeni u "Referenci polja modela". Ove opcije pomažu u definisanju kako bi odnos trebalo da funkcioniše, sve su opcione.
 
 Za detalje o pristupanju objektima povezanim unazad, pogledajte sledeći primer odnosa unazad.
 
-Za primer koda, pogledajte primer modela odnosa više prema jednom.
+##### Relacije više prema više
 
-#### Relacije više prema više
+Da biste definisali relaciju više prema više, koristite `ManyToManyField`. Koristite ga baš kao i bilo koji drugi `Field` tip: uključivanjem kao atributa klase vašeg modela.
 
-Da biste definisali relaciju više prema više, koristite ManyToManyField. Koristite ga baš kao i bilo koji drugi Field tip: uključivanjem kao atributa klase vašeg modela.
+`ManyToManyField zahteva pozicioni argument: klasu sa kojom je model povezan.
 
-ManyToManyField zahteva pozicioni argument: klasu sa kojom je model povezan.
-
-Na primer, ako a Pizza ima više Topping objekata – to jest, jedan Topping može biti na više pica i svaka Pizza ima više dodataka – evo kako biste to predstavili:
+Na primer, ako a Pizza ima više Topping objekata i svaka Pizza ima više dodataka, evo kako biste to predstavili:
 
 ```py
 from django.db import models
@@ -336,26 +328,23 @@ class Pizza(models.Model):
     toppings = models.ManyToManyField(Topping)
 ```
 
-Kao i kod ForeignKey, takođe možete kreirati rekurzivne odnose (objekat sa odnosom više prema više prema samom sebi) i odnose sa modelima koji još nisu definisani.
+Kao i kod `ForeignKey`, takođe možete kreirati rekurzivne odnose (objekat sa odnosom više prema više prema samom sebi) i odnose sa modelima koji još nisu definisani.
 
-Preporučuje se, ali nije obavezno, da ime ManyToManyField ( toppings u gornjem primeru ) bude u množini koja opisuje skup povezanih objekata modela.
+Preporučuje se, ali nije obavezno, da ime `ManyToManyField` ( "toppings" u gornjem primeru ) bude u množini, koja opisuje skup povezanih objekata modela.
 
-Nije bitno koji model ima ManyToManyField, ali treba da ga stavite samo u jedan od modela – ne u oba.
+Nije bitno koji model ima `ManyToManyField`, ali treba da ga stavite samo u jedan od modela – ne u oba.
 
-Generalno, ManyToManyField instance treba da idu u objekat koji će se uređivati na formi. U gornjem primeru, toppings je u Pizza (umesto da Topping ima pizzas ManyToManyField) jer je prirodnije razmišljati o pici sa dodacima nego o dodatku na više pica. Način na koji je podešeno gore, Pizza forma bi omogućila korisnicima da izaberu dodatke.
+Generalno, `ManyToManyField` treba da idu u objekat koji će se uređivati na formi. U gornjem primeru, "toppings" je u "Pizza" ( umesto da "Topping" ima "pizzas" `ManyToManyField` ) jer je prirodnije razmišljati o pici sa dodacima nego o dodatku na više pica. Način na koji je podešeno gore, "Pizza" forma bi omogućila korisnicima da izaberu dodatke.
 
-Vidi takođe:
-Pogledajte primer modela odnosa više prema više za kompletan primer.
+`ManyToManyField` polja takođe prihvataju niz dodatnih argumenata koji su objašnjeni u "Referenci polja modela". Ove opcije pomažu u definisanju kako bi odnos trebalo da funkcioniše; sve su opcione.
 
-ManyToManyField polja takođe prihvataju niz dodatnih argumenata koji su objašnjeni u referenci polja modela. Ove opcije pomažu u definisanju kako bi odnos trebalo da funkcioniše; sve su opcione.
+##### Dodatna polja u relacijama više prema više
 
-#### Dodatna polja u relacijama više prema više
+Kada se bavite samo odnosima tipa više prema više, kao što je mešanje i uparivanje pica i preliva, standardni `ManyToManyField` je sve što vam je potrebno. Međutim, ponekad vam može biti potrebno da povežete podatke sa odnosom između dva modela.
 
-Kada se bavite samo odnosima tipa više prema više, kao što je mešanje i uparivanje pica i preliva, standardno ManyToManyField je sve što vam je potrebno. Međutim, ponekad vam može biti potrebno da povežete podatke sa odnosom između dva modela.
+Na primer, razmotrimo slučaj aplikacije koja prati muzičke grupe kojima pripadaju muzičari. Postoji relacija više prema više između osobe i grupa čiji je član, tako da biste mogli koristiti `ManyToManyField` da predstavite ovu relaciju. Međutim, postoji mnogo detalja o članstvu koje biste možda želeli da prikupite, kao što je datum kada se osoba pridružila grupi.
 
-Na primer, razmotrimo slučaj aplikacije koja prati muzičke grupe kojima muzičari pripadaju. Postoji odnos više prema više između osobe i grupa čiji je član, tako da biste mogli koristiti ManyToManyField da predstavite ovaj odnos. Međutim, postoji mnogo detalja o članstvu koje biste možda želeli da prikupite, kao što je datum kada se osoba pridružila grupi.
-
-U ovim situacijama, Django vam omogućava da odredite model koji će se koristiti za upravljanje odnosom više prema više. Zatim možete dodati dodatna polja na srednji model. Srednji model je povezan sa ManyToManyField korišćenjem throughargumenta da bi se ukazalo na model koji će delovati kao posrednik. Za naš primer muzičara, kod bi izgledao otprilike ovako:
+U ovim situacijama, Django vam omogućava da odredite medjumodel koji će se koristiti za upravljanje relacijom više prema više. Zatim možete dodati dodatna polja na medjumodel model. Medjumodel je povezan sa `ManyToManyField` korišćenjem `through` argumenta da bi se ukazalo na model koji će delovati kao posrednik. Za naš primer muzičara, kod bi izgledao otprilike ovako:
 
 ```py
 from django.db import models
@@ -387,17 +376,17 @@ class Membership(models.Model):
         ]
 ```
 
-Kada podešavate posrednički model, eksplicitno navodite strane ključeve za modele koji su uključeni u odnos više prema više. Ova eksplicitna deklaracija definiše kako su dva modela povezana.
+Kada podešavate medjumodel, eksplicitno navodite strane ključeve za modele koji su uključeni u odnos više prema više. Ova eksplicitna deklaracija definiše kako su dva modela povezana.
 
-Ako ne želite višestruke asocijacije između istih instanci, dodajte UniqueConstraint uključujući i , from i to polja. Django-ove automatski generisane tabele više prema više uključuju takvo ograničenje.
+Ako ne želite višestruke asocijacije između instanci, dodajte `UniqueConstraint` uključujući i `from` i `to` polja. Django-ove automatski generisane tabele više prema više uključuju takvo ograničenje.
 
-Postoji nekoliko ograničenja za srednji model:
+Postoji nekoliko ograničenja za medjumodel:
 
-- Vaš međumodel mora da sadrži jedan - i samo jedan - strani ključ za izvorni model (to bi bilo Group u našem primeru), ili morate eksplicitno navesti strane ključeve koje Django treba da koristi za vezu koristeći ManyToManyField.through_fields. Ako imate više od jednog stranog ključa i through_fields nije navedeno, doći će do greške validacije. Slično ograničenje važi i za strani ključ za ciljni model (to bi bilo Personu našem primeru).
+- Vaš međumodel mora da sadrži jedan - i samo jedan - strani ključ za izvorni model (to bi bilo "Group" u našem primeru), ili morate eksplicitno navesti strane ključeve koje Django treba da koristi za vezu koristeći `ManyToManyField.through_fields`. Ako imate više od jednog stranog ključa i `through_fields` nije navedeno, doći će do greške validacije. Slično ograničenje važi i za strani ključ za ciljni model (to bi bilo "Person" u našem primeru).
 
-- Za model koji ima relaciju više prema više sa samim sobom preko posredničkog modela, dozvoljena su dva strana ključa za isti model, ali će se tretirati kao dve (različite) strane relacije više prema više. Ako through_fieldsnije navedeno, prvi strani ključ će se smatrati izvornom stranom modela ManyToManyField, dok će drugi predstavljati ciljnu stranu. Međutim, ako postoji više od dva strana ključa, morate through_fields eksplicitno naznačiti koje strane ključeve treba koristiti, u suprotnom će se javiti greška u validaciji.
+- Za model koji ima relaciju više prema više sa samim sobom preko medjumodela, dozvoljena su dva strana ključa za isti model, ali će se tretirati kao dve (različite) strane relacije više prema više. Ako `through_fields` nije navedeno, prvi strani ključ će se smatrati izvornom stranom modela `ManyToManyField`, dok će drugi predstavljati ciljnu stranu. Međutim, ako postoji više od dva strana ključa, morate `through_fields` eksplicitno naznačiti koje strane ključeve treba koristiti, u suprotnom će se javiti greška u validaciji.
 
-Sada kada ste podesili ManyToManyField da koristi vaš posrednički model ( Membership, u ovom slučaju ), spremni ste da počnete sa kreiranjem relacija više prema više. To radite kreiranjem instanci posredničkog modela:
+Sada kada ste podesili `ManyToManyField` da koristi vaš medjumodel ( Membership, u ovom slučaju ), spremni ste da počnete sa kreiranjem relacija više prema više. To radite kreiranjem instanci medjumodela:
 
 ```py
 >>> ringo = Person.objects.create(name="Ringo Starr")
@@ -424,7 +413,7 @@ Sada kada ste podesili ManyToManyField da koristi vaš posrednički model ( Memb
 <QuerySet [<Person: Ringo Starr>, <Person: Paul McCartney>]>
 ```
 
-Takođe možete koristiti add(), create() ili set() da biste kreirali odnose, sve dok navedete through_defaults za sva obavezna polja:
+Takođe možete koristiti `add()`, `create()` ili `set()` da biste kreirali odnose, sve dok navedete `through_defaults` za sva obavezna polja:
 
 ```py
 >>> beatles.members.add(john, through_defaults={"date_joined": date(1960, 8, 1)})
@@ -438,7 +427,7 @@ Takođe možete koristiti add(), create() ili set() da biste kreirali odnose, sv
 
 Možda ćete više voleti da direktno kreirate instance srednjeg modela.
 
-Ako prilagođena tabela kroz koju je definisan srednjim modelom ne nameće jedinstvenost na paru, dozvoljavajući višestruke vrednosti, poziv će ukloniti sve instance srednjeg modela: (model1, model2)remove()
+Ako prilagođena tabela kroz koju je definisan medjumodelom ne nameće jedinstvenost na paru, dozvoljavajući višestruke vrednosti, poziv `remove()` će ukloniti sve instance srednjeg modela: (model1, model2)
 
 ```py
 >>> Membership.objects.create(
@@ -455,7 +444,7 @@ Ako prilagođena tabela kroz koju je definisan srednjim modelom ne nameće jedin
 <QuerySet [<Person: Paul McCartney>]>
 ```
 
-Metoda clear()se može koristiti za uklanjanje svih odnosa više prema više za instancu:
+Metoda clear() se može koristiti za uklanjanje svih relacija više prema više za instancu:
 
 ```py
 >>> # Beatles have broken up
@@ -465,7 +454,7 @@ Metoda clear()se može koristiti za uklanjanje svih odnosa više prema više za 
 <QuerySet []>
 ```
 
-Kada uspostavite odnose više prema više, možete izdavati upite. Baš kao i kod normalnih odnosa više prema više, možete izdavati upite koristeći atribute modela povezanog sa više prema više:
+Kada uspostavite relacije više prema više, možete izdavati upite. Baš kao i kod normalnih relacija više prema više, možete izdavati upite koristeći atribute modela povezanog sa više prema više:
 
 ```py
 # Find all the groups with a member whose name starts with 'Paul'
@@ -473,7 +462,7 @@ Kada uspostavite odnose više prema više, možete izdavati upite. Baš kao i ko
 <QuerySet [<Group: The Beatles>]>
 ```
 
-Pošto koristite srednji model, možete takođe da upitate o njegovim atributima:
+Pošto koristite medjumodel, možete takođe da upitate o njegovim atributima:
 
 ```py
 # Find all the members of the Beatles that joined after 1 Jan 1961
@@ -493,7 +482,7 @@ datetime.date(1962, 8, 16)
 'Needed a new drummer.'
 ```
 
-Drugi način za pristup istim informacijama je upitom o obrnutoj relaciji više prema više iz Personobjekta:
+Drugi način za pristup istim informacijama je upitom o obrnutoj relaciji više prema više iz "Person" objekta:
 
 ```py
 >>> ringos_membership = ringo.membership_set.get(group=beatles)
@@ -503,13 +492,13 @@ datetime.date(1962, 8, 16)
 'Needed a new drummer.'
 ```
 
-#### Relacija jedan prema jedan
+##### Relacija jedan prema jedan
 
-Da biste definisali odnos jedan-na-jedan, koristite OneToOneField. Koristite ga baš kao i bilo koji drugi Field tip: uključivanjem kao atributa klase vašeg modela.
+Da biste definisali odnos jedan-na-jedan, koristite `OneToOneField`. Koristite ga baš kao i bilo koji drugi `Field` tip: uključivanjem kao atributa klase vašeg modela.
 
 Ovo je najkorisnije za primarni ključ objekta kada taj objekat na neki način proširuje drugi objekat.
 
-OneToOneField zahteva pozicioni argument: klasu sa kojom je model povezan.
+`OneToOneField` zahteva pozicioni argument: klasu sa kojom je model povezan.
 
 Na primer, ako biste pravili bazu podataka mesta, napravili biste prilično standardne stvari kao što su adresa, broj telefona itd. Zatim, ako biste želeli da napravite bazu podataka restorana preko mesta, umesto da ponavljate i replicirate ta polja u modelu Restaurant, mogli biste da napravite `Restauranthave` (jer je restoran mesto; u stvari, da biste ovo rešili, obično biste koristili nasleđivanje OneToOneFieldPlace, što uključuje implicitnu relaciju jedan-na-jedan).
 
@@ -522,7 +511,7 @@ OneToOneField polja takođe prihvataju opcioni parent_link argument.
 
 OneToOneField klase su ranije automatski postajale primarni ključ na modelu. To više nije tačno (iako možete ručno da prosledite primary_key argument ako želite). Stoga je sada moguće imati više polja tipa OneToOneField na jednom modelu.
 
-### Uvoz modela iz druge aplikacije
+#### Uvoz modela iz druge aplikacije
 
 Sasvim je u redu povezati model sa modelom iz druge aplikacije. Da biste to uradili, uvezite povezani model na vrh datoteke gde je vaš model definisan. Zatim, pozovite se na drugu klasu modela gde god je potrebno. Na primer:
 
@@ -555,13 +544,11 @@ class Restaurant(models.Model):
     )
 ```
 
-Vidite lenje veze za više detalja.
-
-### Ograničenja imena polja
+#### Ograničenja imena polja
 
 Django postavlja neka ograničenja na imena polja modela:
 
-- Ime polja ne može biti rezervisana reč u Pajtonu, jer bi to rezultiralo sintaksičkom greškom u Pajtonu. Na primer:
+- Ime polja ne može biti rezervisana reč u Pajtonu, jer bi to rezultiralo sintaksnom greškom u Pajtonu. Na primer:
 
     ```py
     class Example(models.Model):
@@ -579,17 +566,17 @@ Django postavlja neka ograničenja na imena polja modela:
 
 - Ime polja ne može biti check, jer bi to poništilo metodu okvira za proveru Model.check().
 
-Ova ograničenja se, međutim, mogu zaobići, jer naziv vašeg polja ne mora nužno da se podudara sa nazivom kolone vaše baze podataka. Pogledajte db_column opciju.
+Ova ograničenja se, međutim, mogu zaobići, jer naziv vašeg polja ne mora nužno da se podudara sa nazivom kolone vaše baze podataka. Pogledajte `db_column` opciju.
 
-Rezervisane SQL reči, kao što su join, where ili select, su dozvoljene kao imena polja modela, jer Django izbegava sva imena tabela baze podataka i imena kolona u svakom osnovnom SQL upitu. Koristi sintaksu navodnika vašeg određenog mehanizma baze podataka.
+Rezervisane SQL reči, kao što su `join`, `where` ili `select`, su dozvoljene kao imena polja modela, jer Django izbegava sva imena tabela baze podataka i imena kolona u svakom osnovnom SQL upitu. Koristi sintaksu navodnika vašeg određenog mehanizma baze podataka.
 
-### Tipovi prilagođenih polja
+#### Tipovi prilagođenih polja
 
-Ako jedno od postojećih polja modela ne može da se koristi za vaše potrebe ili ako želite da iskoristite neke manje uobičajene tipove kolona baze podataka, možete da kreirate sopstvenu klasu polja. Potpun pregled kreiranja sopstvenih polja dat je u članku Kako kreirati prilagođena polja modela.
+Ako jedno od postojećih polja modela ne može da se koristi za vaše potrebe ili ako želite da iskoristite neke manje uobičajene tipove kolona baze podataka, možete da kreirate sopstvenu klasu polja.
 
-Meta opcije
+### Meta opcije
 
-Dodelite metapodatke svom modelu koristeći unutrašnji element class Meta, kao što je prikazano:
+Dodelite metapodatke svom modelu koristeći unutrašnji element `class Meta`, kao što je prikazano:
 
 ```py
 from django.db import models
@@ -602,21 +589,21 @@ class Ox(models.Model):
         verbose_name_plural = "oxen"
 ```
 
-Metapodaci modela su sve što nije polje, kao što su opcije redosleda ( ordering ), naziv tabele baze podataka ( db_table ) ili ljudski čitljiva imena u jednini i množini ( verbose_name i verbose_name_plural ). Nijedan nije obavezan, a dodavanje modelu je potpuno opciono.class Meta
+Metapodaci modela `class Meta` su sve što nije polje, kao što su opcije redosleda ( `ordering` ), naziv tabele baze podataka ( `db_table` ) ili ljudski čitljiva imena u jednini i množini ( `verbose_name` i `verbose_name_plural` ). Nijedan nije obavezan, a dodavanje modelu je potpuno opciono.
 
-Kompletna lista svih mogućih Metaopcija može se naći u referenci opcija modela.
+Kompletna lista svih mogućih `Meta` opcija može se naći u "Referenci opcija modela".
 
 ### Atributi modela
 
-- objects
+- `objects`
 
-Najvažniji atribut modela je Manager. To je interfejs preko kojeg se operacije upita baze podataka pružaju Django modelima i koristi se za preuzimanje instanci iz baze podataka. Ako nije Manager definisano prilagođeno ime, podrazumevano ime je objects. Menadžerima se može pristupiti samo preko klasa modela, a ne preko instanci modela.
+    Najvažniji atribut modela je `Manager`. To je interfejs preko kojeg se operacije upita baze podataka pružaju Django modelima i koristi se za preuzimanje instanci iz baze podataka. Ako za Manager nije definisano prilagođeno ime, podrazumevano ime je `objects`. Menadžerima se može pristupiti samo preko klasa modela, a ne preko instanci modela.
 
 ### Metode modela
 
-Definišite prilagođene metode na modelu da biste dodali prilagođenu funkcionalnost na nivou reda svojim objektima. Dok Manager su metode namenjene da rade stvari na nivou cele tabele, metode modela treba da deluju na određenu instancu modela.
+Definišite prilagođene metode na modelu da biste dodali prilagođenu funkcionalnost na nivou reda. Dok su `Manager` metode namenjene da rade stvari na nivou cele tabele, metode modela treba da deluju na određenu instancu modela.
 
-Ovo je vredna tehnika za čuvanje poslovne logike na jednom mestu – modelu.
+Ovo je vredna tehnika za čuvanje poslovne logike na jednom mestu - u modelu.
 
 Na primer, ovaj model ima nekoliko prilagođenih metoda:
 
@@ -647,24 +634,27 @@ class Person(models.Model):
 
 Poslednja metoda u ovom primeru je svojstvo.
 
-Referenca instance modela ima kompletnu listu metoda koje se automatski dodeljuju svakom modelu. Možete da prepišete većinu njih – pogledajte prepisivanje unapred definisanih metoda modela , ispod – ali postoji nekoliko koje ćete skoro uvek želeti da definišete:
+Referenca instance modela ima kompletnu listu metoda koje se automatski dodeljuju svakom modelu. Možete da prepišete većinu njih, ali postoji nekoliko koje ćete skoro uvek želeti da definišete:
 
-**__str__()**
-Pajtonova magična metoda koja vraća string reprezentaciju bilo kog objekta. Ovo je ono što će Pajton i Django koristiti kad god je potrebno da se instanca modela prikaže kao običan string. Najznačajnije je da se ovo dešava kada prikazujete objekat u interaktivnoj konzoli ili u administratorskom delu.
+- `__str__()`
 
-Uvek ćete želeti da definišete ovu metodu; podrazumevana vrednost uopšte nije od velike pomoći.
+    Pajtonova magična metoda koja vraća string reprezentaciju bilo kog objekta. Ovo je ono što će Pajton i Django koristiti kad god je potrebno da se instanca modela prikaže kao običan string. Najznačajnije je da se ovo dešava kada prikazujete objekat u interaktivnoj konzoli ili u administratorskom delu.  
 
-**get_absolute_url()**
-Ovo govori Djangu kako da izračuna URL adresu objekta. Django ovo koristi u svom administratorskom interfejsu i svaki put kada treba da pronađe URL adresu objekta.
+    Uvek ćete želeti da definišete ovu metodu; podrazumevana vrednost uopšte nije od velike pomoći.
 
-Svaki objekat koji ima URL adresu koja ga jedinstveno identifikuje trebalo bi da definiše ovu metodu.
+- `get_absolute_url()`
 
-Prepisivanje unapred definisanih metoda modela 
-Postoji još jedan skup metoda modela koje obuhvataju niz ponašanja baze podataka koje ćete želeti da prilagodite. Konkretno, često ćete želeti da promenite način rada save(), delete().
+    Ovo govori Djangu kako da izračuna URL adresu objekta. Django ovo koristi u svom administratorskom interfejsu i svaki put kada treba da pronađe URL adresu objekta.
+
+    Svaki objekat koji ima URL adresu koja ga jedinstveno identifikuje trebalo bi da definiše ovu metodu.
+
+#### Prepisivanje unapred definisanih metoda modela
+
+Postoji još jedan skup metoda modela koje obuhvataju niz ponašanja baze podataka koje ćete želeti da prilagodite. Konkretno, često ćete želeti da promenite način rada `save()` i `delete()`.
 
 Slobodni ste da prepišete ove metode (i bilo koju drugu metodu modela) da biste promenili ponašanje.
 
-Klasičan slučaj upotrebe za zamenjivanje ugrađenih metoda je ako želite da se nešto desi svaki put kada sačuvate objekat. Na primer (pogledajte save()dokumentaciju o parametrima koje prihvata):
+Klasičan slučaj upotrebe za zamenjivanje ugrađenih metoda je ako želite da se nešto desi svaki put kada sačuvate objekat:
 
 ```py
 from django.db import models
@@ -695,11 +685,13 @@ class Blog(models.Model):
             super().save(**kwargs)  # Call the "real" save() method.
 ```
 
-Važno je zapamtiti da pozovete metod superklase – to je to super().save(**kwargs)– kako biste osigurali da se objekat ipak sačuva u bazi podataka. Ako zaboravite da pozovete metod superklase, podrazumevano ponašanje se neće desiti i baza podataka neće biti dirnuta.
+> [!Note]
+>
+> Važno je zapamtiti da pozovete metod superklase – to je `super().save(**kwargs)` – kako biste osigurali da se objekat sačuva u bazi podataka. Ako zaboravite da pozovete metod superklase, podrazumevano ponašanje se neće desiti i baza podataka neće biti promenjena.
 
-Takođe je važno da prosledite argumente koji se mogu proslediti metodi modela – to je ono što taj **kwargsbit radi. Django će, s vremena na vreme, proširiti mogućnosti ugrađenih metoda modela, dodajući nove ključne argumente. Ako koristite **kwargsu definicijama metoda, garantovano vam je da će vaš kod automatski podržavati te argumente kada se dodaju.
+Takođe je važno da prosledite argumente koji se mogu proslediti metodi modela – to je ono što `**kwargs` radi. Django će, s vremena na vreme, proširiti mogućnosti ugrađenih metoda modela, dodajući nove ključne argumente. Ako koristite `**kwargs` u definicijama metoda, garantovano vam je da će vaš kod automatski podržavati te argumente kada se dodaju.
 
-Ako želite da ažurirate vrednost polja u save()metodi, možete dodati ovo polje i update_fieldsargumentu ključne reči. Ovo će osigurati da se polje sačuva kada update_fieldsje navedeno. Na primer:
+Ako želite da ažurirate vrednost polja sa `save()` metodom, možete dodati ovo polje i `update_fields` argument ključne reči. Ovo će osigurati da se polje sačuva kada `update_fields` je navedeno. Na primer:
 
 ```py
 from django.db import models
@@ -718,20 +710,25 @@ class Blog(models.Model):
         super().save(**kwargs)
 ```
 
-Više detalja pogledajte u odeljku Određivanje polja za čuvanje.
+> [!Warning]
+>
+> **Prepisane metode modela se ne pozivaju kod grupnih operacija**
+>
+> Imajte na umu da se `delete()` metoda za objekat ne poziva nužno prilikom grupnog brisanja
+> objekata pomoću `QuerySet`-a ili kao rezultat `cascading delete`. Da biste osigurali
+> izvršavanje  prilagođene logike brisanja, možete koristiti `pre_delete` i/ili `post_delete`
+> signale.  
+>
+> Nažalost, ne postoji zaobilazno rešenje kada se za `creating` ili `updating` koriste objekti
+> grupno, jer se nijedan od `save()`, `pre_save` i `post_save` ne poziva.
 
-Prepisane metode modela se ne pozivaju kod grupnih operacija
-Imajte na umu da delete()se metoda za objekat ne poziva nužno prilikom grupnog brisanja objekata pomoću QuerySet- a ili kao rezultat. Da biste osigurali izvršavanje prilagođene logike brisanja, možete koristiti signale i/ili.cascading deletepre_deletepost_delete
+#### Izvršavanje prilagođenog SQL-a
 
-Nažalost, ne postoji zaobilazno rešenje kada se creatingili updatingkoriste objekti zajedno, jer se nijedan od save(), pre_savei post_savene poziva.
+Još jedan uobičajeni obrazac je pisanje prilagođenih SQL naredbi u metodama modela i metodama na nivou modula.
 
-### Izvršavanje prilagođenog SQL- a
+### Nasleđivanje modela
 
-Još jedan uobičajeni obrazac je pisanje prilagođenih SQL naredbi u metodama modela i metodama na nivou modula. Za više detalja o korišćenju sirovog SQL-a, pogledajte dokumentaciju o korišćenju sirovog SQL-a.
-
-### Nasleđivanje modela 
-
-Nasleđivanje modela u Django-u funkcioniše gotovo identično kao i normalno nasleđivanje klasa u Python-u, ali osnove na početku stranice i dalje treba poštovati. To znači da osnovna klasa treba da napravi podklasu django.db.models.Model.
+Nasleđivanje modela u Django-u funkcioniše gotovo identično kao i normalno nasleđivanje klasa u Python-u, ali osnove na početku stranice i dalje treba poštovati. To znači da osnovna klasa treba da napravi podklasu iz `django.db.models.Model`.
 
 Jedina odluka koju morate da donesete je da li želite da roditeljski modeli budu modeli sami po sebi (sa sopstvenim tabelama baze podataka) ili su roditelji samo nosioci zajedničkih informacija koje će biti vidljive samo kroz podređene modele.
 
@@ -820,7 +817,7 @@ class Student(CommonInfo, Unmanaged):
 
 Budite oprezni sa related_namei related_query_name
 
-Ako koristite related_name`or` related_query_namena ` ForeignKeyor` ManyToManyField, uvek morate da navedete jedinstveno obrnuto ime i ime upita za polje. Ovo bi obično izazvalo problem u apstraktnim osnovnim klasama, jer su polja u ovoj klasi uključena u svaku od podklasa, sa potpuno istim vrednostima za atribute (uključujući ` related_namei` i `i` related_query_name) svaki put.
+Ako koristite `related_name` or `related_query_namena` ForeignKey ili `ManyToManyField`, uvek morate da navedete jedinstveno obrnuto ime i ime upita za polje. Ovo bi obično izazvalo problem u apstraktnim osnovnim klasama, jer su polja u ovoj klasi uključena u svaku od podklasa, sa potpuno istim vrednostima za atribute ( uključujući `related_namei` i `related_query_name` ) svaki put.
 
 Da biste zaobišli ovaj problem, kada koristite related_nameili related_query_nameu apstraktnoj osnovnoj klasi (samo), deo vrednosti treba da sadrži '%(app_label)s'i '%(class)s'.
 
@@ -857,7 +854,7 @@ class ChildB(Base):
     pass
 ```
 
-Obrnuto ime polja common.ChildA.m2mće biti , common_childa_relateda obrnuto ime upita će biti common_childas. Obrnuto ime polja common.ChildB.m2mće biti , common_childb_relateda obrnuto ime upita će biti common_childbs. Konačno, obrnuto ime polja rare.ChildB.m2mće biti , rare_childb_relateda obrnuto ime upita će biti rare_childbs. Na vama je kako ćete koristiti deo ` '%(class)s'and` '%(app_label)s'da biste konstruisali svoje povezano ime ili povezano ime upita, ali ako zaboravite da ga koristite, Django će izbaciti greške kada izvršite sistemske provere (ili pokrenete migrate).
+Obrnuto ime polja common.ChildA.m2mće biti , common_childa_relateda obrnuto ime upita će biti common_childas. Obrnuto ime polja common.ChildB.m2mće biti , common_childb_relateda obrnuto ime upita će biti common_childbs. Konačno, obrnuto ime polja rare.ChildB.m2mće biti, rare_childb_relateda obrnuto ime upita će biti rare_childbs. Na vama je kako ćete koristiti deo `'%(class)s'` i `'%(app_label)s'` da biste konstruisali svoje povezano ime ili povezano ime upita, ali ako zaboravite da ga koristite, Django će izbaciti greške kada izvršite sistemske provere (ili pokrenete migrate).
 
 Ako ne navedete related_nameatribut za polje u apstraktnoj osnovnoj klasi, podrazumevano obrnuto ime će biti ime podređene klase praćeno sa '_set', baš kao što bi to normalno bilo kada biste polje deklarisali direktno na podređenoj klasi. Na primer, u gornjem kodu, ako related_nameje atribut izostavljen, obrnuto ime za m2mpolje bi bilo childa_setu ChildAslučaju i childb_setza ChildBpolje.
 
@@ -2730,102 +2727,6 @@ Međutim, podrazumevani argument može se podesiti prilikom pozivanja Sumda bi s
 {"price__sum": Decimal("0")}
 
 Ispod haube, podrazumevani argument je implementiran obmotavanjem agregatne funkcije sa Coalesce.
-
-[⚠️ Suspicious Content] 
-Prethodna stranica i sledeća stranica
-Agregacija
-Menadžeri
-Dodatne informacije
-Podržite DŽanga!
-Подржите Џанга!
-
-    Advokatska kancelarija Forsajt je donirala Fondaciji za softver DŽango kako bi podržala razvoj DŽanga. Donirajte danas!
-
-Sadržaj
-
-    Pretraga
-        Slučajevi upotrebe
-            Standardni tekstualni upiti
-            Naprednije funkcije poređenja baze podataka
-            Pretraga zasnovana na dokumentima
-                Podrška za PostgreSQL
-
-Pregledaj
-
-    Prethodno: Agregacija
-    Sledeće: Menadžeri
-    Sadržaj
-    Opšti indeks
-    Indeks Pajton modula
-
-Vi ste ovde:
-
-    Dokumentacija za Django 5.2
-        Korišćenje Django-a
-            Modeli i baze podataka
-                Pretraga
-
-Dobijanje pomoći
-
-Česta pitanja
-    Isprobajte ČPP — ima odgovore na mnoga uobičajena pitanja. 
-Indeks , indeks modula ili sadržaj
-    Korisno kada tražite određene informacije. 
-Django Discord server
-    Pridružite se Django Discord zajednici. 
-Zvanični Django forum
-    Pridružite se zajednici na Django forumu. 
-Praćenje karata
-    Prijavite greške pomoću Django-a ili Django dokumentacije u našem sistemu za praćenje tiketa. 
-
-Preuzmi:
-
-Oflajn (Django 5.2): HTML | PDF | ePub
-Obezbedio Read the Docs .
-DŽango linkovi
-Saznajte više
-
-    O DŽangu
-    Početak rada sa Django-om
-    Organizacija tima
-    Fondacija za softver DŽango
-    Kodeks ponašanja
-    Izjava o raznolikosti
-
-Uključite se
-
-    Pridružite se grupi
-    Doprinesite Django-u
-    Prijavi grešku
-    Prijavi bezbednosni problem
-    Individualno članstvo
-
-Potražite pomoć
-
-    Česta pitanja o dobijanju pomoći
-    DŽango Diskord
-    Zvanični Django forum
-
-Pratite nas
-
-    GitHab
-    Tviter
-    Fedivers (Mastodont)
-    RSS vesti
-
-Podržite nas
-
-    Sponzor DŽango
-    Korporativno članstvo
-    Zvanična prodavnica robe
-    Program dobrotvornih davanja na radnom mestu
-
-DŽango
-
-    Domaćin Donatori u naturi
-    Dizajn od strane Tri tačke & andrevv
-
-© 2005-2025 Fondacija Django Software i pojedinačni saradnici. Django je registrovani zaštitni znak Fondacije Django Software.
 
 [⚠️ Suspicious Content] Menadžeri
 
