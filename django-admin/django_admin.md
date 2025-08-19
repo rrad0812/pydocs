@@ -13,10 +13,10 @@ Lazarevac, avgust 2025.
   - [Modeli koji se koriste u ovom tutorijalu](#modeli-koji-se-koriste-u-ovom-tutorijalu)
 
 - [Generalno](#generalno)
-  - Kako promeniti 'Django administration' tekst?
-  - Kako postaviti naslov modela u množini?
-  - Kako kreirati dva nezavisna sajta?
-  - Kako ukloniti podrazumevane aplikacije iz Django admina?
+  - [Kako promeniti 'Django administration' tekst?](#kako-promeniti-django-administration-tekst)
+  - [Kako postaviti naslov modela u množini?](#kako-postaviti-naslov-modela-u-množini)
+  - [Kako kreirati dva nezavisna sajta?](#kako-kreirati-dva-nezavisna-sajta)
+  - [Kako ukloniti podrazumevane aplikacije iz Django admina?](#kako-ukloniti-podrazumevane-aplikacije-iz-django-admina)
   - Kako dodati logo u Django admin?
   - Kako nadjačati Django admin šablone?
   - Kako da postavimo prilagodjeni poredak aplikacija i modela?
@@ -287,6 +287,10 @@ Koristi pip u komandnoj liniji za instaliranje Djanga:
 (django-venv) python3 -m pip install Django
 ```
 
+> [!Note]
+>
+> Nadalje sve što radimo na projektu radimo sa aktiviranom (django-venv) virtuelnom okolinom.
+
 #### Izgradnja novog projekta
 
 Sada koristi `django-admin` komandu za kreiranje novog projekta.
@@ -297,27 +301,30 @@ Sada koristi `django-admin` komandu za kreiranje novog projekta.
 > - Prosledi ime projekta, `project_name`, biće napravljen novi direktorijum sa prosledjenim imenom i u njemu subdirektorijum sa istim imenom i fajlovima projekta:
 >
 >    ```shell
->    (django-venv) django-admin startproject project_name
+>    django-admin startproject project_name
 >    ```
 >
 > - Prosledi ime projekta, `project_name` i ime projektnog direktorijuma. Projektni direktorijum već mora postojati. Biće stvoren novi `project_name` direktorijum sa fajlovima projekta unutar projektnog direktorijuma:
 >
 >    ```shell
->    (django-venv) django-admin startproject project_name project_dir_name
+>    django-admin startproject project_name project_dir_name
 >    ```
 >
 > - Prosledi ime projekta, `project_name`, biće stvoren novi `project_name` direktorijum sa fajlovima projekta, unutar tekućeg (`project_dir_name`) direktorijuma:
 >
 >    ```shell
->    (django-venv) django-admin startproject project_name .
->   ```  
+>    django-admin startproject project_name .
+>    ```  
 
 Autor predlaže treći način, s'time da je workflow sledeći:
 
-> ```shell
-> mkdir project_dir_name
-> cd project_dir_name
-> (django-venv) django-admin startproject project_name .
+>
+```shell
+mkdir project_dir_name
+cd project_dir_name
+(django-venv) django-admin startproject project_name .
+```
+>
 
 Django-admin će kreirati `project_name` direktorijum u tekućem (`project_dir_name`) direktorijumu sa fajlovima projekta.
 
@@ -328,7 +335,7 @@ Od sada pa nadalje `project_dir_name` je `BASE_DIR` projekta, direktorijum koji 
 Sledeći korak je stvaranje baze podataka koja će se pojaviti kao nova SQLite datoteka sa imenom `db.sqlite3`. Da bismo to uradili, koristimo `manage.py` fajl iz direktorijuma projekta, koju je kreirala `django-admin startproject` komanda. Komanda koju sada želimo je `migrate`, koja može da kreira osnovne tabele baze podataka.
 
 ```shell
-(django-venv) python manage.py migrate
+python manage.py migrate
 ```
 
 Na kraju pokreni Django ugradjeni web server:
@@ -337,10 +344,19 @@ Na kraju pokreni Django ugradjeni web server:
 python manage.py runserver
 ```
 
-Poseti: `localhost:8000/` u pregledaču da bi video Django u akciji.
+#### Kreiranje superusera
 
-Možeš da kreiraš novu aplikaciju pomoću Django `startapp` komande. Vrati se na terminal i pritisni
-kombinaciju CTRL-C, koja će završiti test server i vratiti nas u komandnu liniju. Zatim pomoću
+Da bi mogli da se ulogujemo na admin strane potrebe su nam dozvole. Najpovlašćeniji korisnik na admin stranama i komletnom Djnagu je `superuser`. Da bi kreirali superusera potrebno je da pokrenemo komandu:
+
+```shell
+python manage.py createsuperuser
+```
+
+Posle kompletiranja ove prcedure možemo da posetimo `localhost:8000/` u pregledaču da bi videli Django u akciji.
+
+#### Izgradnja aplikacije
+
+Možeš da kreiraš novu aplikaciju pomoću Django `startapp` komande. Vrati se u terminal i pritisni kombinaciju CTRL-C, koja će završiti test server i vratiti nas u komandnu liniju. Zatim pomoću
 `manage.py` kreiraj aplikaciju.
 
 ```shell
@@ -380,7 +396,7 @@ To je sve. Možete početi sa stvaranjem modela.
 
 ### Modeli koji se koriste u ovom tutorijalu
 
-#### App Entities**
+#### App Entities
 
 ```py
 class Category(models.Model):
@@ -478,42 +494,55 @@ class EventVillain(models.Model):
     is_primary = models.BooleanField()
 ```
 
+[Sadržaj](#sadržaj)
+
 ## Generalno
 
-Kako promeniti ‘Django administration’ tekst?
+### Kako promeniti "Django administration" tekst?
 
-Podrazumevano Django admin prikazuje ’Django administration’. Hajde da zamenimo sa ‘UMSRA
-Administration’.
+Podrazumevano Django admin prikazuje "Django administration". Hajde da zamenimo sa "UMSRA
+Administration".
 
 Ovaj tekst je na sledećim stranama:
+
 - Login strana
 - Listview strana
 - HTML title tag
 
-Možemo napraviti sve tri promene u urls.py:
+Možemo napraviti sve tri promene u `urls.py`:
 
+```py
 admin.site.site_header = "UMSRA Admin"
 admin.site.site_title = "UMSRA Admin Portal"
 admin.site.index_title = "Welcome to UMSRA Researcher Portal"
+```
 
-Kako postaviti naslov modela u množini?
-Podrazumevano admin prikazuje imena modela u množini dodajući ’s’. Često je to nepravilna množina. Od
-vas je zatraženo da postavite tačne pravopisne množine: Categories i Heroes. To možete učiniti
-postavljanjem verbose_name_plural u svojim modelima. Promenite to u models.py:
+> [!Note]
+>
+> Ispravan način je nasledjivanje admin klase i zadavanje ova tri atributa klase. Kako mi radimo sa admin.site klasom (default klasa admin strana) ove klasne atribute zadajemo u `urls.py`.
 
+[Sadržaj](#sadržaj)
+
+### Kako postaviti naslov modela u množini?
+
+Podrazumevano admin prikazuje imena modela u množini dodajući 's'. Često je to nepravilna množina. Od vas je zatraženo da postavite tačne pravopisne množine: `Categories` i `Heroes`. To možete učiniti postavljanjem `verbose_name_plural` u svojim modelima. Promenite u `models.py`:
+
+```py
 class Category(models.Model):
-...
-class Meta:
+  ...
+  class Meta:
+    verbose_name_plural = "Categories"
 
-verbose_name_plural = "Categories"
 class Hero(Entity):
+  ...
+  class Meta:
+    verbose_name_plural = "Heroes"
+```
 
-...
-class Meta:
+[Sadržaj](#sadržaj)
 
-verbose_name_plural = "Heroes"
+### Kako kreirati dva nezavisna sajta?
 
-Kako kreirati dva nezavisna sajta?
 Uobičajeni način kreiranja admin strana je stavljanje svih modela u jednog admina. Međutim, moguće je
 imati više admin lokacija u jednoj Django aplikaciji. Trenutno su naši modeli entiteta i događaja na istom
 mestu. UMSRA ima dve različite grupe koje istražuju događaje i entitete, i zato želi da podeli admine.
@@ -521,40 +550,41 @@ Zadržaćemo zadanog admina za entitete i kreiraćemo novu subklasu AdminSite za
 
 U events/admin.py uradimo sledeće:
 
-from django.contrib.admin import
-AdminSite
-class EventAdminSite(AdminSite):
+```py
+from django.contrib.admin import AdminSite
 
-site_header = "UMSRA Events Admin"
-site_title = "UMSRA Events Admin
-Portal"
-index_title = "Welcome to UMSRA Researcher Events Portal"
+class EventAdminSite(AdminSite):
+  site_header = "UMSRA Events Admin"
+  site_title = "UMSRA Events Admin Portal"
+  index_title = "Welcome to UMSRA Researcher Events Portal"
 
 event_admin_site = EventAdminSite(name='event_admin')
+
 event_admin_site.register(Epic)
 event_admin_site.register(Event)
-
-
-
-P a g e | 12
 event_admin_site.register(EventHero)
+```
 
 I promenimo urls.py na:
 
-from events.admin import
-event_admin_site
+```py
+from events.admin import event_admin_site
+
 urlpatterns = [
-
-path('entity-admin/', admin.site.urls),
-path('event-admin/', event_admin_site.urls),
-
+  path('entity-admin/', admin.site.urls),
+  path('event-admin/', event_admin_site.urls),
 ]
+```
 
 Ovo razdvaja aplikaciju na dva admin sajta. Oba su raspoloživa na:
+
 - /entity-admin/
 - /event-admin/.
 
-Kako ukloniti podrazumevane aplikacije iz Django admina?
+[Sadržaj](#sadržaj)
+
+### Kako ukloniti podrazumevane aplikacije iz Django admina?
+
 Django će uključiti django.contrib.auth u INSTALLED_APPS, to znači da će User i Groups modeli da budu
 uključeni u admin sajt automatski.
 
