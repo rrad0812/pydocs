@@ -9,8 +9,15 @@
 - [DjangoQL](#djangoql)
   - [Instalacija](#instalacija)
   - [Korišćenje DjangoQL sa standardnim Django admin search-om](#korišćenje-djangoql-sa-standardnim-django-admin-search-om)
-  - Mogu li koristiti Django QL van Django admina
-
+  - [Jezičke reference](#jezičke-reference)
+  - [DjangoQL šema](#djangoql-šema)
+  - [Prilagodjena polja za pretragu](#prilagodjena-polja-za-pretragu)
+    - [Search po queryset annotacijama](#search-po-queryset-annotacijama)
+    - [Prilagođene suggest_options](#prilagođene-suggest_options)
+    - [Prilagodjeni search lookup](#prilagodjeni-search-lookup)
+    - [Puni prilagodjeni search lookup](#puni-prilagodjeni-search-lookup)
+    - [Mogu li koristiti Django QL van Django admina](#mogu-li-koristiti-django-ql-van-django-admina)
+  
 ### Polja za pretragu na listview strani
 
 Django admin pruža `search_fields` opciju na ModelAdmin. Postavkom ove opcije će biti omogućen boks za pretragu na `listview strani`, za filtriranje objekata na modelu. Može uraditi pretragu po svim poljima modela i povezanim poljima modela takodje.
@@ -65,6 +72,8 @@ class BookAdmin(DjangoQLSearchMixin, admin.ModelAdmin):
     pass
 ```
 
+[Sadržaj](#sadržaj)
+
 ### Korišćenje DjangoQL sa standardnim Django admin search-om
 
 `DjangoQL` će prepoznati ako imate definisano `search_fields` u ModelAdmin klasi.Vi ćete moći da izaberete izmedju naprednog DjangoQL search-a i standardnog Django search-a (spec. sa search_fields).
@@ -89,6 +98,8 @@ class BookAdmin(DjangoQLSearchMixin, admin.ModelAdmin):
 
 Ako ne želite dva serch moda, jednostavno uklonite `search_fields` iz ModelAdmin klase.
 
+[Sadržaj](#sadržaj)
+
 ### Jezičke reference
 
 `DjangoQL` se dobija sa izuzetnim `SyntaxHelp`, koji se može naći u Django admin (vidi `Syntax Help` link na auto-completion popup-u). Ovde je kratak zaključak:
@@ -106,6 +117,8 @@ DjangoQL je osetljiv na veličinu slova.
 - Operatori poredjenja: `=`, `!=`, `<`, `<=`, `>`, `>=` rade kao što se očekuje.
 - `~` i `!~` test da li string ima ili nema substring (`icontains`);
 - testna vrednost naspram liste: `in`, `not in`. Primer: `pk in (2, 3)`.
+
+[Sadržaj](#sadržaj)
 
 ### DjangoQL šema
 
@@ -145,6 +158,8 @@ U primeru smo kreirali šemu koja radi tri stvari:
 
     Ako želite da definišete prilagodjenu suggest_options, vidi ispod.
 
+[Sadržaj](#sadržaj)
+
 ### Prilagodjena polja za pretragu
 
 Dublje prilagodjenje pretrage može biti postignuto sa prilagodjenim `search` poljima. Prilagodjena `search` polja mogu biti korišćenja:
@@ -163,6 +178,8 @@ U d`jangoql.schema`, DjangoQL definiše sledeća polja bazne klase koje mogu bit
 - RelationField
 
 Ovde su primeri za česte slučajeve upotrebe:
+
+[Sadržaj](#sadržaj)
 
 #### Search po queryset annotacijama
 
@@ -193,6 +210,8 @@ Kada naš queryset sada podigne tu kolonu, možemo filtrirati po njoj. Samo treb
 
 U "UserQLSchema.get_fields()" definišemo prilagodjeno integer search polje za "User" model. Njegovo ime treba da je isto sa imenom kolone u queryset-u.
 
+[Sadržaj](#sadržaj)
+
 #### Prilagođene suggest_options
 
 ```py
@@ -222,6 +241,8 @@ djangoql_schema = UserQLSchema
 
 U ovom primeru definisali smo prilagođeno GroupNameField koje sortira sugestije za grupu imena po popularnosti, (broj korisnika u grupi) umesto default alphabetical sortinga.
 
+[Sadržaj](#sadržaj)
+
 #### Prilagodjeni search lookup
 
 DjangoQL bazna polja pružaju dva osnovna metoda koje možete prepisati radi zamene ili kolone za pretragu, vrednosti pretrage ili oba.
@@ -244,6 +265,8 @@ class CustomUserAdmin(DjangoQLSearchMixin, UserAdmin):djangoql_schema = UserQLSc
 U ovom primeru mi smo definisali prilagodjeno date_joined_year search polje za korisnike. I koristili smo ugradjeni Django year filter opciju u .get_lookup_name() za filtriranje po godini samo.
 
 Slično možete koristiti .get_lookup_value(value) hook za promenu search vrednosti pre nego se koristi u filteru.
+
+[Sadržaj](#sadržaj)
 
 #### Puni prilagodjeni search lookup
 
@@ -322,6 +345,8 @@ class UserQLSchema(DjangoQLSchema):
 class CustomUserAdmin(DjangoQLSearchMixin, UserAdmin):
     djangoql_schema = UserQLSchema
 ```
+
+[Sadržaj](#sadržaj)
 
 ### Mogu li koristiti Django QL van Django admina
 
