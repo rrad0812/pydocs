@@ -8,23 +8,234 @@ Lazarevac, avgust 2025.
 
 ## Sadržaj
 
-- Uvod
-- Generalno
+- [Uvod](#uvod)
+  - [Prvi Django admin](#prvi-django-admin)
+  - [Modeli koji se koriste u ovom tutorijalu](#modeli-koji-se-koriste-u-ovom-tutorijalu)
+
+- [Generalno](#generalno)
+  - Kako promeniti 'Django administration' tekst?
+  - Kako postaviti naslov modela u množini?
+  - Kako kreirati dva nezavisna sajta?
+  - Kako ukloniti podrazumevane aplikacije iz Django admina?
+  - Kako dodati logo u Django admin?
+  - Kako nadjačati Django admin šablone?
+  - Kako da postavimo prilagodjeni poredak aplikacija i modela?
+  - Kako dodati jedan model dva puta na admin?
+  - Kako dodati db view na Django admin?
+
 - Listview strane
+  - Kako prikazati veliki broj zapisa na listview strani?
+  - Kako ukinuti Django admin paginaciju?
+  - Kako dodati datumski bazirano filtriranje na Django admin?
+  - Kako prikazati unutrašnju ManyToMany ili ManyToOne vezu na listview strani?
+
 - Izračunata polja
+  - Kako prikazati izračunato polje na listview strani?
+  - Kako opitimizovati upite u Django adminu sa annotacijama?
+  - Kako omogućiti sortiranje na izračunatim poljima?
+  - Kako omogućiti filtriranje po izračunatim poljima?
+  - Kako prikazati ’on’ ili ’off’ ikone umesto izračunatih boolean polja?
+
 - Polja za pretragu
+  - Polja za pretragu
+  - DjangoQL
+    - Instalacija
+    - Korišćenje DjangoQL sa standardnim Django admin search-om
+    - Mogu li koristiti Django QL van Django admina
+
 - Admin akcije
+  - Pisanje akcija
+    - Pisanje akcionih funkcija
+    - Dodavanje akcija u ModelAdmin
+    - Rukovanje greškama u akcijama
+    - Akcije kao ModelAdmin metode
+  - Omogućavanje-onemogućavanje akcija
+    - Kako onemogućiti akciju na celoj lokaciji
+    - Kako onemogućiti svih akcija za određeni ModelAdmin
+    - Uslovno omogućavanje ili onemogućavanje akcija
+  - Postavljanje dozvola za akcije
+  - Prilagodjene Django admin akcije sa prolaznom stranom
+    - Dodavanje prolazne strane
+    - Dodavanje forme da izvrši našu akciju
+  - Kako kreirati Django admin akciju sa ili bez prolazne strane
+    - Django admin akcija bez prolazne strane
+    - Django admin akcija sa prolaznom stranom
+  - Kako dodati prilagodjenu akcijsku dugmad na listview stranu?
+  - Prilagodjene akcije na pojedinačnim objektima
+  - Prilagodjene akcije po objektu modela
+
 - Add/Change strane
+  - Kako prikazati sliku iz Imagefield na Django adminu?
+  - Kako povezati model sa trenutnim korisnikom koji upisuje/menja model?
+  - Kako označiti polje kao readonly u adminu?
+  - Kako prikazati needitabilna polja u adminu?
+  - Kako napraviti polje editabilnim kada se objekat kreira, inače readonly?
+  - Kako filtrirati FK vrednosti iz padajućih lista u Django adminu?
+  - Kako upravljati modelom sa FK vezom prema modelu sa velikim brojem objekata?
+  - Kako promeniti tekst na FK padajućoj listi?
+  - Kako dodati prilagodjeno dugme na Django changeview stranu?
+  - Kako upravljati History/Model logovima u Django adminu?
+  - Kako prilagoditi add/change formu modela?
+  - Kako nadjačati save ponašanje za Django admin?
+
 - Veze
+  - Povezana polja na admin listview strani
+  - Navigacija po povezanim poljima
+    - to_parent_link
+    - to_child_link
+  - Pružanje veza do drugih stranica sa listama objekata modela
+  - Reverzne veze
+    - related_name
+    - related_query_name
+  - Autokompletiranje za povezana polja
+  - Hiperlinkovi
+  - Kako dobiti Django admin urls za specifične objekte?
+
 - Inlines
+  - Kako editovati višestruke modele iz jednog Django admina?
+  - Kako dodati OneToOne vezu kao inline?
+  - Kako dodati ugnježdene inlines u Django adminu?
+  - Kako kreirati jedan Django admin iz dva različita modela?
+  - Kako pristupiti parent instanci?
+    - Odgovor_1:
+    - Odgovor_2:
+    - Odgovor_3:
+    - Odgovor_4:
+  - Kako dobiti objekt iz formfield_for_foreignkey?
+    - Odgovor_1:
+    - Odgovor_2:
+    - Odgovor_3:
+    - Odgovor_4:
+    - Odgovor_5:
+  - Pristup parent model instanci iz modelforme admin inline-a
+    - Odgovor_1:
+    - Odgovor_2:
+    - Odgovor_3:
+    - Odgovor_4:
+
 - Filtriranje
+  - Kako dodati osnovno filtriranje u interfejs?
+  - Kako dodati prilagođeni filter u django admin?
+  - Kako ulančati filtere u Django adminu?
+  - Kako dodati podrazumevani filter u Django adminu?
+  - Podrazumevani filteri - II način
+  - Prilagodjeni tekst filteri
+  - Prilagodjena lista filtera nad datumskim poljem
+  - Napredni filteri
+
 - Validacija Django prilagođene forme
+  - Django-ova ugrađena validacija forme
+    - Validacija pojedinačnog polja
+    - Validacija više polja
+    - Zaključak
+
 - Djangove optimizacija QuerySet upita
+  - select_related()
+    - *fields parametri
+    - depth parameter
+    - *parameters
+    - Zaključak
+  - prefetch_related()
+    - *lookups parameter
+    - Prefetch objekat
+    - Zaključak
+  - prefetch_related() vs selected related()
+    - Zaključak
+  - Kombinovano korišćenje
+  - Sve što treba da znate o prefetching-u u Django
+    - Šta je problem?
+    - prefetch_related
+    - Uvod u Prefetch objekat
+
+- Efikasna paginacija u Djangu i Postgresu
+  - Razumevanje naivne paginacije
+  - Predstava naivne paginacije
+  - Rukovanje paginacijom u Djangu
+  - Korišćenje dodatka dj-pagination za Django
+  - Zaključak
+
 - Kako skalirati Django admin
+  - Evidentiranje
+  - N + 1 problem
+  - Nadjačavanje get_queryset
+  - Poboljšani search sa DjangoQL
+  - Elminisanje COUNT upita
+  - show_full_result_count
+  - deffer
+  - Paginator
+  - readonly_fields
+  - Skaliranje Django admin date_hierarchy
+    - Paket
+    - date_hierarchy
+
 - JavaScript u Django adminu
+  - Događaji u inline formi
+  - Kako raditi sa AJAX Request u Django
+    - Kao Ajax radi u Django
+  - Pogled na Django
+    - Korišćenje jQuery za AJAX u Django
+      - Zašto koristiti jQuery
+      - Inicijalni setup
+    - AJAX Request implementacija
+    - Najbolje prakse za AJAX JavaScript u Django-u
+  - Ajax request u Django adminu na edit strani
+  - Izgradnja Ajax request-a od nule u Django admin-u
+
 - CSV export-import
+  - CSV Export iz Django admina?
+  - CSV Import u Django admin
+  - CSV Export preko komandne linije
+  - CSV Import preko komandnde linije
+
 - Dozvole
+  - Dozvole za model
+  - Kako proveriti dozvole
+    - Kako primeniti dozvole
+  - Django admin i dozvole za model
+  - Primenite prilagođene poslovne uloge u Django Admin
+    - Postavka prilagođenog User admina
+    - Sprečavanje ažuriranja polja User modela
+    - Uslovno sprečavanje ažuriranja polja
+    - Sprečavanje ne superuser-a da daju superuser prava
+    - Django admin User forma u dva koraka
+    - Dodelite dozvole samo koristeći grupe
+    - Sprečavanje ne superuser-a od promena njihovih vlastitih dozvola
+    - Nadjačavanje dozvola na User modelu
+    - Ograničite pristup prilagođenim akcijama na User modelu
+    - Kako dozvoliti kreiranje samo jednog objekta u adminu?
+    - Kako ukloniti ‘Add’/’Delete’ dugme iz admina?
+
+- Kako napraviti Django admin sigurnijim?
+  - Koristite SSL
+  - Promenite URL
+  - Koristite 'django-admin-honeypot'
+  - Zahtevajte jače lozinke
+  - Koristite dvofaktorsku autentifikaciju
+  - Koristite najnoviju verziju Django-a
+  - Nikada nemojte pokretati `DEBUG` u produkciji
+  - Zapamtite svoje okruženje
+  - Proverite da li postoje greške
+  - Proverite veb sajt
+
 - Prevodi
+  - I18N Pregled
+  - Početno podešavanje
+    - Omogućavanje internacionalizacije
+    - Promena lokalnih puteva
+    - Middleware softver za automatski prevod
+    - Prefiks jezika šablona URL-a
+    - Ograničavanje izbor jezika
+  - Prevodjenje
+    - Gotove fraze
+    - Prilagođeni admin naslovi
+    - Imena aplikacija
+    - Imena modela
+    - Pokreni komande
+  - Bonus: Dugmad za jezike
+    - Prekidač prefiksa jezičkog koda
+    - Prekidač prefiksa šablonskog filtera
+    - Nadjačavanje Admin šablona
+    - Završni prikaz
 
 [Sadržaj](#sadržaj)
 
@@ -36,94 +247,104 @@ Uradjena je u obliku pitanja i odgovora o uobičajenim zadacima koje biste mogli
 
 Ukratko, imamo dve aplikacije, "Events" i "Entities". Modeli su:
 
-- Events: Epic, Event, EventHero, EventVillain
-- Entities: Category, Origin, Entity, Hero, Vilian
+- Events:
+  - Epic,
+  - Event,
+  - EventHero,
+  - EventVillain
+- Entities:
+  - Category,
+  - Origin,
+  - Entity,
+  - Hero,
+  - Vilian
 
-Pored toga ovde su i dodatni tekstovi i Django kod prikupljeni po internetu a u vezi raznih kritičnih mesta u Django. Ponešto je i sam autor priložio, ali to je zaista minimalno. Jedino vredno spomena je prevodjenje i stavljanje u kontekst tema već pomenute **Django Admin Cookbok**.
+Pored toga ovde su i dodatni tekstovi i Django kod prikupljeni po internetu a u vezi raznih kritičnih mesta u Django adminu. Ponešto je i sam autor priložio, ali to je zaista minimalno. Jedino vredno spomena je prevodjenje i stavljanje u kontekst tema već pomenute **Django Admin Cookbok**.
+
+[Sadržaj](#sadržaj)
 
 ### Prvi Django admin
 
 Ovaj tutorijal će vas voditi kroz stvaranje prilagođenog Django admina.
 
-- Napravi novo razvojno okruženje:
+#### Izgradnja razvojnog okruženja
 
-    ```shell
-    python3 -m venv django-venv
-    ```
+Napravi novo razvojno okruženje:
 
-- Pređi u direktorijum koji je kreiran:
+```shell
+python3 -m venv django-venv
+```
 
-    ```shell
-    cd django-venv
-    ```
+Aktiviraj okruženje:
 
-- Aktiviraj okruženje:
+```shell
+django-venv/bin/activate
+```
 
-    ```shell
-    bin/activate
-    ```
+Koristi pip u komandnoj liniji za instaliranje Djanga:
 
-- Koristi pip u komandnoj liniji za instaliranje Djanga:
+```shell
+(django-venv) python3 -m pip install Django
+```
 
-    ```shell
-    (django-venv) python3 -m pip install Django
-    ```
+#### Izgradnja novog projekta
 
 Sada koristi `django-admin` komandu za kreiranje novog projekta.
 
 > [!Note]  
 > Tri su načina:
 >
-> - Prosledi ime projekta, `project_name`, biće napravljen novi direktorijum sa prosledjenim
-> imenom i u njemu subdirektorijum sa istim imenom i fajlovima projekta:
+> - Prosledi ime projekta, `project_name`, biće napravljen novi direktorijum sa prosledjenim imenom i u njemu subdirektorijum sa istim imenom i fajlovima projekta:
 >
 >    ```shell
 >    (django-venv) django-admin startproject project_name
 >    ```
 >
-> - Prosledi ime projekta, `project_name` i ime projektnog direktorijuma. Projektni direktorijum
-> već mora postojati. Biće stvoren novi `project_name` direktorijum sa fajlovima projekta unutar
-> projektnog direktorijuma:
+> - Prosledi ime projekta, `project_name` i ime projektnog direktorijuma. Projektni direktorijum već mora postojati. Biće stvoren novi `project_name` direktorijum sa fajlovima projekta unutar projektnog direktorijuma:
 >
 >    ```shell
 >    (django-venv) django-admin startproject project_name project_dir_name
 >    ```
 >
-> - Prosledi ime projekta, `project_name`, biće stvoren novi `project_name` direktorijum sa
-> fajlovima projekta, unutar tekućeg direktorijuma:
+> - Prosledi ime projekta, `project_name`, biće stvoren novi `project_name` direktorijum sa fajlovima projekta, unutar tekućeg (`project_dir_name`) direktorijuma:
 >
 >    ```shell
 >    (django-venv) django-admin startproject project_name .
->   ```
->
-> Poslednji slučaj je najočigledniji, ali morate imati već kreiran projektni direktorijum.
+>   ```  
 
-Sada predji u direktorijum projekta i počni sa postavkom:
+Autor predlaže treći način, s'time da je workflow sledeći:
 
-```shell
-$cd project_dir_name
-```
+> ```shell
+> mkdir project_dir_name
+> cd project_dir_name
+> (django-venv) django-admin startproject project_name .
+
+Django-admin će kreirati `project_name` direktorijum u tekućem (`project_dir_name`) direktorijumu sa fajlovima projekta.
+
+Od sada pa nadalje `project_dir_name` je `BASE_DIR` projekta, direktorijum koji sadaži `manage.py` fajl i odakle se pokreću sve komande na projektu. Pored toga tu je i `project_name` direktorijum, koji sadrži fajlove za podešavanje projekta.
+
+#### Izgradnja baze podataka
 
 Sledeći korak je stvaranje baze podataka koja će se pojaviti kao nova SQLite datoteka sa imenom `db.sqlite3`. Da bismo to uradili, koristimo `manage.py` fajl iz direktorijuma projekta, koju je kreirala `django-admin startproject` komanda. Komanda koju sada želimo je `migrate`, koja može da kreira osnovne tabele baze podataka.
 
 ```shell
-(django-venv) $python manage.py migrate
+(django-venv) python manage.py migrate
 ```
 
 Na kraju pokreni Django ugradjeni web server:
 
 ```shell
-$python manage.py runserver
+python manage.py runserver
 ```
 
-Poseti: ```html localhost:8000/``` u pregledaču da bi video Django u akciji.
+Poseti: `localhost:8000/` u pregledaču da bi video Django u akciji.
 
 Možeš da kreiraš novu aplikaciju pomoću Django `startapp` komande. Vrati se na terminal i pritisni
 kombinaciju CTRL-C, koja će završiti test server i vratiti nas u komandnu liniju. Zatim pomoću
 `manage.py` kreiraj aplikaciju.
 
 ```shell
-$python3 manage.py startapp app_name
+python3 manage.py startapp app_name
 ```
 
 Sada bi u vašem projektnom direktorijumu trebalo da postoji novi direktorijum `app_name`. Ako pogledate unutra, videćete da je Django stvorio niz fajlova, koji su kostur svake aplikacije.
@@ -155,9 +376,11 @@ INSTALLED_APPS = (
 
 To je sve. Možete početi sa stvaranjem modela.
 
+[Sadržaj](#sadržaj)
+
 ### Modeli koji se koriste u ovom tutorijalu
 
-#### App Entities
+#### App Entities**
 
 ```py
 class Category(models.Model):
