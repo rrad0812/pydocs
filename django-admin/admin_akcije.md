@@ -1,3 +1,4 @@
+
 # Admin akcije
 
 ## Sadržaj
@@ -14,15 +15,13 @@
   - [Onemogućavanje svih akcija za određeni ModelAdmin](#onemogućavanje-svih-akcija-za-određeni-modeladmin)
   - [Uslovno omogućavanje ili onemogućavanje akcija](#uslovno-omogućavanje-ili-onemogućavanje-akcija)
 - [Postavljanje dozvola za akcije](#postavljanje-dozvola-za-akcije)
-- [Prilagodjene Django admin akcije sa prolaznom stranom](#prilagodjene-django-admin-akcije-sa-prolaznom-stranom)
+- [Prilagodjene admin akcije sa prolaznom stranom](#prilagodjene-admin-akcije-sa-prolaznom-stranom)
   - [Dodavanje prolazne strane](#dodavanje-prolazne-strane)
   - [Dodavanje forme da izvrši našu akciju](#dodavanje-forme-da-izvrši-našu-akciju)
-- [Admin akciju sa ili bez prolazne strane](#admin-akcija-sa-ili-bez-prolazne-strane)
-  - [Admin akcija bez prolazne strane](#admin-akcija-bez-prolazne-strane)
-  - [Admin akcija sa prolaznom stranom](#admin-akcija-sa-prolaznom-stranom)
-- Kako dodati prilagodjenu akcijsku dugmad na listview stranu?
-- Prilagodjene akcije na pojedinačnim objektima
-- Prilagodjene akcije po objektu modela
+- [Admin akcija bez prolazne stranom](#admin-akcija-bez-prolazne-strane)
+- [Kako dodati prilagodjenu akcijsku dugmad na listview stranu?](#kako-dodati-prilagodjenu-akcijsku-dugmad-na-listview-stranu)
+  - [Prilagodjene akcije na pojedinačnim objektima](#prilagodjene-akcije-na-pojedinačnim-objektima)
+  - [Prilagodjene akcije po objektu modela](#prilagodjene-akcije-po-objektu-modela)
 
 Osnovni tok Django admina je, ukratko, "izaberite objekat, pa ga promenite, zatim gsačuvajte promene“. Ovo dobro funkcioniše za većinu slučajeva upotrebe. Međutim, ako trebate da napravite istu promenu na više objekata odjednom, ovaj tok posla može biti prilično dosadan. U tim slučajevima, Django admin vam omogućava da napišete i registrujete "akcije" - funkcije koje se pozivaju sa listom objekata izabranih na `listview` stranici.
 
@@ -62,9 +61,9 @@ Uobičajeni zadatak koji bismo mogli obaviti sa ovakvim modelom je ažuriranje s
 
 Prvo ćemo morati da napišemo funkciju koja se poziva kada se akcija pokrene u adminu. Akcione funkcije su regularne funkcije koje uzimaju tri argumenta:
 
+- `ModelAdmin` objekat,
 - `HttpRequest` koji predstavlja trenutni zahtev,
 - `QuerySet` koji sadrži skup objekata koje je korisnik izabrao.
-- `ModelAdmin` objekat,
 
 Našoj funkciji za ažuriranje zapisa neće trebati `ModelAdmin objekt` ili `request` ali ćemo koristiti `queryset`:
 
@@ -144,11 +143,11 @@ class ArticleAdmin(admin.ModelAdmin):
         queryset.update(status='p')
 ```
 
-Preselili smo funkciju `make_published` u klasu `ModelAdmin`, prvi parametar je sada `self`, i na kraju `make_published` je string u listi actions, umesto direktne reference na callable. Ovo govori da je akcija ModelAdmin metoda.
+Preselili smo funkciju `make_published` u klasu `ModelAdmin`. Prvi parametar je sada `self`, i na kraju `make_published` je string u listi actions, umesto direktne reference na callable. Ovo govori da je akcija ModelAdmin metoda.
 
 Definisanje akcija kao metoda daje akciji idiomatičniji pristup ModelAdmin-a samog sebi, omogućavajući akciji da pozove bilo koju od metoda koje pruža admin.
 
-Na primer, možemo koristiti self za fleširanje poruke korisniku obaveštavajući ga da je akcija uspela:
+Na primer, možemo koristiti self za "fleš" poruke korisniku obaveštavajući ga da je akcija uspela:
 
 ```py
 from django.contrib import messages
@@ -281,7 +280,8 @@ class ArticleAdmin(admin.ModelAdmin):actions = ['make_published']
         queryset.update(status='p')
     
     def has_publish_permission(self, request):
-        """Does the user have the publish permission?"""opts = self.opts
+        """Does the user have the publish permission?"""
+        opts = self.opts
         codename = get_permission_codename('publish', opts)
         return request.user.has_perm('%s.%s' % (opts.app_label, codename))
 ```
@@ -294,7 +294,7 @@ class ArticleAdmin(admin.ModelAdmin):actions = ['make_published']
 
 [Sadržaj](#sadržaj)
 
-### Prilagodjene Django admin akcije sa prolaznom stranom
+### Prilagodjene admin akcije sa prolaznom stranom
 
 Kreiranje akcije u Django adminu je vrlo jednostavno. Morate definisati funkciju koja je potom referencirana u ModelAdmin definiciji akcija. Ova funkcija če prihvatiti tri argumenta:
 
@@ -302,7 +302,7 @@ Kreiranje akcije u Django adminu je vrlo jednostavno. Morate definisati funkciju
 - HTTP request
 - queryset izabranih modela
 
-OrderModel sa korisničkom akcijom koja ažurira status za izabrane stavke:
+"OrderAdmin" sa korisničkom akcijom koja ažurira status za izabrane stavke:
 
 `admin.py`
 
@@ -315,7 +315,7 @@ class OrderAdmin(admin.ModelAdmin):
         update_status.short_description = "Update status"
 ```
 
-`short_description` property se koristi za prilagodjenu labelu u padajućoj listi akcija.
+`short_description` property se koristi za prilagodjenje labele u padajućoj listi akcija.
 
 [Sadržaj](#sadržaj)
 
@@ -325,26 +325,29 @@ Da biste dodali prolaznu stranu, nastavićete sa gornjim kodom, ali umesto da od
 
 `admin.py`
 
+```py
 from django.shortcuts import render
 class OrderAdmin(admin.ModelAdmin):
+    actions = ['update_status']
+    
+    def update_status(self, request, queryset):
+        return render(request, 'admin/order_intermediate.html', context={})
 
-actions = ['update_status']
-def update_status(self, request, queryset):
-
-return render(request, 'admin/order_intermediate.html', context={})
-update_status.short_description = "Update status"
+        update_status.short_description = "Update status"
+```
 
 Da zadržimo admin look & feel proširimo djangov admin osnovni šablon:
 
 `admin/order_intermediate.html`
 
+```html
 {% extends "admin/base_site.html" %}
 {% block content %}
 Are you sure you want to execute this action?
 {% endblock %}
+```
 
-Pokušajte sa ovim kodom i bičete odvedeni na prolaznu stranu koja vas pita da li želite da izvršite izabranu
-akciju. Medjutim ne želite opciju koja ne radi ništa. Kakoto da poboljšamo?
+Pokušajte sa ovim kodom i bičete odvedeni na prolaznu stranu koja vas pita da li želite da izvršite izabranu akciju. Medjutim ne želite opciju koja ne radi ništa. Kako to da poboljšamo?
 
 [Sadržaj](#sadržaj)
 
@@ -352,9 +355,9 @@ akciju. Medjutim ne želite opciju koja ne radi ništa. Kakoto da poboljšamo?
 
 Prvo dodajmo jednostavnu formu na naš šablon. Koristimo django form iz našeg konteksta, za sada pišemo kod ručno.Tri su važne form osobine koje morate da uključite:
 
-1. action key, koji bi trebao da mapira na prilagodjenu akciju,
-2. apply key, koji može biti bilo šta. Ovo je za hvatanje našeg submission kasnije u pogledu.
-3. Izabrane stavke, u formi selected_action koji bi trebalo da su lista pk izabranih stavki.
+1. `action key`, koji bi trebao da mapira na prilagodjenu akciju,
+2. `apply key`, koji može biti bilo šta. Ovo je za hvatanje našeg submission kasnije u pogledu.
+3. Izabrane stavke, u formi `selected_action` koji bi trebalo da su lista `pk` izabranih stavki.
 
 Sada naš šablon izgleda ovako:
 
@@ -369,13 +372,10 @@ Sada naš šablon izgleda ovako:
 Are you sure you want to execute this action on the selected items?
 </p>
 {% for order in orders %}
-
 <p>
 {{ order }}
-
 </p>
 <input type="hidden" name="_selected_action" value="{{ order.pk }}" />
-
 {% endfor %}
 <input type="hidden" name="action" value="update_status" />
 <input type="submit" name="apply" value="Update status"/>
@@ -383,7 +383,7 @@ Are you sure you want to execute this action on the selected items?
 {% endblock %}
 ```
 
-Primetite da smo dodali hidden polja za _selected_action vrednosti kao i action property. Sada za hvatanje form submit-a, u našoj admin akciji:
+Primetite da smo dodali `hidden` polja za `_selected_action` vrednosti kao i `action` property. Sada za hvatanje form submit-a, u našoj admin akciji:
 
 `admin.py`
 
@@ -395,9 +395,8 @@ class OrderAdmin(admin.ModelAdmin):
 actions = ['update_status']
 def update_status(self, request, queryset):
 
-    """All requests here will actually be of type POST
-    so we will need to check for our special key
-    'apply' rather than the actual request type"""
+    """All requests here will actually be of type POST so we will need to check 
+       for our special key 'apply' rather than the actual request type"""
 
     if 'apply' in request.POST:
         # The user clicked submit on the intermediate form.
@@ -405,7 +404,7 @@ def update_status(self, request, queryset):
         queryset.update(status='NEW_STATUS')
         # Redirect to our admin view after our update has
         # completed with a nice little info message
-        saying# our models have been updated:
+        # saying our models have been updated:
         self.message_user(request,
             "Changed status on {} orders".format(queryset.count()))
 
@@ -415,11 +414,11 @@ def update_status(self, request, queryset):
         context={'orders':queryset})
 ```
 
-### Admin akcija sa ili bez prolazne strane
+[Sadržaj](#sadržaj)
 
-#### Admin akcija bez prolazne strane
+### Admin akcija bez prolazne strane
 
-Jedan od mojih projekata ima deo za parsiranje. Ponekad moram ručno ponovo da parsiramplejlistu (na primer kada ažuriram kod parsera nakon ispravke greške). Tako sam pronašao kul način da dodam metodu u Django ModelAdmin koja se može pokrenuti iz admina.
+Jedan od mojih projekata ima deo za parsiranje. Ponekad moram ručno ponovo da parsiram plejlistu (na primer kada ažuriram kod parsera nakon ispravke greške). Tako sam pronašao kul način da dodam metodu u Django ModelAdmin koja se može pokrenuti iz admina.
 
 `your_app/admin.py`
 
@@ -427,185 +426,39 @@ Jedan od mojih projekata ima deo za parsiranje. Ponekad moram ručno ponovo da p
 from django.contrib import admin
 from .models import Playlist
 from .tasks import parse_playlist
+
 @admin.register(Playlist)
 class PlaylistAdmin(admin.ModelAdmin):
-
-actions = ['parse']
-def parse(self, request, queryset):
-
-queryset.update(is_parsed=False)
-for playlist in queryset.all():
-
-parse_playlist.delay(url=playlist.url)
-self.message_user(request, "Playlists will be reparsed soon")
+    actions = ['parse']
+    
+    def parse(self, request, queryset):
+        queryset.update(is_parsed=False)
+        for playlist in queryset.all():
+            parse_playlist.delay(url=playlist.url)
+            self.message_user(request, "Playlists will be reparsed soon")
 ```
 
 Interesantni delovi:
 
-- Samo menjam Playlist.is_parsed polje na False, jer će moja lista biti parsirana uskoro.
+- Menjam "Playlist.is_parsed" polje na `False`, jer će moja lista biti parsirana uskoro.
 
-queryset.update(is_parsed=False)
+    ```py
+    queryset.update(is_parsed=False)
+    ```
 
-- Celery task parse_playlist i u toj liniji se task odlaže sa .delay() metodom.
-parse_playlist.delay(url=playlist.url)
+- Celery task "parse_playlist" i u toj liniji se task odlaže sa `.delay()` metodom.
+
+    ```py
+    parse_playlist.delay(url=playlist.url)
+    ```
 
 - Poruka korisniku koja če se pojaviti kada se parsiranje završi.
-self.message_user()
 
-#### Admin akcija sa prolaznom stranom
+    ```py
+    self.message_user()
+    ```
 
-Dobro je pokretati taskove kao što sam prikazao gore. Ali postoje slučajevi kada treba da obezbedite više podataka da bi pokrenuli task. Treba da napišemo jedan broadcast metod koji če slati poruke nekim Telegram bot korisnicima.
-
-Plan je: Izabrati korisnike, klikni na broadcast akciju, prikaži broadcast tekst poruku, pritisni Run i dozvoli pozadinskim taskovima da odrade posao.
-
-Potrebno je kreirati prolaznu stranu sa formom podataka od Django admin korisnika. Treba kreirati/editovati fajlove aplikacije:
-
-- your_app/forms.py,
-- your_app/admin.py,
-- your_app/templates/admin/broadcast_message.html.
-
-`your_app/forms.py`
-
-from django import
-forms
-from .models import Botclass
-BroadcastForm(forms.Form):
-
-_selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-broadcast_text = forms.CharField(widget=forms.Textarea)
-bot = forms.ModelChoiceField(Bot.objects)
-
-Ovde je:
-
-- _selected_action - Ovo če biti za transfer izabranih stavki podataka iz admina u kod.
-- broadcast_text - Tekst brodcast poruke.
-- bot - U bek-endu imam nekoliko Telegram botova.
-
-Zato želim da izaberem Bot instancu koja će da brodkastuje poruku.
-
-Fajl akcije treba da renderuje stranu sa formom gde ćete dodati parametre. Kada je prolazna strana napunjena
-i korisnik pritisnuo < submit > dugme, treba da izdvojimoparametre iz POST request-a i pokrenemo željeni
-pozadinski task.
-
-`your_app/admin.py`
-
-...
-imports
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-
-actions = ['broadcast'] register method as action
-
-def broadcast(self, request, queryset):
-
-if 'apply' in request.POST: if user pressed 'apply' on intermediate page
-# Cool thing is that params will have the same names as in forms.py
-broadcast_message_text = request.POST["broadcast_text"]
-bot_id = request.POST["bot"]
-# Get data from models using the params - maybe not the best way,
-bot_token = Bot.objects.filter(id=bot_id).first().token
-user_ids = [u.user_id for u in queryset]
-# Run background task that will send broadcast messages
-broadcast_message.delay(bot_token, user_ids, broadcast_message_text)
-# Show alert that everything is coolself.
-message_user(request,
-
-"Broadcasting of %s messages has been started" %len(user_ids))
-# Return to previous page
-return HttpResponseRedirect(request.get_full_path())
-# Create form and pass the data which objects were selected
-# before triggering 'broadcast' action
-# We create an intermediate page right here
-form = BroadcastForm(initial={'_selected_action':
-
-queryset.values_list('id', flat=True)})
-# We need to create a template of intermediate
-
-page
-# with form - but this is really easy
-return render(request, "admin/broadcast_message.html",
-
-{'items': queryset, 'form': form})
-<!-- my_django_app/templates/admin/broadcast_message.html
-<!-- This block will be included to django admin basic template
-{% extends "admin/base_site.html" %}
-{% block content %}
-
-<form action="" method="post">{% csrf_token %}
-<!-- The code of the form with all input fields will be
-
-automatically generated by Django -->
-{{ form }}
-<!-- Show the list of selected objects on the previous step-->
-<p>Broadcast Message will be sent to these users:</p>
-<ul>{{ items|unordered_list }}</ul>
-
-<!-- Link the action name in hidden params
-<input type="hidden" name="action" value="broadcast" />
-
-<!-- Submit! Apply!
-<input type="submit" name="apply" value="Send" />
-
-</form>
-{% endblock %}
-
-Django forma će generisati polja forme - pogledaj {{ form }}. Ovo je najlepši deo ovog šablona. Možete copy-paste ovaj šablon za kreiranje više akcija.
-
-Plan je:
-1. Zadržati Django admin "look and feel"
-2. Imati lepu admin poruku "X posts were successfully updated"
-
-Direktno u ModelAdmin sekcji, kreiraj unutrašnju klasu za novu formu (za izbor taga), i funkciju za procesiranje forme kao u normalnom pogledu. Naravno, treba dodati novi metod u listu akcija.
-
-actions = ['add_tag']
-class AddTagForm(forms.Form):
-
-_selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-tag = forms.ModelChoiceField(Tag.objects)
-def add_tag(self, request, queryset):form = None
-if 'apply' in request.POST:
-
-form = self.AddTagForm(request.POST)
-if form.is_valid():
-
-tag = form.cleaned_data['tag']
-count = 0
-for article in queryset: article.tags.add(tag) count += 1
-plural = ''
-if count != 1: plural = 's'
-self.message_user(request,
-
-"Successfully added tag %s to %d article%s." % (tag, count, plural))
-return HttpResponseRedirect(request.get_full_path())
-
-if not form:
-form = self.AddTagForm(initial={'_selected_action': request.POST.
-
-getlist(admin.ACTION_CHECKBOX_NAME)})
-return render_to_response('admin/add_tag.html', {'articles': queryset,
-
-'tag_form': form, })
-add_tag.short_description = "Add tag to articles"
-
-# I ovde je prolazna strana, koja koristi admin look & feel i locirana je u
-#templates/admin/add_tag.html.
-
-{% extends "admin/base_site.html" %}
-{% block content %}
-
-<p>Select tag to apply:</p>
-
-<form action="" method="post">
-{{ tag_form }}
-<p>The tag will be applied to:</p>
-<ul>{{ articles|unordered_list }}</ul>
-<input type="hidden" name="action" value="add_tag" />
-<input type="submit" name="apply" value="Apply tag" />
-
-</form>
-{% endblock %}
-
-Sakriveno polje je tu da bi Django prepoznao form submission kao admin akciju.
+[Sadržaj](#sadržaj)
 
 ### Kako dodati prilagodjenu akcijsku dugmad na listview stranu?
 
@@ -613,36 +466,37 @@ UMSRA je odlučila da su, ukoliko imaju dovoljno kriptonita, svi Heroji su smrtn
 
 Budući da utiče na sve junake, bez obzira na odabir, ovo mora biti zasebno dugme, a ne padajući meni akcije. Prvo ćemo promeniti šablon na HeroAdmin-u kako bismo mogli da dodamo dva dugmeta:
 
+```py
 @admin.register(Hero)
 class HeroAdmin(admin.ModelAdmin, ExportCsvMixin):
+    change_list_template = "entities/heroes_changelist.html"
+```
 
-change_list_template =
-"entities/heroes_changelist.html"
+Tada ćemo nadjačati `get_urls`, i dodati `set_immortal` i `set_mortal` metode na ModelAdmin.
 
-Tada ćemo nadjačati get_urls, i dodati set_immortal i set_mortal metode na ModelAdmin.
-
+```py
 def get_urls(self):
-urls = super().get_urls()
-my_urls = [
-
-path('immortal/', self.set_immortal),
-path('mortal/', self.set_mortal),
-
-]
-return my_urls + urls
+    urls = super().get_urls()
+    my_urls = [
+        path('immortal/', self.set_immortal),
+        path('mortal/', self.set_mortal),
+    ]
+    return my_urls + urls
 
 def set_immortal(self, request):
-self.model.objects.all().update(is_immortal=True)
-self.message_user(request, "All heroes are now immortal"
-return HttpResponseRedirect("../")
+    self.model.objects.all().update(is_immortal=True)
+    self.message_user(request, "All heroes are now immortal"
+    return HttpResponseRedirect("../")
 
 def set_mortal(self, request):
-self.model.objects.all().update(is_immortal=False)
-self.message_user(request, "All heroes are now mortal")
-return HttpResponseRedirect("../")
+    self.model.objects.all().update(is_immortal=False)
+    self.message_user(request, "All heroes are now mortal")
+    return HttpResponseRedirect("../")
+```
 
-Na kraju, kreirajmo entities/heroes_changelist.html šablon proširenjem admin/change_list.html:
+Na kraju, kreirajmo `entities/heroes_changelist.html` šablon proširenjem `admin/change_list.html`:
 
+```html
 {% extends 'admin/change_list.html' %}
 {% block object-tools %}
 
@@ -657,8 +511,11 @@ Na kraju, kreirajmo entities/heroes_changelist.html šablon proširenjem admin/c
 {{ block.super }}
 
 {% endblock %}
+```
 
-### Prilagodjene akcije na pojedinačnim objektima
+[Sadržaj](#sadržaj)
+
+#### Prilagodjene akcije na pojedinačnim objektima
 
 Grupne admin akcije su neefikasne na pojedinačnim objektima. Na primer, za brisanje jednog korisnika
 treba da sledimo sledeće korake.
@@ -669,69 +526,77 @@ treba da sledimo sledeće korake.
 4. Kliknuti na Go dugme.
 5. Potvrditi da objekat treba da bude obrisan.
 
-Za brisanje jednog zapis imamo pet klikova. To je previše za jednu akciju. Da pojednostavimo proces, napravimo dugme na nivou vrste (objekta). To može biti postignuto pisanjem funkcije koja će insertovati delete dugme za svaki zapis.
+Za brisanje jednog zapisa imamo pet klikova. To je previše za jednu akciju. Da pojednostavimo proces, napravimo dugme na nivou vrste (objekta). To može biti postignuto pisanjem funkcije koja će insertovati delete dugme za svaki zapis.
 
 ModelAdmin instance pružaju set imenovanih URL-ova za CRUD operacije. Dobijanje objekt url-a za jednu stranu biće:
 
+```py
 {{ app_label }}_{{model_name }}_{{ page }}
+```
 
 Na primer, za dobijanje delete URL-a za book objekat možemo pozvati
 
+```py
 reverse(‘admin:book_book_delete’, args=[book_id])
+```
 
-Možemo dodati delet edugme i dodati ga u list_display tako da je delete dugme raspoloživo za svaki pojedinačni objekat.
+Možemo dodati "delete" dugme i dodati ga u `list_display` tako da je delete dugme raspoloživo za svaki pojedinačni objekat.
 
+```py
 from django.contrib import admin
-from django.utils.html import
-format_htmlfrom book.models import Book
+from django.utils.html import format_html
+from book.models import Book
+
 class BookAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'author', 'is_available', 'delete')
 
-list_display = ('id', 'name', 'author', 'is_available', 'delete')
-def delete(self, obj):
-
-view_name = "admin:{}_{}_delete".format(obj._meta.app_label,
-obj._meta.model_name)
-link = reverse(view_name, args=[book.pk])
-html = '<input type="button"
-onclick="location.href=\'{}\'"value = "Delete"
-/>'.format(link)
-return format_html(html)
+    def delete(self, obj):
+        view_name = "admin:{}_{}_delete".format(obj._meta.app_label,
+        obj._meta.model_name)
+        link = reverse(view_name, args=[book.pk])
+        html = '<input type="button" onclick="location.href=\'{}\'"value = "Delete"/>'.format(link)
+        return format_html(html)
+```
 
 Sada u adminu imamo delete dugme za svaki pojedinačni objekat. Za brisanje jednog objekta je potreban klik na delete dugme, i potom drugi klik za potvrdu brisanja.
 
-U prethodnom primeru mi smo koristili ugradjeni admin deletepogled. Možemo takodje napraviti prilagodjeni pogled i povezati ga sa prilagodjenom akcijom na individualni objekat. Na primer, možemo dodati dugme koje će markirati status knjige na raspoloživ.
+U prethodnom primeru mi smo koristili ugradjeni admin "delete" pogled. Možemo takodje napraviti prilagodjeni pogled i povezati ga sa prilagodjenom akcijom na individualni objekat. Na primer, možemo dodati dugme koje će markirati status knjige na raspoloživ.
 
-### Prilagodjene akcije po objektu modela
+[Sadržaj](#sadržaj)
+
+#### Prilagodjene akcije po objektu modela
 
 Ponekad želite da izvršite odredjenu akciju samo na jednom objektu. ‘actions’ padajućalista pravi to mogućim, al je potrebno nekoliko klikova da bi se izvršila. Postoji i jednostavniji način, implementiranje hiperlinka za svaku vrstu pojedinačno sa željenom akcijom:
 
+```py
 class PictureAdmin(admin.ModelAdmin):
     list_fields = (..., 'mail_link', )
+
     def mail_link(self, obj):
         dest = reverse('admin:myapp_pictures_mail_author',
         kwargs={'pk': obj.pk})
-        return format_html(
+        return format_html('<a href="{url}">{title}</a>', url = dest, title='send mail')
+    
+    mail_link.short_description = 'Show some love'
+    mail_link.allow_tags = True
 
-'<a href="{url}">{title}</a>',url=dest, title='send mail')
-mail_link.short_description = 'Show some love'
-mail_link.allow_tags = True
+
 def get_urls(self):
-
-urls = [
-url('^(?P<pk>\d+)/sendaletter/?$',
-
-self.admin_site.admin_view(self.mail_view),
-name='myapp_pictures_mail_author'),
-
-]
-return urls + super(PictureAdmin, self).get_urls()
+    urls = [
+        url('^(?P<pk>\d+)/sendaletter/?$',
+        self.admin_site.admin_view(self.mail_view),
+        name='myapp_pictures_mail_author'),
+    ]
+    return urls + super(PictureAdmin, self).get_urls()
 
 def mail_view(self, request, *args, **kwargs):
-obj = get_object_or_404(Picture, pk=kwargs['pk'])
-send_mail('Feel the granny\'s love', 'Hey, she loves your pet!',
-
-'granny@yoursite.com', [obj.author.email])
-self.message_user(request, 'The letter is on its way')
-return redirect(reverse('admin:myapp_picture_changelist'))
+    obj = get_object_or_404(Picture, pk=kwargs['pk'])
+    send_mail('Feel the granny\'s love', 'Hey, she loves your pet!',
+        'granny@yoursite.com', [obj.author.email])
+    self.message_user(request, 'The letter is on its way')
+    return redirect(reverse('admin:myapp_picture_changelist'))
+```
 
 Link se pojavljuje pored svake vrste, na kraju, klikom na njega biće poslat mejl.
+
+[Sadržaj](#sadržaj)
