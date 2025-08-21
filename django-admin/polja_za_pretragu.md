@@ -404,7 +404,7 @@ Book.objects.djangoql('name ~ "Peace") uses BookSchema
 
 Prepisivanje default queryset šeme sa `AnotherSchema`:
 
-```
+```py
 Book.objects.djangoql('name ~ "Peace", schema=AnotherSchema)
 ```
 
