@@ -217,15 +217,15 @@ Lazarevac, avgust 2025.
     - Middleware softver za automatski prevod
     - Prefiks jezika šablona URL-a
     - Ograničavanje izbor jezika
-  - Prevodjenje
-    - Gotove fraze
-    - Prilagođeni admin naslovi
-    - Imena aplikacija
-    - Imena modela
-    - Pokreni komande
-  - Bonus: Dugmad za jezike
-    - Prekidač prefiksa jezičkog koda
-    - Prekidač prefiksa šablonskog filtera
+    - Prevodjenje
+      - Gotove fraze
+      - Prilagođeni admin naslovi
+      - Imena aplikacija
+      - Imena modela
+      - Pokreni komande
+      - Bonus: Dugmad za jezike
+        - Prekidač prefiksa jezičkog koda
+        - Prekidač prefiksa šablonskog filtera
     - Nadjačavanje Admin šablona
     - Završni prikaz
 
