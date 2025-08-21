@@ -11,8 +11,8 @@
   - [Uklanjanje Count upita](#uklanjanje-count-upita)
   - [Približno COUNT](#približno-count)
   - [Paginacija sa setovanjem ključa](#paginacija-sa-setovanjem-ključa)
-- Korišćenje dodatka dj-pagination za Django
-- Zaključak
+- [Korišćenje dodatka `dj-pagination za Django`](#korišćenje-dodatka-dj-pagination)
+- [Zaključak paginacija](#zaključak-paginacija)
 
 Moglo bi se reći da većina veb okvira koristi naivan pristup paginaciji. Korišćenjem  PostgreSQL `COUNT`, `LIMIT` i `OFFSET` radi dobro za većinu veb aplikacija, ali ako imate tabele sa milionima zapisa ili više, degradira performanse brzo.
 
@@ -236,68 +236,79 @@ Kada koristite paginaciju ključeva zajedno sa pravim indeksom, videćete znača
 
 Ova metoda takođe štiti od oskudnih podataka. Ako je korisnik izbrisan i redosled više nije uzastopan u tabeli, to ne utiče na paginaciju skupova ključeva; bez problema će preskočiti nedostajuću vrednost.
 
-13.6.3.3.2 Kompromisi paginacije skupova ključeva
+[Sadržaj](#sadržaj)
 
-Paginacija ključeva dolazi sa nekoliko kompromisa. Bez pomaka, ne znate tačno koliko stranica ima u tabeli niti na kom se broju stranice trenutno nalazite. Osim toga, za paginaciju skupova ključeva potrebno je sortirati polje na vašem modelu. Sekvencijalni ID-ovi i polja datuma dobro funkcionišu.
+#### Kompromisi paginacije skupova ključeva
 
-13.6.4 Korišćenje dodatka dj-pagination za Django
+Paginacija ključeva dolazi sa nekoliko kompromisa. Bez `OFFSET`-a, ne znate tačno koliko stranica ima u tabeli niti na kom se broju stranice trenutno nalazite. Osim toga, za paginaciju skupova ključeva potrebno je sortirati polje na vašem modelu. Sekvencijalni ID-ovi i polja datuma dobro funkcionišu.
 
-Nažalost, nisam uspeo da pronađem biblioteku koja proširuje Djangov osnovni Paginator za dodavanje paginacije skupova ključeva. Admin tabela zahteva paginator tog tipa, pa ću iste generisane podatke demonstrirati u novom prikazu aplikacije pomoću dodatka dj-pagination.
+[Sadržaj](#sadržaj)
 
-Dodajte aplikaciju u svoj INSTALLED_APPS i middleware - dokumenti dobro objašnjavaju. Zatim kreirajte prikaz u aplikaciji Korisnici:
+### Korišćenje dodatka dj-pagination
 
-# {project}/users/views.py
+Nažalost, nisam uspeo da pronađem biblioteku koja proširuje Djangov osnovni `Paginator` za dodavanje paginacije skupova ključeva. Admin tabela zahteva paginator tog tipa, pa ću iste generisane podatke demonstrirati u novom prikazu aplikacije pomoću dodatka `dj-pagination`.
+
+Dodajte aplikaciju u svoj `INSTALLED_APPS` i middleware - dokumenti dobro objašnjavaju. Zatim kreirajte prikaz u aplikaciji Users:
+
+`{project}/users/views.py`
+
+```py
 from django.shortcuts import render from .models import User
+
 def index(request):
+  context = {
+    'users': User.objects.order_by('id').all()
+  }
+  return render(request, 'users/index.html', context)
+```
 
-context = {
-'users': User.objects.order_by('id').all()
+Ovaj kod omogućava korisnicima da budu QuerySet dostupni u kontekstu prikaza i kaže mu da prikaže datoteku šablona. Zatim dodajte direktorijum šablona u svoj `TEMPLATES` objekat podešavanja i dodajte novu datoteku šablona:
 
-}
-return render(request, 'users/index.html', context)
+`{project}/templates/users/index.html`
 
-Ovaj kod omogućava korisnicima da budu QuerySet dostupni u kontekstu prikaza i kaže mu da prikaže
-datoteku predloška. Zatim dodajte direktorijum predloška u svoj TEMPLATES objekat podešavanja i dodajte
-
-novu datoteku šablona:
-
-# {project}/templates/users/index.html
+```html
 {% load pagination_tags %}
 {% autopaginate users %}
 {% for user in users %}
 {{ user.name }}
 {% endfor %}
 {% paginate %}
+```
 
-U stvarnoj aplikaciji, dodali biste dodatno označavanje i oblikovanje kako biste prikazali listu korisnika, ali to pokazuje oznake koje vam dj-pagination postaju dostupne.
+U stvarnoj aplikaciji, dodali biste dodatno označavanje i oblikovanje kako biste prikazali listu korisnika, ali to pokazuje oznake koje vam `dj-pagination` postaju dostupne.
 
-Sada kada imate prikaz i predložak, napravite urls.py datoteku za usmeravanje zahteva do prikaza:
+Sada kada imate prikaz i šablon, napravite `urls.py` datoteku za usmeravanje zahteva do prikaza:
 
-# {project}/users/urls.py from django.urls import path from . import views
+`{project}/users/urls.py`
+
+```py
+from django.urls import path 
+from . import views
+
 app_name = 'users' urlpatterns = [
-
-# ex: /users/
-path('', views.index, name='index'),
-
+  # ex: /users/
+  path('', views.index, name='index'),
 ]
+```
 
 Na kraju, dodajte ga u svoje URL adrese:
 
 ```py
-// various imports... urlpatterns = [
-// routes...
-path('users/', include('users.urls')),
-
+// various imports... 
+urlpatterns = [
+  // routes...
+  path('users/', include('users.urls')),
 ]
 ```
 
-Sada, kada usmerite pregledač na /users stranicu, videćete listu korisničkih imena sa jednostavnim kontrolama paginacije. Generisani upit vraća rezultate za manje od 100 ms, bez obzira na koju stranicu pređem.
+Sada, kada usmerite pregledač na `/users stranicu`, videćete listu korisničkih imena sa jednostavnim kontrolama paginacije. Generisani upit vraća rezultate za manje od 100 ms, bez obzira na koju stranicu pređem.
 
-Ako tražite način da imate veću kontrolu nad paginacijom skupova ključeva, django-infinite-scroll-pagination
-bi možda bilo vredno pogledati.
+Ako tražite način da imate veću kontrolu nad paginacijom skupova ključeva, `django-infinite-scroll-pagination` bi možda bilo vredno pogledati.
+
+[Sadržaj](#sadržaj)
 
 #### Zaključak paginacija
 
-U ovom članku ste saznali kako funkcioniše paginacija u Djangu. Iako naivna paginacija dobro funkcioniše za male tabele, ova metoda brzo smanjuje performanse kako vaša tabela raste na milione redova. Štaviše, skok do zapisa duboko u tabeli biće veoma spor u upitu koji koristi OFFSET.
+U ovom članku ste saznali kako funkcioniše paginacija u Djangu. Iako naivna paginacija dobro funkcioniše za male tabele, ova metoda brzo smanjuje performanse kako vaša tabela raste na milione redova. Štaviše, skok do zapisa duboko u tabeli biće veoma spor u upitu koji koristi `OFFSET`.
 
-Dobra vest je da možete ubrzati stvari promenom COUNT upita. Pored toga, prelazak na paginaciju skupova tastera poboljšaće performanse pretraživanja stranica i učiniće ih da rade u stalnom vremenu. Django olakšava promenu podrazumevane konfiguracije, dajući vam moć da napravite efikasno rešenje za paginaciju u Djangu.
+Dobra vest je da možete ubrzati stvari promenom `COUNT` upita. Pored toga, prelazak na paginaciju skupova ključeva poboljšaće performanse pretraživanja stranica i učiniće ih da rade u realnom vremenu. Django olakšava promenu podrazumevane konfiguracije, dajući vam moć da napravite efikasno rešenje za paginaciju u Djangu.
