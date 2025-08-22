@@ -43,36 +43,33 @@ Lazarevac, avgust 2025.
     - [Jezičke reference](0504_jezičke_reference.md)
     - [DjangoQL šema](0505_djangql_šema.md)
     - [Prilagodjena polja za pretragu](0506_prilagodjena_polja_za_pretragu.md)
-      - [Prilagodjena pretraga queryseta po annotacijama](0507_djangoql_prilagodjena_polja_za_pretragu.md)
-      - [Prilagođene suggest_options](0508_prilagodjene_suggest_options.md)
-      - [Prilagodjeni search lookup](0509_prilagodjeni_search_lookup.md)
-      - [Puni prilagodjeni search lookup](0510_puni_prilagodjeni_search_lookup.md)
-    - [DjangoQL van admina](0511_djangoql_van%20admina.md)
+    - [Puni prilagodjeni search lookup](0507_puni_prilagodjeni_search_lookup.md)
+    - [DjangoQL van admina](0508_djangoql_van%20admina.md)
   
-- [Admin akcije](06_admin_akcije.md)
+- [Admin akcije](0600_admin_akcije.md)
   
-- [Add/Change strane](07_add-change_strane.md)
+- [Add/Change strane](0700_add-change_strane.md)
   
-- [Inlines](08_inlines.md)
+- [Inlines](0800_inlines.md)
 
-- [Veze](09_veze.md)
+- [Veze](0900_veze.md)
   
-- [Filtriranje](10_filtriranje.md)
+- [Filtriranje](1000_filtriranje.md)
   
-- [Validacija prilagođene forme](11_validacija.md)
+- [Validacija prilagođene forme](1100_validacija.md)
   
-- [Optimizacija QuerySet upita](12_optimizacija_queryset_upita.md)
+- [Optimizacija QuerySet upita](120_optimizacija_queryset_upita.md)
   
-- [Efikasna paginacija](13_paginacija.md)
+- [Efikasna paginacija](130_paginacija.md)
   
-- [Kako skalirati admin](14_skaliranje_admina.md)
+- [Kako skalirati admin](1400_skaliranje_admina.md)
   
-- [JavaScript u adminu](15_javascript_u_adminu.md)
+- [JavaScript u adminu](150_javascript_u_adminu.md)
   
-- [CSV export-import](16_csv_export_import.md)
+- [CSV export-import](1600_csv_export_import.md)
   
-- [Dozvole](17_dozvole.md)
+- [Dozvole](1700_dozvole.md)
   
-- [Prevodi](18_prevodi.md)
+- [Prevodi](1800_prevodi.md)
 
-- [Sigurnost admina](19_sigurnost_admina.md)
+- [Sigurnost admina](1900_sigurnost_admina.md)
