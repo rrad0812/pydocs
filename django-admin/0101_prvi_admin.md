@@ -1,12 +1,7 @@
 
 # Uvod
 
-## Sadržaj
-
-[Nazad](sadrzaj.md)
-
-- [Prvi Django admin](#prvi-django-admin)
-- [Modeli koji se koriste u ovom tutorijalu](#modeli-koji-se-koriste-u-ovom-tutorijalu)
+[Sadržaj](00_sadrzaj.md)
 
 **Django Admin Cookbook** je knjiga o tome kako raditi stvari sa Django adminom. Namenjen je srednjim Django programerima, koji imaju određeno iskustvo sa Django adminom, ali žele proširiti svoje znanje o Django adminu i postići majstorstvo.
 
@@ -19,6 +14,7 @@ Ukratko, imamo dve aplikacije, "Events" i "Entities". Modeli su:
   - Event,
   - EventHero,
   - EventVillain
+
 - Entities:
   - Category,
   - Origin,
@@ -26,15 +22,15 @@ Ukratko, imamo dve aplikacije, "Events" i "Entities". Modeli su:
   - Hero,
   - Vilian
 
-Pored toga ovde su i dodatni tekstovi i Django kod prikupljeni po internetu a u vezi raznih kritičnih mesta u Django adminu. Ponešto je i sam autor priložio, ali to je zaista minimalno. Jedino vredno spomena je prevodjenje i stavljanje u kontekst tema već pomenute **Django Admin Cookbok**.
+Pored toga ovde su i dodatni tekstovi i Django kod prikupljeni po internetu a u vezi raznih kritičnih mesta u Django adminu. Ponešto je i sam autor priložio, ali to je zaista minimalno. Jedino vredno spomena je prevodjenje i stavljanje u kontekst tema već pomenute **Django Admin Cookbok** knjige.
 
-[Sadržaj](#sadržaj)
-
-### Prvi Django admin
+[Sadržaj](00_sadrzaj.md)
 
 Ovaj tutorijal će vas voditi kroz stvaranje prilagođenog Django admina.
 
-#### Izgradnja razvojnog okruženja
+## Prvi admin
+
+### Izgradnja razvojnog okruženja
 
 Napravi novo razvojno okruženje:
 
@@ -58,7 +54,7 @@ Koristi pip u komandnoj liniji za instaliranje Djanga:
 >
 > Nadalje sve što radimo na projektu radimo sa aktiviranom (django-venv) virtuelnom okolinom.
 
-#### Izgradnja novog projekta
+### Izgradnja novog projekta
 
 Sada koristi `django-admin` komandu za kreiranje novog projekta.
 
@@ -97,7 +93,7 @@ Django-admin će kreirati `project_name` direktorijum u tekućem (`project_dir_n
 
 Od sada pa nadalje `project_dir_name` je `BASE_DIR` projekta, direktorijum koji sadaži `manage.py` fajl i odakle se pokreću sve komande na projektu. Pored toga tu je i `project_name` direktorijum, koji sadrži fajlove za podešavanje projekta.
 
-#### Izgradnja baze podataka
+### Izgradnja baze podataka
 
 Sledeći korak je stvaranje baze podataka koja će se pojaviti kao nova SQLite datoteka sa imenom `db.sqlite3`. Da bismo to uradili, koristimo `manage.py` fajl iz direktorijuma projekta, koju je kreirala `django-admin startproject` komanda. Komanda koju sada želimo je `migrate`, koja može da kreira osnovne tabele baze podataka.
 
@@ -111,7 +107,7 @@ Na kraju pokreni Django ugradjeni web server:
 python manage.py runserver
 ```
 
-#### Kreiranje superusera
+### Kreiranje superusera
 
 Da bi mogli da se ulogujemo na admin strane potrebe su nam dozvole. Najpovlašćeniji korisnik na admin stranama i komletnom Djnagu je `superuser`. Da bi kreirali superusera potrebno je da pokrenemo komandu:
 
@@ -121,7 +117,7 @@ python manage.py createsuperuser
 
 Posle kompletiranja ove prcedure možemo da posetimo `localhost:8000/` u pregledaču da bi videli Django u akciji.
 
-#### Izgradnja aplikacije
+### Izgradnja aplikacije
 
 Možeš da kreiraš novu aplikaciju pomoću Django `startapp` komande. Vrati se u terminal i pritisni kombinaciju CTRL-C, koja će završiti test server i vratiti nas u komandnu liniju. Zatim pomoću
 `manage.py` kreiraj aplikaciju.
@@ -159,106 +155,4 @@ INSTALLED_APPS = (
 
 To je sve. Možete početi sa stvaranjem modela.
 
-[Sadržaj](#sadržaj)
-
-### Modeli koji se koriste u ovom tutorijalu
-
-#### App Entities
-
-```py
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def str (self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = "Categories"
-
-
-class Origin(models.Model):
-    name = models.CharField(max_length=100)
-    
-    def str (self):
-        return self.name
-
-class Entity(models.Model):
-    GENDER_MALE = "Male"
-    GENDER_FEMALE = "Female"
-    GENDER_OTHERS = "Others/Unknown"
-    
-    name = models.CharField(max_length=100)
-    alternative_name = models.CharField(max_length=100, null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    origin = models.ForeignKey(Origin, on_delete=models.CASCADE)
-    gender = models.CharField(
-        max_length=100,
-        choices=(
-            (GENDER_MALE, GENDER_MALE),
-            (GENDER_FEMALE, GENDER_FEMALE),
-            (GENDER_OTHERS, GENDER_OTHERS),
-        )
-    )
-    description = models.TextField()
-    
-    def str (self):
-        return self.name
-    
-    class Meta:
-        abstract = True
-
-class Hero(Entity): class Meta:
-    verbose_name_plural = "Heroes"
-    is_immortal = models.BooleanField(default=True)
-    benevolence_factor = models.PositiveSmallIntegerField(
-        help_text="How benevolent this hero is?" )
-
-    arbitrariness_factor = models.PositiveSmallIntegerField(
-        help_text="How arbitrary this hero is?" )
-
-    father = models.ForeignKey("self", related_name="+", null=True, blank=True,
-        on_delete=models.SET_NULL )
-
-    mother = models.ForeignKey("self", related_name="+", null=True, blank=True,
-        on_delete=models.SET_NULL )
-
-    spouse = models.ForeignKey("self", related_name="+", null=True, blank=True,
-        on_delete=models.SET_NULL )
-
-class Villain(Entity):
-    is_immortal = models.BooleanField(default=False)
-    malevolence_factor = models.PositiveSmallIntegerField(
-        help_text="How malevolent this villain is?")
-
-    power_factor = models.PositiveSmallIntegerField(
-        help_text="How powerful this villain is?" )
-
-    is_unique = models.BooleanField(default=True)
-    count = models.PositiveSmallIntegerField(default=1)
-```
-
-#### App Events
-
-```py
-class Epic(models.Model):
-    name = models.CharField(max_length=255)
-    participating_heroes = models.ManyToManyField(Hero)
-    participating_villains = models.ManyToManyField(Villain)
-
-class Event(models.Model):
-    epic = models.ForeignKey(Epic, on_delete=models.CASCADE)
-    details = models.TextField()
-    years_ago = models.PositiveIntegerField()
-
-class EventHero(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    hero = models.ForeignKey(Hero, on_delete=models.CASCADE)
-    is_primary = models.BooleanField()
-
-class EventVillain(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    hero = models.ForeignKey(Villain, on_delete=models.CASCADE)
-    is_primary = models.BooleanField()
-```
-
-[Sadržaj](#sadržaj)
+[Nazad](0100_uvod.md)
