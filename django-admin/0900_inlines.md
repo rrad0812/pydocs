@@ -5,14 +5,6 @@
 
 [Nazad](sadrzaj.md)
 
-- [Kako editovati višestruke modele iz jednog Django admina?](#kako-editovati-višestruke-modele-iz-jednog-admina)
-- [Kako dodati OneToOne vezu kao inline?](#kako-dodati-onetoone-vezu-kao-inline)
-- [Kako dodati ugnježdene inlines u Django adminu?](#kako-dodati-ugnježdene-inlines-u-django-adminu)
-- [Kako kreirati jedan admin iz dva različita modela?](#kako-kreirati-jedan-admin-iz-dva-različita-modela)
-- [Kako pristupiti parent instanci?](#kako-pristupiti-parent-instanci)
-- [Kako dobiti objekt iz formfield_for_foreignkey?](#kako-dobiti-objekt-iz-formfield_for_foreignkey)
-- [Pristup parent model instanci iz modelforme admin inline-a](#pristup-parent-model-instanci-iz-modelforme-admin-inline-a)
-
 ### Kako editovati višestruke modele iz jednog admina?
 
 Ukratko, treba da koristite `inlines`. Imate "Category" model, i potrebno je da dodajete i editujete "Villain" modele unutar "Category" admina:

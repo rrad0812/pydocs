@@ -34,7 +34,7 @@ Lazarevac, avgust 2025.
   - [Opitimizovanje upita sa annotacijama](0402_optimizovanje_upite_sa_annotacijama.md)
   - [Sortiranje po izračunatim poljima](0403_sortiranje_po_izračunatim_poljima.md)
   - [Filtriranje po izračunatim poljima](0404_filtriranje_po_izračunatim_poljima.md)
-  - [’on’ ili ’off’ ikone umesto izračunatih boolean polja](0405_on_ili_off_%20ikone_umesto_izračunatih_boolean_polja.md_)
+  - [’on’ ili ’off’ ikone umesto izračunatih boolean polja](0405_on_ili_off_%20ikone_umesto_izračunatih_boolean_polja.md)
   
 - Polja za pretragu
   - [Polja za pretragu](0501_polja_za_pretragu.md)
@@ -64,11 +64,37 @@ Lazarevac, avgust 2025.
     - [Prilagodjene akcije na pojedinačnim objektima](0615_prilagodjene_akcije_na_pojedinačnim_objektima.md)
     - [Prilagodjene akcije po objektu modela](0616_prilagodjene_akcije_po_objektu_modela.md)
 
-- [Add/Change strane](0700_add-change_strane.md)
+- Add/Change strane
+  - [Prikazivanje slike na admin strani](0701_prikazivanje_slike_na_admin_strani.md)
+  - [Povezivanje modela sa trenutnim korisnikom](0702_povezivanje%20modela_sa_trenutnim_korisnikom.md)
+  - [Označavanje polje kao readonly](0703_označavanje_polja_kao_readonly.md)
+  - [Needitabilna polja](0704_needitabilna_polja.md)
+  - [Editabilno polje inače readonly](0705_editabilno_polje_inače_readonly.md)
+  - [Filtriranje FK vrednosti](0706_filtriranje_FK_vrednosti.md)
+  - [Upravljanje velikim FK modelom](0707_Upravljanje_velikim_FK_modelom.md)
+  - [Promena teksta na FK padajućoj listi](0708_promena_teksta%20na%20FK_padajućoj_listi.md)
+  - [Prilagodjeno dugme na changeview strani](0709_dodavanje_prilagodjenog_dugmeta.md)
+  - [Upravljanje History/Model logovima](0710_Upravljanje_History-Model%20logovima.md)
+  - [Prilagodjavanje add/change forme modela](0711_prilagodjenje_add-change_forme_modela.md)
+  - [Nadjačavanje save ponašanja za admin](0712_nadjačavanje_save_ponašanja%20.md)
   
-- [Inlines](0800_inlines.md)
-
-- [Veze](0900_veze.md)
+- Veze
+  - [Povezana polja na admin listview strani](0801_povezana_polja_na_listview_strani.md)
+  - [Navigacija po povezanim poljima](0802_navigacija_po_povezanim_poljima.md)
+  - [Veze do drugih strana sa listama objekata modela](0803_veze%20do%20drugih_strana%20sa%20listama_objekata.md)
+  - [Reverzne veze](0804_reverzne_veze.md)
+  - [Autokompletiranje za povezana polja](0805_autokompletiranje%20za%20povezana_polja.md)
+  - [Hiperlinkovi](0806_Hiperlinkovi.md)
+  - [Kako dobiti admin urls za specifične objekte?](0807_dobijanje_admin_url_za%20specifične%20objekte.md)
+  
+- [Inlines](0900_inlines.md)
+  - [Kako editovati višestruke modele iz jednog Django admina](#kako-editovati-višestruke-modele-iz-jednog-admina)
+  - [Kako dodati OneToOne vezu kao inline?](#kako-dodati-onetoone-vezu-kao-inline)
+  - [Kako dodati ugnježdene inlines u Django adminu?](#kako-dodati-ugnježdene-inlines-u-django-adminu)
+  - [Kako kreirati jedan admin iz dva različita modela?](#kako-kreirati-jedan-admin-iz-dva-različita-modela)
+  - [Kako pristupiti parent instanci?](#kako-pristupiti-parent-instanci)
+  - [Kako dobiti objekt iz formfield_for_foreignkey?](#kako-dobiti-objekt-iz-formfield_for_foreignkey)
+  - [Pristup parent model instanci iz modelforme admin inline-a](#pristup-parent-model-instanci-iz-modelforme-admin-inline-a)
   
 - [Filtriranje](1000_filtriranje.md)
   
