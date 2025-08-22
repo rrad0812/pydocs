@@ -46,8 +46,24 @@ Lazarevac, avgust 2025.
     - [Puni prilagodjeni search lookup](0507_puni_prilagodjeni_search_lookup.md)
     - [DjangoQL van admina](0508_djangoql_van%20admina.md)
   
-- [Admin akcije](0600_admin_akcije.md)
-  
+- Admin akcije
+  - [Pisanje akcija](0601_pisanje_akcija.md)
+    - [Pisanje akcionih funkcija](0602_pisanje_akcionih_funkcija.md)
+    - [Dodavanje akcija u ModelAdmin](0603_dodavanje_akcija_u_ModelAdmin.md)
+    - [Rukovanje greškama u akcijama](0604_rukovanje_greškama.md)
+    - [Akcije kao ModelAdmin metode](0605_akcije_kao_ModelAdmin_metode.md)
+  - [Omogućavanje-onemogućavanje akcija](0606_omogućavanje-onemogućavanje_akcija.md)
+    - [Onemogućavanje akcije na celoj lokaciji](0607_onemogućavanje_akcija_na_celoj_lokaciji.md)
+    - [Onemogućavanje svih akcija za ModelAdmin](0608_onemogućavanje_svih_akcija%20za_Model_Admin.md)
+    - [Uslovno omogućavanje-onemogućavanje akcija](0609_uslovno_omogućavanje-onemogućavanje_akcija.md)
+  - [Dozvole za akcije](0610_dozvole%20za%20akcije.md)
+  - [Prilagodjene admin akcije](0611_prilagodjene_admin_akcije.md)
+  - [Prilagodjene admin akcije sa prolaznom stranom i formom](0612_prolazna_strana_i_forme.md)
+  - [Prilagodjene akcije bez prolazne strane](0613_prilagodjene_admin_akcije_bez_prolazne_strane.md)
+  - [Prilagodjena akcijska dugmad](0614_prilagodjena_akcijska_dugmad.md)
+    - [Prilagodjene akcije na pojedinačnim objektima](0615_prilagodjene_akcije_na_pojedinačnim_objektima.md)
+    - [Prilagodjene akcije po objektu modela](0616_prilagodjene_akcije_po_objektu_modela.md)
+
 - [Add/Change strane](0700_add-change_strane.md)
   
 - [Inlines](0800_inlines.md)
