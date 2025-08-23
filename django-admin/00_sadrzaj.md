@@ -134,8 +134,27 @@ Lazarevac, avgust 2025.
 - [Prefetch objekat](1207_prefetch_objekat.md)
   
 ### Efikasna paginacija
+
+- [Naivna paginacijaja](1301_naivna_paginacija.md)
+  - [Uklanjanje Count upita](1302_uklanjanje_count_upita.md)
+  - [Približno COUNT](1303_prbližno_count.md)
+  - [Paginacija sa skupom ključeva](1304_paginacija_sa_skupom_ključeva.md)
+  - [Dodatak dj-pagination](1305_dodatak_dj-pagination.md)
+- [Zaključak paginacija](1306_završno_o_paginaciji.md)
   
-### Kako skalirati admin
+### Skaliranje admina
+
+- [Skaliranje admina](1401_skaliranje_admina.md)
+  - [Nadjačavanje get_queryset](1201_Modeli.md)
+  - [Poboljšani search sa DjangoQL](1403_poboljšani_search_sa%20DjangoQL.md)
+  - [Elminisanje COUNT upita](1404_eleiminisanje_count_upita.md.md)
+  - [show_full_result_count](1405_show_full_result_count.md)
+  - [deffer](1406_deffer.md)
+  - [Paginator](1407_paginator.md)
+  - [readonly_fields](1408_readonly_fields.md)
+  - [Skaliranje admin date_hierarchy](1409_skaliranje_date_hierarchy.md)
+  - [Dodatak django-admin-lightweight-date-hierarchy](1410_dodatak_django-admin-lightweight-date-hierarchy.md)
+  - [date_hierarchy index](1411_date_hierarchy_index.md)
   
 ### JavaScript u adminu
   
