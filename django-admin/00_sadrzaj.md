@@ -38,7 +38,7 @@ Lazarevac, avgust 2025.
 - [Opitimizovanje upita sa annotacijama](0402_optimizovanje_upite_sa_annotacijama.md)
 - [Sortiranje po izračunatim poljima](0403_sortiranje_po_izračunatim_poljima.md)
 - [Filtriranje po izračunatim poljima](0404_filtriranje_po_izračunatim_poljima.md)
-- [’on’ ili ’off’ ikone umesto izračunatih boolean polja](0405_on_ili_off_%20ikone_umesto_izračunatih_boolean_polja.md)
+- [’on’ ili ’off’ ikone umesto izračunatih boolean polja](0405_on_ili_off_ikone_umesto_izračunatih_boolean_polja.md)
   
 ### Polja za pretragu
 
@@ -49,7 +49,7 @@ Lazarevac, avgust 2025.
   - [DjangoQL šema](0505_djangql_šema.md)
   - [Prilagodjena polja za pretragu](0506_prilagodjena_polja_za_pretragu.md)
   - [Puni prilagodjeni search lookup](0507_puni_prilagodjeni_search_lookup.md)
-  - [DjangoQL van admina](0508_djangoql_van%20admina.md)
+  - [DjangoQL van admina](0508_djangoql_van_admina.md)
   
 ### Admin akcije
 
@@ -60,9 +60,9 @@ Lazarevac, avgust 2025.
   - [Akcije kao ModelAdmin metode](0605_akcije_kao_ModelAdmin_metode.md)
 - [Omogućavanje-onemogućavanje akcija](0606_omogućavanje-onemogućavanje_akcija.md)
   - [Onemogućavanje akcije na celoj lokaciji](0607_onemogućavanje_akcija_na_celoj_lokaciji.md)
-  - [Onemogućavanje svih akcija za ModelAdmin](0608_onemogućavanje_svih_akcija%20za_Model_Admin.md)
+  - [Onemogućavanje svih akcija za ModelAdmin](0608_onemogućavanje_svih_akcija_za_Model_Admin.md)
   - [Uslovno omogućavanje-onemogućavanje akcija](0609_uslovno_omogućavanje-onemogućavanje_akcija.md)
-- [Dozvole za akcije](0610_dozvole%20za%20akcije.md)
+- [Dozvole za akcije](0610_dozvole_za_akcije.md)
 - [Prilagodjene admin akcije](0611_prilagodjene_admin_akcije.md)
 - [Prilagodjene admin akcije sa prolaznom stranom i formom](0612_prolazna_strana_i_forme.md)
 - [Prilagodjene akcije bez prolazne strane](0613_prilagodjene_admin_akcije_bez_prolazne_strane.md)
@@ -73,27 +73,27 @@ Lazarevac, avgust 2025.
 ### Add/Change strane
 
 - [Prikazivanje slike na admin strani](0701_prikazivanje_slike_na_admin_strani.md)
-- [Povezivanje modela sa trenutnim korisnikom](0702_povezivanje%20modela_sa_trenutnim_korisnikom.md)
+- [Povezivanje modela sa trenutnim korisnikom](0702_povezivanje_modela_sa_trenutnim_korisnikom.md)
 - [Označavanje polje kao readonly](0703_označavanje_polja_kao_readonly.md)
 - [Needitabilna polja](0704_needitabilna_polja.md)
 - [Editabilno polje inače readonly](0705_editabilno_polje_inače_readonly.md)
 - [Filtriranje FK vrednosti](0706_filtriranje_FK_vrednosti.md)
 - [Upravljanje velikim FK modelom](0707_Upravljanje_velikim_FK_modelom.md)
-- [Promena teksta na FK padajućoj listi](0708_promena_teksta%20na%20FK_padajućoj_listi.md)
+- [Promena teksta na FK padajućoj listi](0708_promena_teksta_na_FK_padajućoj_listi.md)
 - [Prilagodjeno dugme na changeview strani](0709_dodavanje_prilagodjenog_dugmeta.md)
-- [Upravljanje History/Model logovima](0710_Upravljanje_History-Model%20logovima.md)
+- [Upravljanje History/Model logovima](0710_Upravljanje_History-Model_logovima.md)
 - [Prilagodjavanje add/change forme modela](0711_prilagodjenje_add-change_forme_modela.md)
-- [Nadjačavanje save ponašanja za admin](0712_nadjačavanje_save_ponašanja%20.md)
+- [Nadjačavanje save ponašanja za admin](0712_nadjačavanje_save_ponašanja.md)
   
 ### Veze
 
 - [Povezana polja na admin listview strani](0801_povezana_polja_na_listview_strani.md)
 - [Navigacija po povezanim poljima](0802_navigacija_po_povezanim_poljima.md)
-- [Veze do drugih strana sa listama objekata modela](0803_veze%20do%20drugih_strana%20sa%20listama_objekata.md)
+- [Veze do drugih strana sa listama objekata modela](0803_veze_do_drugih_strana_sa_listama_objekata.md)
 - [Reverzne veze](0804_reverzne_veze.md)
-- [Autokompletiranje za povezana polja](0805_autokompletiranje%20za%20povezana_polja.md)
+- [Autokompletiranje za povezana polja](0805_autokompletiranje_za_povezana_polja.md)
 - [Hiperlinkovi](0806_Hiperlinkovi.md)
-- [Kako dobiti admin urls za specifične objekte?](0807_dobijanje_admin_url_za%20specifične%20objekte.md)
+- [Dobijanje admin urla za specifične objekte](0807_dobijanje_admin_url_za_specifične_objekte.md)
   
 ### Inlines
   
@@ -121,7 +121,7 @@ Lazarevac, avgust 2025.
 - [Ugrađena validacija forme](1101_ugradjena_validacija_forme.md)
 - [Validacija pojedinačnog polja](1102_Validacija_pojedinačnog_polja.md)
 - [Validacija više polja](1103_validacija_više_polja.md)
-- [Završno o validaciji](1104_završno%20o%20validaciji.md)
+- [Završno o validaciji](1104_završno_o_validaciji.md)
   
 ### Optimizacija QuerySet upita
 
@@ -146,7 +146,7 @@ Lazarevac, avgust 2025.
 
 - [Skaliranje admina](1401_skaliranje_admina.md)
   - [Nadjačavanje get_queryset](1201_Modeli.md)
-  - [Poboljšani search sa DjangoQL](1403_poboljšani_search_sa%20DjangoQL.md)
+  - [Poboljšani search sa DjangoQL](1403_poboljšani_search_sa_DjangoQL.md)
   - [Elminisanje COUNT upita](1404_eleiminisanje_count_upita.md.md)
   - [show_full_result_count](1405_show_full_result_count.md)
   - [deffer](1406_deffer.md)
@@ -157,10 +157,37 @@ Lazarevac, avgust 2025.
   - [date_hierarchy index](1411_date_hierarchy_index.md)
   
 ### JavaScript u adminu
-  
+
+- [Ajax request u adminu](1501_AJAX_Request_u_adminu.md)
+- [Događaji u inline formi](1502_dogadjaji_u_inline_formi.md)
+- [AJAX Request implementacija](1503_Ajax_request_implementacija.md)
+- [Najbolje prakse za AJAX u Django-u](1504_najbolje_prakse_za_AJAX_u_adminu.md)
+- [Ajax request na changeview strani](1505_AJAX_request_na_changeview_strani.md)
+
 ### CSV export-import
+
+- [CSV Export iz admina](1601_csv_export_iz_admina.md)
+- [CSV Import u admin](1602_csv_import_u_admin.md)
+- [CSV Export preko komandne linije](1603_csv_export_preko_komandne_linije.md)
+- [CSV Import preko komandnde linije](1604_csv_import_preko_komandne_linije.md)
   
 ### Dozvole
+
+- [Dozvole](1701_dozvole.md)
+  - [Dozvole za model](1702_dozvole_za_model.md)
+  - [Provera dozvola](1703_provera_dozvola.md)
+  - [Primena dozvola](1704_primena_dozvola.md)
+- [Django admin i dozvole](1705_django_admin_i_dozvole.md)
+  - [Sprečavanje ažuriranja polja User modela](1706_sprečavanje_ažuriranja.md)
+  - [Uslovno sprečavanje ažuriranja polja](1707_uslovno_ažuriranje_polja.md)
+  - [Sprečavanje ne superuser-a da daju superuser prava](1708_sprečavanje_ne_superuser_korisnika_da_daje_superuser_prava.md)
+  - [User forma u dva koraka](1709_User_forma_u_dva_korak.md)
+  - [Dodela dozvole preko grupa samo](1710_dodela_dozvola_preko_grupa_samo.md)
+  - [Sprečavanje ne superuser-a od promena vlastitih dozvola](1711_sprečavanje_ne_superuser_od_promena_vlastitih_dozvola.md)
+  - [Nadjačavanje dozvola na User modelu](1712_nadjačavanje_dozvola_na_user_modelu.md)
+  - [Ograničenje pristupa prilagođenim akcijama na User modelu](1713_ograničenje_pristupa_prilagodjenim_akcijama_na_user_modelu.md)
+  - [Dozvoliti za kreiranje samo jednog objekta u adminu](1714_dozvola_za_kreiranje_samo_jednog_objekta.md)
+  - [Uklanjanje Add - Change dugmadi iz admina](1715_uklanjanje_add-change_dugmeta.md)
   
 ### Prevodi
 
