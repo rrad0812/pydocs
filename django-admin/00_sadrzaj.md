@@ -41,6 +41,7 @@ Lazarevac, avgust 2025.
 - [’on’ ili ’off’ ikone umesto izračunatih boolean polja](0405_on_ili_off_%20ikone_umesto_izračunatih_boolean_polja.md)
   
 ### Polja za pretragu
+
 - [Polja za pretragu](0501_polja_za_pretragu.md)
 - [DjangoQL](0502_djangoql.md)
   - [Korišćenje DjangoQL sa standardnim admin search](0503_korišćenje_sa_standardnim_admin_searchom.md)
@@ -51,6 +52,7 @@ Lazarevac, avgust 2025.
   - [DjangoQL van admina](0508_djangoql_van%20admina.md)
   
 ### Admin akcije
+
 - [Pisanje akcija](0601_pisanje_akcija.md)
   - [Pisanje akcionih funkcija](0602_pisanje_akcionih_funkcija.md)
   - [Dodavanje akcija u ModelAdmin](0603_dodavanje_akcija_u_ModelAdmin.md)
@@ -116,18 +118,31 @@ Lazarevac, avgust 2025.
   
 ### Validacija prilagođene forme
   
-- [Optimizacija QuerySet upita](120_optimizacija_queryset_upita.md)
+- [Ugrađena validacija forme](1101_ugradjena_validacija_forme.md)
+- [Validacija pojedinačnog polja](1102_Validacija_pojedinačnog_polja.md)
+- [Validacija više polja](1103_validacija_više_polja.md)
+- [Završno o validaciji](1104_završno%20o%20validaciji.md)
   
-- [Efikasna paginacija](130_paginacija.md)
-  
-- [Kako skalirati admin](1400_skaliranje_admina.md)
-  
-- [JavaScript u adminu](150_javascript_u_adminu.md)
-  
-- [CSV export-import](1600_csv_export_import.md)
-  
-- [Dozvole](1700_dozvole.md)
-  
-- [Prevodi](1800_prevodi.md)
+### Optimizacija QuerySet upita
 
-- [Sigurnost admina](1900_sigurnost_admina.md)
+- [Modeli](1201_Modeli.md)
+- [select_related](1202_select_related.md)
+- [prefetch_related](1203_prefetch_related.md)
+- [prefetch_related vs select_related](1204_prefetch_related_vs_select_related.md)
+- [Kombinovano korišćenje](1205_kombinovano_korišćenje.md)
+- [Prefetching](1206_prefetching.md)
+- [Prefetch objekat](1207_prefetch_objekat.md)
+  
+### Efikasna paginacija
+  
+### Kako skalirati admin
+  
+### JavaScript u adminu
+  
+### CSV export-import
+  
+### Dozvole
+  
+### Prevodi
+
+### Sigurnost admina
