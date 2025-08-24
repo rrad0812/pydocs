@@ -1,7 +1,7 @@
 
 # DJANGO  ADMIN  KUVAR
 
-> [!INFO]
+> [!TIP]
 >
 > Prošireno internet izdanje
 >
