@@ -192,9 +192,9 @@
   
 ### Prevodi
 
-- [Prevodi admin strana](1801_prevodi_admin_strana.md)
+- [Prevod admin strana](1801_prevod_admin_strana.md)
 - [Prevod admin strana II](1802_prevod_admin_strana_2.md)
-- [Dugmad za jezike.md](1803_Dugmad_za_jezike.md)
+- [Dugmad za jezike.md](1803_dugmad_za_jezike.md)
 
 ### Sigurnost admina
 
