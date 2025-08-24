@@ -1,9 +1,11 @@
 
-# DJANGO ADMIN KUVAR
+# DJANGO  ADMIN  KUVAR
 
-Prošireno internet izdanje
-
-**RADOSAV RADOVANOVIĆ** Lazarevac, avgust 2025.
+> [!INFO]
+>
+> Prošireno internet izdanje
+>
+> **rrad0812** - Lazarevac, avgust 2025.
 
 ## Sadržaj
 
