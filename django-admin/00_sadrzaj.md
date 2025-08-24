@@ -3,8 +3,7 @@
 
 Prošireno internet izdanje
 
-RADOSAV RADOVANOVIĆ
-Lazarevac, avgust 2025.
+**RADOSAV RADOVANOVIĆ** Lazarevac, avgust 2025.
 
 ## Sadržaj
 
@@ -25,7 +24,7 @@ Lazarevac, avgust 2025.
 - [Jedan model dva puta na adminu](0208_jedan_model_dva_puta_na_adminu.md)
 - [Db view na adminu](0209_Db_view_na_adminu.md)
   
-### List_View strane
+### ListView strane
 
 - [Veliki broj zapisa](0301_veliki_broj_zapisa.md)
 - [Ukidanje admin paginacije](0302_ukidanje_admin_paginacije.md)
@@ -191,23 +190,10 @@ Lazarevac, avgust 2025.
   
 ### Prevodi
 
-- I18N Pregled
-- Početno podešavanje
-  - Omogućavanje internacionalizacije
-  - Promena lokalnih puteva
-  - Middleware softver za automatski prevod
-  - Prefiks jezika šablona URL-a
-  - Ograničavanje izbor jezika
-- Prevodjenje
-  - Gotove fraze
-  - Prilagođeni admin naslovi
-  - Imena aplikacija
-  - Imena modela
-- Pokreni komande
-- Bonus: Dugmad za jezike
-- Prekidač prefiksa jezičkog koda
-- Prekidač prefiksa šablonskog filtera
-- Nadjačavanje Admin šablona
-- Završni prikaz
+- [Prevodi admin strana](1801_prevodi_admin_strana.md)
+- [Prevod admin strana II](1802_prevod_admin_strana_2.md)
+- [Dugmad za jezike.md](1803_Dugmad_za_jezike.md)
 
 ### Sigurnost admina
+
+- [Sigurnost admina](1901_sigurnost_admina.md)

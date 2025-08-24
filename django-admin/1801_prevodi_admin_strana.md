@@ -1,12 +1,10 @@
 
-# Prevodi
+# Prevodi admin strana
 
 [Sadržaj](00_sadrzaj.md)
 
-Django je fantastičan veb okvir Pithon-a, a jedna od njegovih sjajnih funkcija je internacionalizacija (ili
-"i18n"). Prilično je lako dodati prevode na skoro bilo koji string u aplikaciji Django, ali šta je sa
-prevođenjem Admin stranice sajta? Naslovi, imena i akcije - svima su potrebni prevodi. Te admin stranice
-se automatski generišu, pa kako se njihove reči mogu prevesti?
+Django je fantastičan veb okvir Pajtona, a jedna od njegovih sjajnih funkcija je internacionalizacija (ili "i18n"). Prilično je lako dodati prevode na skoro bilo koji string u aplikaciji Django, ali šta je sa
+prevođenjem Admin stranice sajta? Naslovi, imena i akcije - svima su potrebni prevodi. Te admin stranice se automatski generišu, pa kako se njihove reči mogu prevesti?
 
 Ovaj vodič vam pokazuje kako je to lako uraditi.
 
@@ -14,11 +12,11 @@ Ovaj vodič vam pokazuje kako je to lako uraditi.
 
 [Sadržaj](00_sadrzaj.md)
 
-Ako ste novi za prevode u Django, prvo pročitajte zvaničnu Translation stranicu. Ukratko, svi stringovi kojima je potreban prevod treba da se prenesu u funkciju prevođenja za Pithon kod ili blok prevod za Django šablonski kod. Django Managementkomande generišu datoteke poruka za specifične za jezik, u kojima prevodioci dodajuprevode za obeležene stringove i konačno ih sastavljaju za upotrebu u aplikaciji. Imajte na umu da prevodi zahtevaju da se gettext alati postave na vašu mašinu. Django takođe pruža neku naprednu logiku za rukovanje posebnim slučajevima kao i formatima datuma i pluralizacijom.
+Ako ste novi za prevode u Django, prvo pročitajte zvaničnu Translation stranicu. Ukratko, svi stringovi kojima je potreban prevod treba da se prenesu u funkciju prevođenja za Pajton kod ili blok prevod za Django šablonski kod. Django management komande generišu datoteke poruka za specifične za jezik, u kojima prevodioci dodaju prevode za obeležene stringove i konačno ih sastavljaju za upotrebu u aplikaciji. Imajte na umu da prevodi zahtevaju da se `gettext` alati postave na vašu mašinu. Django takođe pruža neku naprednu logiku za rukovanje posebnim slučajevima kao i formatima datuma i pluralizacijom.
 
 ## Početno podešavanje
 
-Projektu Django je potrebno malo osnovne konfiguracije pre nego što se uradi prevode, koji su potrebni i za glavnu lokaciju i za admin.
+Projektu Django je potrebno malo osnovne konfiguracije pre nego što se urade prevodi, koji su potrebni i za glavnu lokaciju i za admin.
 
 ### Omogućavanje internacionalizacije
 
@@ -38,7 +36,7 @@ One su dodate podrazumevano. Booleani trebaju postavljeni na `False` za aplikaci
 
 [Sadržaj](00_sadrzaj.md)
 
-Podrazumevano se datoteke sa porukama generišu u lokalne direktorijume za svaku aplikaciju sa stringovima označenim za prevod. Možete opciono da postavite `LOCALE_PATHS` da biste promenili puteve. Na primer, možda će biti najlakše staviti sve datoteke sa porukama u jedan takav direktorijum, a ne da ih podelite aplikacijama:
+Podrazumevano se datoteke sa porukama generišu u `locale` direktorijume za svaku aplikaciju sa stringovima označenim za prevod. Možete opciono da postavite `LOCALE_PATHS` da biste promenili puteve. Na primer, možda će biti najlakše staviti sve datoteke sa porukama u jedan takav direktorijum, a ne da ih podelite aplikacijama:
 
 U `settings.py`:
 
@@ -91,7 +89,7 @@ Dobijanje automatskih prevoda iz kontekstnih tragova je sjajno, ali je ipak kori
 Opciono, mogu se postaviti šabloni tako da URL-ovi bez prefiksa jezika će koristiti podrazumevani jezik. Glavna upozorenja za korišćenje `i18n_patterns`-a je da se mora koristiti iz root URLconf-a, a ne iz
 uključenih. Projektna `urls.py` datoteka treba da izgleda ovako:
 
-`urls.py`:
+U `urls.py`:
 
 ```py
 from django.conf.urls.i18n import i18n_patterns
