@@ -1,152 +1,173 @@
 ﻿
-Administratorski interfejs Django NIJE namenjen krajnjim korisnicima.
+# Administracija Django-a
 
-Osnovne stranice prikazane u Django Admin-u su:
+> [!Note]
+>
+> Admin interfejs Django-a nije namenjen krajnjim korisnicima.
 
-Kontrolna tabla prikazuje listu svih aplikacija za registre i modela koji se nalaze u tim aplikacijama.
-Kada kliknete na model, otvara se stranica sa listom promena za taj model. Ova stranica prikazuje sve objekte sadržane u modelu.
-Kada kliknete na objekat na stranici sa listom promena, otvara se stranica Dodaj/Promeni koja prikazuje polja i sadržaj za taj objekat.
+Admin interfejs se sastoji od kontrolne tabla sa prikazom liste svih registrovanih aplikacija i modela koji se nalaze u tim aplikacijama.
 
-Registrujte modele
+Kada kliknete na model, otvara se `changelist` stranica sa listom objekata za taj model. Mi ćemo je zvati `listview` stranica. Ova stranica prikazuje sve objekte sadržane u modelu. Kada kliknete na objekat na `listview` stranici, otvara se `changeview` stranica za `Add/Change` koja prikazuje polja i sadržaje za taj objekat.
 
-Da biste koristili administratorski interfejs, morate da kreirate bazu podataka i superkorisnika da biste se prijavili.
-Pre nego što se bilo koji od vaših modela pojavi u administratorskom interfejsu, morate ih registrovati u admin.py datoteci unutar svake aplikacije.
+## Registracija modela
 
-1. Napravite super korisnika za prijavljivanje na administratorski veb interfejs tako što ćete otići do direktorijuma projekta i otkucati sledeću komandu:
+Da biste koristili admin interfejs, morate da kreirate bazu podataka i superkorisnika da biste se prijavili. Pre nego što se bilo koji od vaših modela pojavi u admin interfejsu, morate ga registrovati u admin.py datoteci unutar svake aplikacije.
 
-$ python manage.py createsuperuser
+**Napravite superuser korisnika**:
 
-(Biće vam zatraženo korisničko ime, imejl, lozinka i ponovo lozinka.)
+Napravite superuser korisnika za prijavljivanje na admin veb interfejs tako što ćete otići do direktorijuma projekta i otkucati sledeću komandu:
 
-2. Pokrenite Pajton server koristeći sledeću komandu:
+```shell
+python manage.py createsuperuser
+```
 
-$ python manage.py runserver
+Biće vam zatraženo korisničko ime, imejl, lozinka i ponovo lozinka.
 
-3. Otvorite veb pregledač i idite na localhost:8000/admin da biste se prijavili na administratorski interfejs sa super korisnikom koga ste upravo kreirali.
+**Pokrenite Pajton server**:
 
-4. Kada se prijavite, možete videti kontrolnu tablu za administraciju sajta.
+  ```shell
+  python manage.py runserver
+  ```
 
-5. Uredite admin.py datoteku u vašoj aplikaciji i dodajte kod koji će registrovati svaki model.
+Otvorite veb pregledač i idite na `localhost:8000/admin` da biste se
+prijavili na admin interfejs sa superuser korisnikom koga ste upravo kreirali.
 
-# app admin.py
+Kada se prijavite, možete videti kontrolnu tablu admin sajta.
+
+Uredite `admin.py` datoteku u vašoj aplikaciji i dodajte kod koji će
+registrovati svaki model.
+
+`app admin.py`
+
+```py
 from django.contrib import admin
 from .models import Item
-
 admin.site.register(Item)
+```
 
-Prilagodite način prikazivanja modela
+## Prilagodite način prikazivanja modela
 
-Kada registrujete svoje modele, možete prilagoditi način na koji se prikazuju na administratorskom sajtu koristeći ModelAdmin klasu u istoj admin.py datoteci u kojoj registrujete svoj(e) model(e).
+Kada registrujete svoje modele, možete prilagoditi način na koji se prikazuju na admin sajtu koristeći `ModelAdmin` klasu u istoj `admin.py` datoteci u kojoj registrujete svoj(e) model(e).
+
 U nastavku su navedene popularne opcije za prilagođavanje stranice sa listom promena za model.
 
-Opcija Opis Primer
+**list_filter**:
 
-Omogućava filtriranje liste objekata po poljima naznačenim na desnoj bočnoj traci na list_filter = 
-er stranici 
+Omogućava filtriranje liste objekata po poljima naznačenim na desnoj bočnoj traci na
 
-Lista promena. ['is_staff', 'is_superuser']
+```py
+list_filter = ['is_staff', 'is_superuser']
+```
 
-list_edit Omogućava vam da uredite polje direktno u redu tabele na stranici Lista promena. Pogledajte primer liste able koja se može uređivati ispod.
+**list_edit**:
 
-actions_on_bottom = 
-Podrazumevano, administratorske radnje se nalaze na vrhu stranice. Međutim, ako imate
-mnogo objekata, može biti zgodno da se radnje prikažu i na dnu liste. True
+Omogućava vam da uredite polje direktno u redu tabele na stranici Lista promena. Pogledajte primer liste able koja se može uređivati ispod.
+
+**actions_on_bottom**:
+
+Podrazumevano, administratorske radnje se nalaze na vrhu stranice. Međutim, ako imate mnogo objekata, može biti zgodno da se radnje prikažu i na dnu liste.
 
 Ispod su popularne opcije za prilagođavanje stranice Dodaj/Izmeni za model.
 
-Opcija Opis Primer
+**prepopulated_fields**:
 
-prepopula Popuniće određena polja u skladu sa uputstvima datim u rečniku. Često se koristi za prepopulated_fields = 
-ted_field SlugFields. {'slug': ('category', 
-s 'product')}
+Popuniće određena polja u skladu sa uputstvima datim u rečniku. Često se koristi za prepopulated slugs.
 
-inlines Omogućava ugnežđene modele uređivanja unutar matičnog modela. inlines = [OtherModel]
+```py
+prepopulated_fields = {'slug': ('category', 'product')}
+```
 
-Prikaz liste
-Podrazumevano, Django prikazuje str() svakog objekta u listi administratorskih promena. Ali možete prikazati više polja na ovoj stranici
-dodavanjem list_display opcije i određivanjem koja polja treba prikazati.
+**inlines**:
+  
+Omogućava ugnežđene modele uređivanja unutar matičnog modela.
 
+```py
+inlines = [OtherModel]
+```
+
+### Prikaz liste
+
+Podrazumevano, Django prikazuje `str()` svakog objekta u `listview` listi. Ali možete prikazati više polja na ovoj stranici dodavanjem `list_display` opcije i određivanjem koja polja treba prikazati.
+
+```py
 class QuestionAdmin(admin.ModelAdmin):
-# ...
-
-    list_display = ('question_text', 'pub_date', 'was_published_recently')
-
-Pre Posle
+  # ...
+  list_display = ('question_text', 'pub_date', 'was_published_recently')
+```
 
 Filter liste
 Dodaje bočnu traku filtera koja omogućava ljudima da filtriraju listu promena prema poljima definisanim list_filter opcijom.
 
-
-
-    date_hierarchy = 'publication_date'
-    fieldsets = (
-        . . .
-        (_('Illustration'), {
-
-'fields': ('image', 'image_caption'),
-'classes': ('collapse', 'collapse-closed')}),
-
-        (_('Publication'), {
-'fields': ('publication_date', 'sites',
-
-                      ('start_publication', 'end_publication')),
-            }),
-        (_('Discussions'), {
-
-'fields': ('comment_enabled', 'pingback_enabled', 'trackback_enabled'),
-'classes': ('collapse', 'collapse-closed'),
-
-            }),
-        (_('Privacy'), {
-
-'fields': ('login_required', 'password'),
-'classes': ('collapse', 'collapse-closed')}),
-
-        (_('Metadatas'), {
-'fields': (('content_template', 'detail_template'),
-
-'authors', 'related'),
-            }),
-        (None, {'fields': ('featured', )}))
-        . . .
-
-
+```py
+date_hierarchy = 'publication_date'
+fieldsets = (
+  ...
+  (_('Illustration'), {
+    fields': ('image', 'image_caption'),
+    'classes': ('collapse', 'collapse-closed')
+  }),
+  (_('Publication'), {
+    'fields': ('publication_date', 'sites',
+    ('start_publication', 'end_publication')),
+  }),
+  (_('Discussions'), {
+    'fields': ('comment_enabled', 'pingback_enabled', 'trackback_enabled'),
+    'classes': ('collapse', 'collapse-closed'),
+  }),
+  (_('Privacy'), {
+    'fields': ('login_required', 'password'),
+    'classes': ('collapse', 'collapse-closed')}),
+  (_('Metadatas'), {
+    'fields': (('content_template', 'detail_template'), 'authors',
+      'related'),
+  }),
+  (None, {
+    'fields': ('featured', )
+  })
+)
+  ...
+```
 
 Primer liste koji se može uređivati
 
-Ugrađeni modeli
-Administratorski interfejs vam omogućava da ugnezdite model za uređivanje unutar nadređenog modela. To se naziva ugrađeni redovi
-(inlines) .
-Postoje dve vrste ugrađenih polja: - TabularInLine - Ugrađeni model koji postavlja svako polje jedno pored drugog. - StackedInline -
-Ugrađeni model koji postavlja svako polje preko drugog.
-Primer StackedInline-a možete videti ispod.
+## Ugrađeni modeli
 
+Administratorski interfejs vam omogućava da ugnezdite model za uređivanje unutar nadređenog modela. To se naziva `inlines`.
 
+Postoje dve vrste ugrađenih polja:
 
-        ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
-    ]
-    inlines = [ChoiceInline]
+- TabularInLine, koji postavlja svako polje jedno pored drugog.
+- StackedInLine, koji postavlja svako polje preko drugog.
+
+Primer StackedInline-a možete videti ispod:
+
+```py
+  ...
+  ('Date information', {
+    'fields': ['pub_date'], 
+    'classes': ['collapse']
+  }),
+    
+  inlines = [ChoiceInline]
 
 admin.site.register(Question, QuestionAdmin)
+```
 
-Kod govori DŽangu da se objekti Choice uređuju na administratorskoj stranici Question i da bi trebalo da bude dovoljno polja za tri
-izbora.
+Kod govori Djangu da se objekti Choice uređuju na admin stranici Question i da bi trebalo da bude dovoljno polja za tri izbora.
 
-Ako umesto toga promenite ChoiceInline klasu u TabularInline model, prikaz se menja i izgleda ovako, što je u ovom slučaju mnogo
-preglednije:
+Ako umesto toga promenite ChoiceInline klasu u TabularInline model, prikaz se menja i izgleda ovako, što je u ovom slučaju mnogo preglednije:
 
+**save_on_top**:
 
-
-Sačuvaj na vrhu
-Obično se dugmad za čuvanje pojavljuju samo na dnu obrazaca. Ako vaš model ima mnogo polja, možda ćete želeti dugmad za čuvanje
-i na vrhu stranice. Da biste to uradili, podesite save_on_top=True i dugmad će se pojaviti i na vrhu i na dnu.
+Obično se dugmad za čuvanje pojavljuju samo na dnu obrazaca. Ako vaš model ima mnogo polja, možda ćete želeti dugmad za čuvanje i na vrhu stranice. Da biste to uradili, podesite save_on_top=True i dugmad će se pojaviti i na vrhu i na dnu.
 
 Promena načina prikazivanja objekata
-Jedan od načina da prilagodite prikaz objekata jeste korišćenje __str__() metode prilikom prve konfiguracije modela. Podrazumevano,
-objekat će se prikazivati kao njegov ID broj kada se na njega pozivate. Ovo možete promeniti tako što ćete odrediti kako želite da se
-objekat modela prikazuje.
 
-# models.py
+Jedan od načina da prilagodite prikaz objekata jeste korišćenje __str__() metode prilikom prve konfiguracije modela. Podrazumevano, objekat će se prikazivati kao njegov ID broj kada se na njega pozivate. Ovo možete promeniti tako što ćete odrediti kako želite da se objekat modela prikazuje.
+
+`models.py`
+
+```py
 from django.db import models
 
 class Post(models.Model):
@@ -155,27 +176,29 @@ class Post(models.Model):
 
 def __str__(self):
 return self.title
+```
 
-Pozivi
+### Callable
+
 Možete koristiti pozivajuće metode i funkcije da biste dodali funkcionalnost Django administrativnom panelu. Ovo vam omogućava da
 zaista izmenite listu i ekrane za prikaz kako bi odgovarali potrebama vašeg projekta.
+
 Uobičajeni primer je definisanje funkcije koja prikazuje ciljni URL objekta.
 
+```py
+    url = reverse('ice_cream_bar_detail', kwargs={'pk': instance.pk}) 
+    response = format_html("""<a href="{0}">{0}</a>""", url)
+    return response
 
+    show_url.short_description = 'Ice Cream Bar URL'
 
-    url = reverse(
-'ice_cream_bar_detail', 
+    # Displays HTML tags
+    # Never set allow_tags to True against user submitted data!!!
 
-        kwargs={'pk': instance.pk}) response = format_html("""<a href="{0}">{0}</a>""", url)
-return response
+    show_url.allow_tags = True
+```
 
-            show_url.short_description = 'Ice Cream Bar URL'
-# Displays HTML tags
-# Never set allow_tags to True against user submitted data!!!
-
-            show_url.allow_tags = True
-
-Akcije administratora Django-a
+### Akcije administratora Django-a
 
 Obično u Administratorskom delu birate stavku i menjate je. Međutim, Django Admin interfejs omogućava administratorske akcije koje vam omogućavaju da menjate više objekata odjednom. Akcija Delete selected <objects> dolazi podrazumevano, ali možete pisati i prilagođene funkcije.
 
@@ -640,8 +663,6 @@ Onemogućite automatsko dovršavanje u poljima za plaćanje jer mnogi ljudi kori
 Modeli
 Ne koristite ModelForms.Meta.exclude jer omogućava promenu svih polja modela osim onih koja su navedena.
 Ne koristite ModelForms.Meta.fields = "__all__" . Deluje kao prečica, ali otvara ranjivost sličnu funkciji exclude .
-Pažljivo rukujte datotekama koje su otpremili korisnici korišćenjem mreža za isporuku sadržaja ili njihovim skladištenjem na
-potpuno odvojenom domenu.
+Pažljivo rukujte datotekama koje su otpremili korisnici korišćenjem mreža za isporuku sadržaja ili njihovim skladištenjem na potpuno odvojenom domenu.
 
-Za datoteke koje su otpremili korisnici ( FileField i ImageField ), koristite paket treće strane (kao što je python-magic ili
-Pillow) da biste validirali tipove otpremljenih datoteka.
+Za datoteke koje su otpremili korisnici ( FileField i ImageField ), koristite paket treće strane (kao što je python-magic ili Pillow) da biste validirali tipove otpremljenih datoteka.
