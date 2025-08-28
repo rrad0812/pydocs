@@ -1,5 +1,5 @@
 
-# Baze podataka i nodeli u Django-u
+# Baze podataka i modeli u Django-u
 
 Objektno-relaciono mapiranje (ORM) je sloj između aplikacije i baze podataka. Ono konvertuje upite napisane u kodu u SQL i konvertuje tabelarne rezultate u objekte.
 
