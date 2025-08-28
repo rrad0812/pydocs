@@ -1,5 +1,5 @@
-﻿Kako proširiti Django korisnički model
-22. jul 2016. 18 minuta čitanja 312 komentara 664.664pregledi
+﻿
+# Kako proširiti Django korisnički model
 
 Django-ov ugrađeni sistem za autentifikaciju je odličan. Uglavnom ga možemo
 koristiti odmah po pokretanju, što nam štedi mnogo truda u razvoju i testiranju.
@@ -41,6 +41,7 @@ Opcija 2: Korišćenje veze „jedan na jedan“ sa korisničkim
 modelom (profilom)
 
 Šta je veza „Jedan-na-jedan“?
+
 To je običan Django model koji će imati sopstvenu tabelu baze podataka i
 održavaće odnos „Jedan-na-jedan“ sa postojećim korisničkim modelom putem
 OneToOneField .
@@ -56,8 +57,6 @@ Opcija 3: Kreiranje prilagođenog korisničkog modela
 proširivanjem AbstractBaseUser-a
 
 Šta je prilagođeni model korisnika koji proširuje AbstractBaseUser?
-
-
 
 To je potpuno novi model korisnika koji nasleđuje od AbstractBaseUser .
 Zahteva posebnu pažnju i ažuriranje nekih referenci kroz settings.py .
@@ -94,8 +93,6 @@ To mi je potrebno! Odvedi me do uputstava .
 Proširivanje korisničkog modela korišćenjem
 proksi modela
 
-
-
 Ovo je manje nametljiv način proširenja postojećeg modela korisnika. Sa tom
 strategijom nećete imati nikakvih nedostataka. Ali je u mnogim pogledima
 veoma ograničena.
@@ -128,12 +125,9 @@ proksi model.
 
 Ako je to sve što ti treba, samo napred. Neka bude jednostavno.
 
-Proširivanje korisničkog modela korišćenjem veze
-„jedan-na-jedan“
+Proširivanje korisničkog modela korišćenjem veze „jedan-na-jedan“
+
 Postoji velika verovatnoća da je to ono što želite. Lično, to je metod koji ja
-
-
-
 uglavnom koristim. Kreiraćemo novi Django model za čuvanje dodatnih
 informacija koje se odnose na korisnički model.
 
@@ -176,9 +170,6 @@ if created:
 Profile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
-
-
-
 def save_user_profile(sender, instance, **kwargs):
 instance.profile.save()
 
@@ -220,8 +211,6 @@ class UserForm(forms.ModelForm):
 class Meta:
 
 model = User
-
-
 
 fields = ('first_name', 'last_name', 'email')
 
@@ -272,8 +261,6 @@ profil.html
 
 A dodatni upiti u bazu podataka o kojima ste govorili?
 
-
-
 O, da. O ovom problemu sam se bavio u drugom postu pod nazivom
 „Optimizacija upita baze podataka“. Možete ga pročitati klikom ovde .
 
@@ -287,9 +274,9 @@ unapred učitati u jednom upitu baze podataka:
 
 users = User.objects.all().select_related('profile')
 
-Proširivanje korisničkog modela korišćenjem
-prilagođenog modela Proširivanje
-AbstractBaseUser-a
+Proširivanje korisničkog modela korišćenjem prilagođenog modela 
+Proširivanje AbstractBaseUser-a
+
 Onaj dlakavi. Pa, iskreno, trudim se da ga izbegnem po svaku cenu. Ali
 ponekad ne možete pobeći od toga. I sasvim je u redu. Teško da postoji tako
 nešto kao najbolje ili najgore rešenje. Uglavnom postoji manje-više
@@ -306,9 +293,6 @@ potrebe za is_staff zastavicom, jer nisam koristio Django Admin.
 Evo kako sam definisao svoj korisnički model:
 
 from __future__ import unicode_literals
-
-
-
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
@@ -335,31 +319,24 @@ verbose_name = _('user')
 verbose_name_plural = _('users')
 
 def get_full_name(self):
-'''
-
-        Returns the first_name plus the last_name, with a space in between.
-        '''
+  '''
+  Returns the first_name plus the last_name, with a space in between.
+  '''
 
 full_name = '%s %s' % (self.first_name, self.last_name)
 return full_name.strip()
 
 def get_short_name(self):
-'''
-
-        Returns the short name for the user.
-        '''
-
-return self.first_name
+  '''
+  Returns the short name for the user.
+  '''
+  return self.first_name
 
 def email_user(self, subject, message, from_email=None, **kwargs):
-'''
-
-        Sends an email to this User.
-        '''
-
-send_mail(subject, message, from_email, [self.email], **kwargs)
-
-
+  '''
+  Sends an email to this User.
+  '''
+  send_mail(subject, message, from_email, [self.email], **kwargs)
 
 Želeo sam da ga zadržim što je moguće bližim postojećem User modelu. Pošto
 nasleđujemo od , AbstractBaseUser moramo da sledimo neka pravila:
@@ -392,10 +369,9 @@ class UserManager(BaseUserManager):
 use_in_migrations = True
 
 def _create_user(self, email, password, **extra_fields):
-"""
-
-        Creates and saves a User with the given email and password.
-        """
+  """
+  Creates and saves a User with the given email and password.
+  """
 
 if not email:
 raise ValueError('The given email must be set')
@@ -483,27 +459,25 @@ projekta i sa posebnom pažnjom. To će promeniti celu šemu baze podataka.
 Takođe, poželjno je kreirati strane ključeve za model korisnika uvozom
 podešavanja from django.conf import settings i pozivanjem na njega,
 settings.AUTH_USER_MODEL umesto direktnog pozivanja na prilagođeni model
-
 korisnika.
 
-
-
 Zaključci
+
 U redu! Prošli smo kroz četiri različita načina za proširenje postojećeg
 korisničkog modela. Pokušao sam da vam dam što više detalja. Kao što sam
 već rekao, ne postoji najbolje rešenje . Zaista će zavisiti od toga šta treba da
 postignete. Neka bude jednostavno i birajte mudro.
 
-Proksi model: Zadovoljni ste svim što Django korisnik pruža i ne morate da
+- Proksi model: Zadovoljni ste svim što Django korisnik pruža i ne morate da
 čuvate dodatne informacije.
 
-Korisnički profil: Zadovoljni ste načinom na koji Django obrađuje
+- Korisnički profil: Zadovoljni ste načinom na koji Django obrađuje
 autentifikaciju i potrebno je da dodate neke atribute koji nisu povezani sa
 autentifikacijom korisniku.
 
-Prilagođeni model korisnika iz AbstractBaseUser-a: Način na koji Django
+- Prilagođeni model korisnika iz AbstractBaseUser-a: Način na koji Django
 obrađuje autorizaciju ne odgovara vašem projektu.
 
-Prilagođeni model korisnika od AbstractUser-a: Način na koji Django
+- Prilagođeni model korisnika od AbstractUser-a: Način na koji Django
 obrađuje autentifikaciju je savršen za vaš projekat, ali ipak želite da dodate
 dodatne atribute bez potrebe za kreiranjem posebnog modela.

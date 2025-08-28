@@ -1,6 +1,9 @@
 ﻿Prilagodite Django Admin
 
-Django okvir dolazi sa moćnim administrativnim alatom koji se zove admin. Možete ga koristiti  za brzo dodavanje, brisanje ili uređivanje bilo kog modela baze podataka iz web interfejsa. Ali sa malo dodatnog koda, možete da prilagodite Django administratora da podigne svoje administratorske mogućnosti na sledeći nivo.
+Django okvir dolazi sa moćnim administrativnim alatom koji se zove admin. Možete 
+ga koristiti  za brzo dodavanje, brisanje ili uređivanje bilo kog modela baze 
+podataka iz web interfejsa. Ali sa malo dodatnog koda, možete da prilagodite 
+Django administratora da podigne svoje administratorske mogućnosti na sledeći nivo.
 
 U ovom vodiču ćete naučiti kako da:
 
@@ -13,17 +16,21 @@ U ovom vodiču ćete naučiti kako da:
 
 Preduslovi
 
-Da biste izvukli maksimum iz ovog vodiča, biće vam potrebno malo poznavanja Djanga, posebno 
-objekata modela. Pošto Django nije deo standardne Python biblioteke, najbolje je da takođe imate neko znanje o pip i pyenv ( ili ekvivalentnom alatu za virtuelno okruženje ). 
+Da biste izvukli maksimum iz ovog vodiča, biće vam potrebno malo poznavanja Djanga,
+posebno objekata modela. Pošto Django nije deo standardne Python biblioteke, 
+najbolje je da takođe imate neko znanje o pip i pyenv ( ili ekvivalentnom alatu 
+za virtuelno okruženje ). 
 
-Možda ćete biti zainteresovani i za jedan od mnogih dostupnih Django tutorijala.
-
-Isečci koda u ovom vodiču su testirani u odnosu na Django 3.0.7. Svi koncepti su prethodili Djangu 2.0, tako da bi trebalo da rade u bilo kojoj verziji koju koristite, ali mogu postojati manje razlike.
+Isečci koda u ovom vodiču su testirani u odnosu na Django 3.0.7. 
+Svi koncepti su prethodili Djangu 2.0, tako da bi trebalo da rade u bilo kojoj 
+verziji koju koristite, ali mogu postojati manje razlike.
 
 Podešavanje Django admina
 
-Django admin obezbeđuje web-bazirani interfejs za kreiranje i upravljanje objektima modela baze 
-podataka. Da biste ga videli u akciji, prvo će vam trebati Django projekat i neki objektni modeli. 
+Django admin obezbeđuje web-bazirani interfejs za kreiranje i upravljanje objektima 
+modela baze podataka. Da biste ga videli u akciji, prvo će vam trebati Django 
+projekat i neki objektni modeli. 
+
 Instalirajte Django unutar čistog virtuelnog okruženja:
 
 $ python -m pip install django
@@ -39,9 +46,8 @@ Password (again):
 
 • Prvo kreirate novi Django projekat pod nazivom School sa aplikacijom pod nazivom core. 
 • Zatim migrirate tabele za autentifikaciju i kreirate administratora. Pristup Django admin ekranima 
-
-je ograničen na korisnike sa staff ili superuser pravima, tako da koristite createsuperuser 
-komandu da biste kreirali superuser.
+  je ograničen na korisnike sa staff ili superuser pravima, tako da koristite createsuperuser 
+  komandu da biste kreirali superuser.
 
 Takođe morate da izmenite School/settings.py da biste uključili novu aplikaciju pod nazivom core:
 

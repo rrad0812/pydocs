@@ -1,205 +1,162 @@
-﻿Last updated August 24th, 2023
-
-Customizing the Django Admin
-Nik Tomazic
+﻿
+# Customizing the Django Admin
 
 Django's automatically generated admin site is one of the biggest strengths of the
-
 framework. The centralized admin interface lets you easily view and manipulate
-
 your models' data. This can save you a lot of time while developing and managing
-
 content.
 
 Even though the admin site is highly customizable, many developers aren't aware
-
 of its full capabilities. This results in developers creating views and functions for
-
 things that could be easily implemented with a bit of admin site tweaking.
 
 In this article, we'll look at how to customize Django's admin site through practical
-
 examples. We'll cover the built-in customization options as well as customization via
+third-party packages such as `DjangoQL`, `django-import-export`, and `django-admin-interface`.
 
-third-party packages such as DjangoQL, django-import-export, and django-admin-
+## Objectives
 
-interface.
-
-Objectives
 By the end of this article, you'll be able to:
 
 1. Perform basic Django admin site configuration
-
 2. Explain how Django model attributes affect the admin site
-
 3. Use list_display  to control which model fields are displayed
-
 4. Add custom fields to list_display  and format existing ones
-
 5. Add links to related model objects in list_display
-
 6. Enable search and filters via search_fields  and list_filter
-
 7. Handle model inlines for both N:1  and M:M  relationships
-
 8. Use Django admin actions and create custom ones
-
 9. Override Django admin forms and templates
-
 10. Utilize DjangoQL for advanced searching functionality
-
 11. Import data in and export data to different formats using django-import-
-
 export
-
 12. Modify the appearance of your admin site via django-admin-interface
 
-Project Setup
+## Project Setup
+
 To demonstrate the different admin site customization options, I've prepared a
-
 simple web app. The web app serves as an event ticket sales system. It allows you
-
 to manage venues, concerts, concert categories, and tickets.
 
 It has the following entity-relationship model:
 
-
-
 I highly recommend you first follow along with this web app. After reading,
-
 you can then apply the gained knowledge to your Django projects.
 
 First, grab the source code from the repository on GitHub:
 
-$ git clone https://github.com/duplxey/django-admin-customization.git --
-
-branch base
-
-$ cd django-admin-customization
+```shell
+git clone https://github.com/duplxey/django-admin-customization.git --branch base
+cd django-admin-customization
+```
 
 Create a virtual environment and activate it:
 
-$ python3.11 -m venv env && source env/bin/activate
+```shell
+python3.11 -m venv env && source env/bin/activate
+```
 
 Install the requirements and migrate the database:
 
-(venv)$ pip install -r requirements.txt
-
-(venv)$ python manage.py migrate
+```shell
+(venv)pip install -r requirements.txt
+(venv)python manage.py migrate
+```
 
 Create a superuser and populate the database:
 
-(venv)$ python manage.py createsuperuser
-
-(venv)$ python manage.py populate_db
+```shell
+(venv)python manage.py createsuperuser
+(venv)python manage.py populate_db
+```
 
 Run the development server:
 
+```shell
 (venv)$ python manage.py runserver
+```
 
-Open your favorite web browser and navigate to http://localhost:8000/admin. Try
-
+Open your favorite web browser and navigate to <http://localhost:8000/admin>. Try
 using your superuser credentials to access the Django admin site. After that, ensure
-
 the database is populated with a few venues, concert categories, concerts, and
-
 tickets.
 
 Before continuing, I suggest you check the models in tickets/models.py. Pay
-
 attention to what fields a model has and how the models are connected.
 
-Basic Admin Site Customization
+## Basic Admin Site Customization
+
 The Django admin site provides some basic configuration options. These options
-
 allow you to change the site's title, header, site URL, and more. The site_header
-
 setting can be especially convenient if you have multiple environments and want to
-
 differentiate between them easily.
 
-The admin.site  settings are usually modified in your project's main urls.py file.
-
+The admin.site  settings are usually modified in your project's main `urls.py` file.
 Rename the Django admin to "TicketPlus" and tag the current environment as dev :
 
+`core/urls.py`
 
-
-# core/urls.py
-
+```py
 admin.site.site_title = "TicketsPlus site admin (DEV)"
-
 admin.site.site_header = "TicketsPlus administration"
-
 admin.site.index_title = "Site administration"
+```
 
-All the settings can be viewed by checking Django's contrib/admin/sites.py
-
+All the settings can be viewed by checking Django's `contrib/admin/sites.py`
 file.
 
-Another thing you should do is change the default /admin  URL. This'll make it more
-
+Another thing you should do is change the default `/admin`  URL. This'll make it more
 difficult for malicious actors to find your admin panel.
 
 Change your core/urls.py like so:
 
-# core/urls.py
+`core/urls.py`
 
+```py
 urlpatterns = [
-
-path("secretadmin/", admin.site.urls),
-
+  path("secretadmin/", admin.site.urls),
 ]
+```
 
-Your admin site should now be accessible at http://localhost:8000/secretadmin.
+Your admin site should now be accessible at <http://localhost:8000/secretadmin>.
 
-Django Model and Admin
+## Django Model and Admin
+
 Some Django model attributes directly affect the Django admin site. Most
-
 importantly:
 
 1. __str__()  is used to define object's display name
-
 2. Meta  class is used to set various metadata options (e.g., ordering  and
-
 verbose_name )
 
 Here's an example of how these attributes are used in practice:
 
-# tickets/models.py
+`tickets/models.py`
 
+```py
 class ConcertCategory(models.Model):
+  name = models.CharField(max_length=64)
+  description = models.TextField(max_length=256, blank=True, null=True)
 
-name = models.CharField(max_length=64)
+  class Meta:
+    verbose_name = "concert category"
+    verbose_name_plural = "concert categories"
+    ordering = ["-name"]
 
-description = models.TextField(max_length=256, blank=True, null=True)
-
-class Meta:
-
-verbose_name = "concert category"
-
-verbose_name_plural = "concert categories"
-
-ordering = ["-name"]
-
-def __str__(self):
-
-return f"{self.name}"
+  def __str__(self):
+    return f"{self.name}"
+```
 
 1. We provided the plural form since the plural of "concert category" isn't "concert
-
 categorys".
 
 2. By providing the ordering  attribute the categories are now ordered by name.
-
 For all the Meta  class options, check out Model Meta options.
 
-Customize Admin Site with ModelAdmin
-Class
+## Customize Admin Site with ModelAdmin Class
+
 In this section, we'll take a look at how to use the ModelAdmin class to customize
-
 the admin site.
-
-
 
 Control List Display
 

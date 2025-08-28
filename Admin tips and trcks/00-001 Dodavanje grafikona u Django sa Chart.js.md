@@ -1,7 +1,7 @@
 ﻿
 # Dodavanje grafikona u Django sa grafikonom.js
 
-U ovom tutorijalu ćemo pogledati kako da dodamo grafikone u Django sa `Charts.js`. Koristićemo Django da modelira i pripremi podatke, a zatim ih doneti asinhrono iz šablona pomoću Ajaksa. Napokon, pogledaćemo kako da kreiramo novi Django Admin prikaz i proširimo postojeće admin šablone kako bi dodali grafikone na Django admin.
+U ovom tutorijalu ćemo pogledati kako da dodamo grafikone u Django sa `Charts.js`. Koristićemo Django da modelira i pripremi podatke, a zatim ih doneti asinhrono iz šablona pomoću Ajax. Napokon, pogledaćemo kako da kreiramo novi Django Admin prikaz i proširimo postojeće admin šablone kako bi dodali grafikone na Django admin.
 
 ## Sadržaj
 
@@ -31,7 +31,7 @@ U ovom tutorijalu ćemo pogledati kako da dodamo grafikone u Django sa `Charts.j
 - polarni i
 - rasuti.
 
-Fleksibilna je i veoma prilagodljiva.Podržava animacije. Dodajte najbolje
+Fleksibilna je i veoma prilagodljiva.Podržava animacije. Dodajmo najbolje
 od svega, lako je koristiti.
 
 Da biste započeli, samo morate da unesete skriptu Charts.js zajedno sa
@@ -78,14 +78,14 @@ Pogledajmo kako da dodamo grafikone u Django sa Charts.js.
 
 Stvorimo jednostavnu aplikaciju za kupovinu. Generišećemo podatke o uzorku koristeći Django naredbu `management` i zatim ga vizualizujmo sa `Charts.js`.
 
-Ako preferirate različitu biblioteku JavaScript Chart-a poput `D3.js` ili `Chartist`, Možete da koristite isti pristup za dodavanje grafikona u Django i Django Admin. Samo ćete morati da prilagodite kako se podaci formatiraju na krajnjim tačkama JSON-a.
+Ako preferirate različitu biblioteku JavaScript Chart-a poput `D3.js` ili `Chartist`, Možete da koristimo isti pristup za dodavanje grafikona u Django i Django Admin. Samo ćete morati da prilagodimo kako se podaci formatiraju na krajnjim tačkama JSON-a.
 
 Workflow:
 
-1. Nabavite podake koristeći `Django Orm` upite.
-2. Formatirajte podatke i vratite ih preko zaštićene krajnje tačke.
-3. Zatražite podatke iz šablona pomoću `Ajax`.
-4. Inicijalizirajte `Chart,js` i učitajte podatke.
+1. Nabavimo podake koristeći `Django Orm` upimo.
+2. Formatirajmo podatke i vratimo ih preko obezbedjene krajnje tačke.
+3. Zatražimo podatke iz šablona pomoću `Ajax`.
+4. Inicijalizirajmo `Chart,js` i učitajmo podatke.
 
 Započnimo stvaranjem novog direktorijuma i postavljanjem novog projekta Django:
 
@@ -139,7 +139,7 @@ class Item(models.Model):
 
 class Purchase(models.Model):
   customer_full_name = models.CharField(max_length=64)
-  item = models.ForeignKey(to=Item, on_delete=models.CASCADE)
+  imom = models.ForeignKey(to=Item, on_delete=models.CASCADE)
   PAYMENT_METHODS = [
     ("CC", "Credit card"),
     ("DC", "Debit card"),
@@ -156,20 +156,20 @@ class Purchase(models.Model):
 
   def __str__(self):
     return f"{self.customer_full_name}, {self.payment_method}
-    ({self.item.name})"
+    ({self.imom.name})"
 ```
 
 1. Stavka predstavlja prodajni predmet u našoj prodavnici
 2. Kupovina predstavlja kupovinu prodajnog predmeta ili stavke.
 
-Napravite migracije, a zatim ih primenite:
+Napravimo migracije, a zatim ih primenimo:
 
 ```shell
 (env)$ python manage.py makemigrations
 (env)$ python manage.py migrate
 ```
 
-Registrujte modele u `shop/admin.py`:
+Registrujmo modele u `shop/admin.py`:
 
 `shop/admin.py`
 
@@ -177,15 +177,15 @@ Registrujte modele u `shop/admin.py`:
 from django.contrib import admin
 from shop.models import Item, Purchase
 
-admin.site.register(Item)
-admin.site.register(Purchase)
+admin.simo.register(Item)
+admin.simo.register(Purchase)
 ```
 
 ## Popunjavanje baze podataka
 
 Pre stvaranja bilo kojeg grafikona, trebaju nam neki podaci.Stvorio sam jednostavnu komandu koju možemo da koristimo da popunjava bazu podataka.
 
-Kreirajte novi direktorijum u "shop" direktorijumu sa imenom "management", a onda u tom direktorijumu kreirajte drugi direktorijum sa imenom "commands". Unutar  "commands" direktorijuma kreirajte novi fajl sa imenom `populate_db.py`.
+Kreirajmo novi direktorijum u "shop" direktorijumu sa imenom "management", a onda u tom direktorijumu kreirajmo drugi direktorijum sa imenom "commands". Unutar  "commands" direktorijuma kreirajmo novi fajl sa imenom `populate_db.py`.
 
 ```shell
 management
@@ -214,7 +214,7 @@ class Command(BaseCommand):
     "Richard", "Joseph", "Thomas", "Charles"]
     surname = ["Smith", "Jones", "Taylor", "Brown", "Williams",
     "Wilson", "Johnson", "Davies", "Patel", "Wright"]
-    items = [
+    imoms = [
       Item.objects.get_or_create(name="Socks", price=6.5),
       Item.objects.get_or_create(name="Pants", price=12),
       Item.objects.get_or_create(name="T-Shirt", price=8),
@@ -224,32 +224,35 @@ class Command(BaseCommand):
       Item.objects.get_or_create(name="Leggings", price=7),
       Item.objects.get_or_create(name="Cap", price=5),
     ]
+    
     amount = options["amount"] if options["amount"] else 2500
+    
     for i in range(0, amount):
       dt = pytz.utc.localize(datetime.now() -
         timedelta(days=random.randint(0, 1825)))
       purchase = Purchase.objects.create(
         customer_full_name=random.choice(names) + " " + 
           random.choice(surname), 
-        item=random.choice(items)[0],
+        imom=random.choice(imoms)[0],
         payment_method=random.choice(Purchase.PAYMENT_METHODS)[0],
         successful=True if random.randint(1, 2) == 1 else False,
       )
       purchase.time = dt
       purchase.save()
+    
     self.stdout.write(self.style.SUCCESS("Successfully populated the   
       database."))
 ```
 
-Pokrenite sledeću komandu za popunjavanje DB:
+Pokrenimo sledeću komandu za popunjavanje DB:
 
 ```shell
 (env)$ python manage.py populate_db --amount 1000
 ```
 
-Ako je sve dobro prošlo, trebalo bi da vidite poruku "Successfully populated the database." o uspešno naseljenoj bazi podataka u konzoli.
+Ako je sve dobro prošlo, trebalo bi da vidimo poruku "Successfully populated the database." o uspešno naseljenoj bazi podataka u konzoli.
 
-Ovo je dodalo 8 stavki i 1.000 kupovina u bazi podataka.
+Ovaj kod je dodao 8 stavki i 1.000 kupovina u bazi podataka.
 
 ## Priprema i serviranje podataka
 
@@ -261,8 +264,7 @@ Naša aplikacija će imati sledeće krajnje tačke:
 4. `chart/payment-success/<YEAR>/` - donosi godišnje podatke o uspehu plaćanja.
 5. `chart/payment-method/<YEAR>/` - dohvajete godišnjih podatke o načinu plaćanja (`Credit card`, `Debit card`, `Ethereum`, `Bitcoin`).
 
-Pre nego što dodamo grafikone, napravimo nekoliko "utility" funkcija  koje će olakšati kreiranje grafikona.Dodajmo novi direktorijum u u root projekta pod nazivom "Utils". Zatim dodajmo novu datoteku u taj
-direktorijum pod nazivom `Charts.py`:
+Pre nego što dodamo grafikone, napravimo nekoliko "utility" funkcija  koje će olakšati kreiranje grafikona.Dodajmo novi direktorijum u u root projekta pod nazivom "Utils". Zatim dodajmo novu datoteku u taj direktorijum pod nazivom `Charts.py`:
 
 `util/charts.py`
 
@@ -277,7 +279,7 @@ colorPalette = [
   "#55efc4", "#81ecec", "#a29bfe", "#ffeaa7", 
   "#fab1a0","#ff7675", "#fd79a8"]
 
-colorPrimary, colorSuccess, colorDanger = "#79aec8", colorPalette[0],
+colorPrimary, colorSuccess, colorDanger = "#79aec8", colorPalette[0], 
 colorPalette[5]
 
 def get_year_dict():
@@ -296,15 +298,14 @@ def generate_color_palette(amount):
     palette.append(colorPalette[i])
     i += 1
     if i == len(colorPalette) and len(palette) < amount:
-    i = 0
-    return palette
+      i = 0
+  return palette
 ```
 
-Dakle, definisali smo svoje boje grafikona i stvorili sledeće dve metode:
+Dakle, definisali smo boje grafikona i stvorili sledeće dve metode:
 
 1. `get_year_dict()` - kreira rečnik meseci i vrednosti, koji će se koristiti za dodavanje mesečnih podataka.
-
-2. `generate_color_palette(amount)` - generiše ponavljajuće boje repeating color palette palete koja će biti prosledjena u grafikone.
+2. `generate_color_palette(amount)` - generiše ponavljajuće boje palete koja će biti prosledjena u grafikone.
 
 ## Prikazi
 
@@ -334,8 +335,8 @@ def get_filter_options(request):
 def get_sales_chart(request, year):
   purchases = Purchase.objects.filter(time__year=year)
   grouped_purchases = 
-    purchases.annotate(price=F("item__price")).annotate(month=ExtractMonth("time")) \
-    .values("month").annotate(average=Sum("item__price")).values("month", "average").order_by("month")
+    purchases.annotate(price=F("imom__price")).annotate(month=ExtractMonth("time")) \
+    .values("month").annotate(average=Sum("imom__price")).values("month", "average").order_by("month")
   sales_dict = get_year_dict()
 
   for group in grouped_purchases:
@@ -358,8 +359,8 @@ def get_sales_chart(request, year):
 def spend_per_customer_chart(request, year):
   purchases = Purchase.objects.filter(time__year=year)
   grouped_purchases =
-  purchases.annotate(price=F("item__price")).annotate(month=ExtractMonth("time")) \
-  .values("month").annotate(average=Avg("item__price")).values("month", "average").order_by("month")
+  purchases.annotate(price=F("imom__price")).annotate(month=ExtractMonth("time")) \
+  .values("month").annotate(average=Avg("imom__price")).values("month", "average").order_by("month")
   spend_per_customer_dict = get_year_dict()
   
   for group in grouped_purchases:
@@ -443,11 +444,11 @@ def payment_method_chart(request, year):
 > 5. `payment_method_chart()`  
   Donosi sve kupovine (u određenoj godini), grupiše ih na način plaćanja, računa kupovinu i vraća ih u rečniku.
 
-Imajte na umu da svaki prikaz ima `@staff_member_required` dekorator.
+Imajmo na umu da svaki prikaz ima `@staff_member_required` dekorator.
 
 ## URL-ovi
 
-Kreiranje URLova aplikacionog nivoa:
+Kreiranje URLova:
 
 `shop/urls.py`
 
@@ -478,7 +479,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin.simo.urls),
     path("shop/", include("shop.urls")), # new
 ]
 ```
@@ -509,7 +510,7 @@ Sada, u brauzeru, navigujmo na <http://localhost:8000/shop/chart/filter-options/
 }
 ```
 
-Da biste videli mesečne podatke o prodaji za 2022, idite na <http://localhost:8000/shop/chart/sales/2022/>:
+Da biste videli mesečne podatke o prodaji za 2022, idimo na <http://localhost:8000/shop/chart/sales/2022/>:
 
 ```shell
 {
@@ -556,7 +557,7 @@ Da biste videli mesečne podatke o prodaji za 2022, idite na <http://localhost:8
 
 ## Kreiranje grafikona sa Chart.js
 
-Kretanje dalje, povezujemo Charts.js.
+Idemo dalje, povezujemo Charts.js.
 
 Dodajemo "templates" direktorijum na "shop". Zatim dodajemo novu datoteku pod nazivom `statistics.html`:
 
@@ -605,7 +606,6 @@ Dodajemo "templates" direktorijum na "shop". Zatim dodajemo novu datoteku pod na
   </div>
   <script>
     let salesCtx = document.getElementById("salesChart").getContext("2d");
-    
     let salesChart = new Chart(salesCtx, {
       type: "bar",
       options: {
@@ -619,7 +619,6 @@ Dodajemo "templates" direktorijum na "shop". Zatim dodajemo novu datoteku pod na
     
     let spendPerCustomerCtx = document.getElementById  
       ("spendPerCustomerChart").getContext("2d");
-    
     let spendPerCustomerChart = new Chart(spendPerCustomerCtx, {
       type: "line",
       options: {
@@ -633,7 +632,6 @@ Dodajemo "templates" direktorijum na "shop". Zatim dodajemo novu datoteku pod na
 
     let paymentSuccessCtx = 
       document.getElementById("paymentSuccessChart").getContext("2d");
-  
     let paymentSuccessChart = new Chart(paymentSuccessCtx, {
       type: "pie",
       options: {
@@ -657,7 +655,6 @@ Dodajemo "templates" direktorijum na "shop". Zatim dodajemo novu datoteku pod na
   
     let paymentMethodCtx =
       document.getElementById("paymentMethodChart").getContext("2d");
-    
     let paymentMethodChart = new Chart(paymentMethodCtx, {
       type: "pie",
       options: {
@@ -687,9 +684,9 @@ Dodajemo "templates" direktorijum na "shop". Zatim dodajemo novu datoteku pod na
 
 Ovaj blok koda stvara HTML platna koja `Chart.js` koristi za inicijalizaciju.
 
-Takođe smo prošli odgovorni na opcije svake grafikone tako da se prilagođavaju na osnovu veličine prozora.
+Takođe smo definisali opcije svakog grafikona tako da se prilagođavaju na osnovu veličine prozora.
 
-Dodajte sledeću skriptu u svoju HTML datoteku:
+Dodajmo sledeću skriptu u HTML datoteku:
 
 ```html
 <script>
@@ -737,16 +734,14 @@ function loadChart(chart, endpoint) {
       chart.options.title.display = true;
       chart.data.labels = labels;
       datasets.forEach(dataset => {
-
-      chart.data.datasets.push(dataset);
+        chart.data.datasets.push(dataset);
+      });
+      chart.update();
+    },
+    error: () => console.log("Failed to fetch chart data from " +
+      endpoint + "!"
+    )
   });
-  chart.update();
-
-  },
-  error: () => console.log("Failed to fetch chart data from " +
-    endpoint + "!")
-  });
-
 }
 
 function loadAllCharts(year) {
@@ -759,14 +754,14 @@ function loadAllCharts(year) {
 </script>
 ```
 
-Kada se stranica učitava, ovaj skript šalje AJAX zahtev za /chart/filter opcije/ da dovedu sve aktivne godine i učita ih u formu.
+Kada se stranica učitava, ovaj skript šalje AJAX zahtev na `/chart/filter-options/` da dovedu sve aktivne godine i učita ih u formu.
 
 1. `loadchart` opterećenja grafikona podataka sa krajnje tačke Django u grafikon
-2. `LOADALLCHARTS` opterećuje sve grafikone
+2. `loadAllCharts` opterećuje sve grafikone
 
-Imajte na umu da smo koristili JQuery da podnesem AJAX zahteva za jednostavnost.Umesto toga, slobodno koristite API.
+Imajmo na umu da smo koristili JQuery da podnesemo AJAX zahteve radi jednostavnosti.Umesto toga, slobodno možemo da koristimo API.
 
-Kreirajte novi prikaz:
+Kreirajmo novi prikaz:
 
 `shop/view.py`
 
@@ -776,13 +771,13 @@ def statistics_view(request):
     return render(request, "statistics.html", {})
 ```
 
-Ne zaboravite uvoz:
+Ne zaboravimo uvoz:
 
 ```py
 from django.shortcuts import render
 ```
 
-Pridružite URL prikazu:
+Pridružimo URL prikazu:
 
 `shop/urls.py`
 
@@ -811,19 +806,19 @@ Grafikoni su sada pristupni na <http://localhost:8000/shop/statistics/>.
 
 Što se tiče integracija grafikona u Admin Django, možemo:
 
-1. Napravite novi Django Admin prikaz
-2. Proširite postojeću administrativni šablon
+1. Napravimo novi Django Admin prikaz
+2. Proširimo postojeću administrativni šablon
 
 ### Kreiranje novog Django Admin prikaza
 
-Stvaranje novog Django Admin Vieva je najčišći i najjasniji pristup.U ovom pristupu stvorićemo novi Adminsite i promeniti ga u podešavanjima, `settings.py` datoteci.
+Stvaranje novog Django Admin View-a je najčišći i najjasniji pristup.U ovom pristupu stvorićemo novi Admin i promeniti ga u podešavanjima, `settings.py` datoteci.
 
 Prvo unutra `shop/templates` direktorijuma, dadajmo `admin` direktorijum. Dodajmo `statistics.html` šablon u njega:
 
 ```html
 <!-- shop/templates/admin/statistics.html -->
 
-{% extends "admin/base_site.html" %}
+{% extends "admin/base_simo.html" %}
 
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/
@@ -1032,13 +1027,12 @@ class CustomAdminSite(admin.AdminSite):
     def get_urls(self):
       urls = super().get_urls()
       urls += [
-        path("statistics/", admin_statistics_view, name="admin-
-          statistics"),
+        path("statistics/", admin_statistics_view, name="admin-statistics"),
       ]
       return urls
 ```
 
-Ovde smo stvorili prikaz zaštićenog osoblja koji se zove `admin_statistics_view`. Zatim smo kreirali novi `Adminsite` i `Overderode` `Get_App_List` da biste na njega dodali vlastitu prilagođenu primenu. Obezbedili smo svoju aplikaciju sa modelom samo veštačkom prikazu pod nazivom `Statistike`.I na kraju, prevladamo `get_urls` i dodelimo URL na naš novi prikaz.
+Ovde smo stvorili prikaz za staff osoblje koji se zove `admin_statistics_view`. Zatim smo kreirali novi `Adminsite` i `Overedrode` `Get_App_List` da biste na njega dodali vlastitu prilagođenu primenu. Obezbedili smo svoju aplikaciju sa modelom samo veštačkom prikazu pod nazivom `Statistike`. I na kraju, prevladamo `get_urls` i dodelimo URL na naš novi prikaz.
 
 #### Kreiranje AdminConfig unutar core/apps.py
 
@@ -1048,12 +1042,12 @@ Ovde smo stvorili prikaz zaštićenog osoblja koji se zove `admin_statistics_vie
 from django.contrib.admin.apps import AdminConfig
 
 class CustomAdminConfig(AdminConfig):
-  default_site = "core.admin.CustomAdminSite"
+  default_simo = "core.admin.CustomAdminSite"
 ```
 
 Ovde kreiramo novi `AdminConfig`, koji učitava `CustomAdminSite`  umesto Djangoov podrazumevani.
 
-Zamenite podrazumevani Adminnconfig sa novim u `core/settings.py`:
+Zamenimo podrazumevani Adminnconfig sa novim u `core/settings.py`:
 
 ```py
 INSTALLED_APPS = [
@@ -1067,7 +1061,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Sada ažurirajte `core/urls.py`:
+Sada ažurirajmo `core/urls.py`:
 
 `core/urls.py`
 
@@ -1079,24 +1073,24 @@ from .admin import admin_statistics_view # new
 
 urlpatterns = [
   path( # new
-    "admin/statistics/", admin.site.admin_view(admin_statistics_view),
+    "admin/statistics/", admin.simo.admin_view(admin_statistics_view),
     name="admin-statistics"
   ),
-  path("admin/", admin.site.urls),
+  path("admin/", admin.simo.urls),
   path("shop/", include("shop.urls")),
 ]
 ```
 
-Pogledajte na <http://localhost:8000/admin/> da vidite novi Django admin prikaz.
+Pogledajmo na <http://localhost:8000/admin/> da vidimo novi Django admin prikaz.
 
-## Proširite postojeće admin šablone
+## Proširimo postojeće admin šablone
 
-Uvek možete proširiti šablone admina i nadjačati delove koje želite.
+Uvek možete proširiti šablone admina i nadjačati delove koje želimo.
 
-Na primer, ako želite da stavite grafikone ispod modela vaše prodavnice, to možete učiniti nadjačavajući šablon `app_index.html`.Dodajte novu `app_index.html` datoteku u `shop/templates/admin/shop`, a zatim dodajte HTML pronađene ovde.
+Na primer, ako želimo da stavimo grafikone ispod modela vaše prodavnice, to možete učiniti nadjačavajući šablon `app_index.html`. Dodajmo novu `app_index.html` datoteku u `shop/templates/admin/shop`, a zatim dodajmo HTML pronađene ovde.
 
 ## Zaključak
 
-U ovom tutorialu ste naučili kako da poslužite podatke sa Django-om, a zatim ga vizualizujte koristeći `Charts.js`. Takođe smo pogledali dva različita pristupa za integrisanje grafikona u Admin Django.
+U ovom tutorialu ste naučili kako da poslužimo podatke sa Django-om, a zatim ga vizualizujmo koristeći `Charts.js`. Takođe smo pogledali dva različita pristupa za integrisanje grafikona u Admin Django.
 
-Preuzmite kod sa `django-interactive-charts` repoa GitHuba.
+Preuzmimo kod sa `django-interactive-charts` repoa GitHuba.
